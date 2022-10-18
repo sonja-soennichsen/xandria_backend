@@ -144,7 +144,7 @@ const driver = neo4j.driver(
 
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 
-neoSchema.getSchema().then((schema: any) => {
+export default neoSchema.getSchema().then((schema: any) => {
     const server = new ApolloServer({
         schema,
     });

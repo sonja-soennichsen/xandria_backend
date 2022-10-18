@@ -1,8 +1,6 @@
 # Use latest version of node
 FROM node:latest
 
-EXPOSE 4000
-
 # Use latest version of npm
 RUN npm install npm@latest -g
 
@@ -14,5 +12,7 @@ RUN npm install --no-optional && npm cache clean --force
 WORKDIR /xandria
 
 COPY . .
+
+EXPOSE 4000
 
 CMD [ "npm", "run", "start"]

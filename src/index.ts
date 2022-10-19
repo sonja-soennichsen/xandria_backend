@@ -21,7 +21,7 @@ const User = ogm.model("User");
 
 const resolvers = {
   Mutation: {
-      signUp: async (_source:any, { username, password }: any) => {
+      signUp: async (_source:any, { username, password, name, email }: any) => {
           const [existing] = await User.find({
               where: {
                   username,
@@ -32,15 +32,26 @@ const resolvers = {
               throw new Error(`User with username ${username} already exists!`);
           }
 
+          const createdAt = new Date().toISOString()
+          const updatedAt = new Date().toISOString()
+          const bookmarks: any[] = []
+          const role = 'User'
+
           const { users } = await User.create({
               input: [
                   {
                       username,
                       password,
+                      name,
+                      role,
+                      email,
+                      bookmarks,
+                      createdAt,
+                      updatedAt,
                   }
               ]
           });
-          return   jwt.sign({ sub: users[0].id }, 'shhhhh');
+          return jwt.sign({ sub: users[0].id }, 'shhhhh');
       },
       signIn: async (_source:any, { username, password }:any) => {
           const [user] = await User.find({
@@ -74,21 +85,6 @@ const neoSchema = new Neo4jGraphQL({
       })
   }
 });
-
-// export default neoSchema.getSchema().then((schema: any) => {
-//     const server = new ApolloServer({
-//         schema,
-//         context: ({ req }:any) => ({ req }),
-//         plugins: [
-//             ApolloServerPluginLandingPageLocalDefault({ embed: false }),
-//         ],
-//     });
-  
-//     server.listen()
-//     // .then(({ url }) => {
-//     //     console.log(`🚀 Server ready at ${url}`);
-//     // });
-//   })
 
 
 Promise.all([neoSchema.getSchema(), ogm.init()]).then(([schema]) => {

@@ -38,8 +38,8 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signUp(username: String!, password: String!): String! ### JWT
-    signIn(username: String!, password: String!): String! ### JWT
+    signUp(username: String!, password: String!, name:String!, email:String!): String!
+    signIn(username: String!, password: String!): String!
 }
 
 

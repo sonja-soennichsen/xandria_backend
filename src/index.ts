@@ -1,14 +1,13 @@
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
 import {typeDefs} from "./types"
-import bcrypt from 'bcrypt';
 const { Neo4jGraphQL } = require("@neo4j/graphql");
 const { ApolloServer } = require("apollo-server");
 const neo4j = require("neo4j-driver");
 require('dotenv').config()
 const { OGM } = require("@neo4j/graphql-ogm") 
 var jwt = require('jsonwebtoken');
-const {scrypt} = require('node:crypto');
-import { compare, hash } from "../helpers/passwordUtils";
+import { compare, hash, getSalt } from "./helpers/passwordUtils";
+
 
 const driver = neo4j.driver(
     'neo4j+s://3af1e591.databases.neo4j.io',
@@ -31,21 +30,20 @@ const resolvers = {
               throw new Error(`User with username ${username} already exists!`);
           }
 
-          const bookmarks: any[] = []
-          const role = 'User'
-
-          // Using the factory defaults.
-          const hashedPassword = hash(password, 'salt')
+          const salt = getSalt()
+          const hashedPassword = hash(password, salt)
+          
 
           const { users } = await User.create({
               input: [
                   {
                       username,
                       password: hashedPassword,
+                      salt,
                       name,
-                      role,
+                      role: 'User',
                       email,
-                      bookmarks,
+                      bookmarks: [],
                       createdAt: new Date().toISOString(),
                       updatedAt: new Date().toISOString(),
                   }
@@ -64,7 +62,7 @@ const resolvers = {
               throw new Error(`User with username ${username} not found!`);
           }
 
-          const correctPassword = compare(password, user.password, 'salt')
+          const correctPassword = compare(password, user.password, user.salt)
 
           if (!correctPassword) {
               throw new Error(`Incorrect password for user with username ${username}!`);

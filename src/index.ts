@@ -8,7 +8,7 @@ require('dotenv').config()
 const { OGM } = require("@neo4j/graphql-ogm") 
 var jwt = require('jsonwebtoken');
 const {scrypt} = require('node:crypto');
-import { comparePassword } from "../helpers/comparePasswords";
+import { compare, hash } from "../helpers/passwordUtils";
 
 const driver = neo4j.driver(
     'neo4j+s://3af1e591.databases.neo4j.io',
@@ -35,7 +35,7 @@ const resolvers = {
           const role = 'User'
 
           // Using the factory defaults.
-          const hashedPassword = scrypt(password, 'salt', 64, (err:any, derivedKey:any) => {if (err) throw err;});
+          const hashedPassword = hash(password, 'salt')
 
           const { users } = await User.create({
               input: [
@@ -64,7 +64,7 @@ const resolvers = {
               throw new Error(`User with username ${username} not found!`);
           }
 
-          const correctPassword = comparePassword(password, user.password, 'salt')
+          const correctPassword = compare(password, user.password, 'salt')
 
           if (!correctPassword) {
               throw new Error(`Incorrect password for user with username ${username}!`);

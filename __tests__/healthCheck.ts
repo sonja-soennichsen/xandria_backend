@@ -1,6 +1,12 @@
 import { gql } from "apollo-server";
-// const { ApolloServer, gql } = require("apollo-server");
-import server from "../src/index";
+import { DocumentNode } from "graphql";
+import serverPromise from "../src/index";
+
+let server: any;
+
+serverPromise.then(instance => {
+    server = instance
+})
 
 it("runs a health against our graphql schema", async () => {
   let result = await server.executeOperation({

@@ -30,7 +30,7 @@ export const typeDefs = gql`
   type User {
     id: ID @id
     username: String!
-    password: String! @private
+    password: String @private
     name: String!
     role: String!
     email: String!

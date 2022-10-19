@@ -8,8 +8,6 @@ require('dotenv').config()
 const { OGM } = require("@neo4j/graphql-ogm") 
 var jwt = require('jsonwebtoken');
 
-
-
 const driver = neo4j.driver(
     'neo4j+s://3af1e591.databases.neo4j.io',
     neo4j.auth.basic('neo4j', 'E-r9PlqZMgSwO4JKRwwr5o7nhntIkAK9w3L8dhdoAcU')
@@ -85,7 +83,8 @@ const neoSchema = new Neo4jGraphQL({
 });
 
 
-Promise.all([neoSchema.getSchema(), ogm.init()]).then(([schema]) => {
+export default Promise.all([neoSchema.getSchema(), ogm.init()])
+.then(([schema]) => {
   const server = new ApolloServer({
       schema,
       context: ({ req }:any) => ({ req }),

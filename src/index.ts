@@ -1,13 +1,12 @@
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
 import {typeDefs} from "./types"
-
+import bcrypt from 'bcrypt';
 const { Neo4jGraphQL } = require("@neo4j/graphql");
 const { ApolloServer } = require("apollo-server");
 const neo4j = require("neo4j-driver");
 require('dotenv').config()
 const { OGM } = require("@neo4j/graphql-ogm") 
 var jwt = require('jsonwebtoken');
-
 
 
 
@@ -32,22 +31,21 @@ const resolvers = {
               throw new Error(`User with username ${username} already exists!`);
           }
 
-          const createdAt = new Date().toISOString()
-          const updatedAt = new Date().toISOString()
           const bookmarks: any[] = []
           const role = 'User'
+          const hashedPassword = await bcrypt.hash(password, 8);
 
           const { users } = await User.create({
               input: [
                   {
                       username,
-                      password,
+                      password: hashedPassword,
                       name,
                       role,
                       email,
                       bookmarks,
-                      createdAt,
-                      updatedAt,
+                      createdAt: new Date().toISOString(),
+                      updatedAt: new Date().toISOString(),
                   }
               ]
           });
@@ -64,7 +62,7 @@ const resolvers = {
               throw new Error(`User with username ${username} not found!`);
           }
 
-          const correctPassword = password = user.password ? true : false
+          const correctPassword = bcrypt.compareSync(password, user.password)
 
           if (!correctPassword) {
               throw new Error(`Incorrect password for user with username ${username}!`);

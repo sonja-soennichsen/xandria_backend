@@ -1,6 +1,8 @@
 const { gql } = require("apollo-server");
 
 export const typeDefs = gql`
+
+
   type Resource {
     id: ID
     headline: String!

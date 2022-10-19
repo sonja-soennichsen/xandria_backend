@@ -22,10 +22,14 @@
   "homepage": "https://github.com/athifongoqa/xandria-BE#readme",
   "dependencies": {
     "@apollo/client": "^3.7.0",
+    "@apollo/server": "^4.0.1",
     "@neo4j/graphql": "^3.10.1",
+    "@neo4j/graphql-ogm": "^3.10.1",
+    "@neo4j/graphql-plugin-auth": "^1.1.0",
     "apollo-server": "^3.10.3",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
+    "jsonwebtoken": "^8.5.1",
     "neo4j-driver": "^5.1.0"
   },
   "devDependencies": {

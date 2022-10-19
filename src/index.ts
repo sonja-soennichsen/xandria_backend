@@ -1,156 +1,103 @@
+import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
+import {typeDefs} from "./types"
+
 const { Neo4jGraphQL } = require("@neo4j/graphql");
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer } = require("apollo-server");
 const neo4j = require("neo4j-driver");
 require('dotenv').config()
+const { OGM } = require("@neo4j/graphql-ogm") 
+var jwt = require('jsonwebtoken');
 
-const typeDefs = gql`
-  type Resource {
-    id: ID
-    headline: String!
-    description: String
-    url: String!
-    imageURL: String
-    rootSite: String!
-    counter: Int!
-    generatedTags: [String!]
-    userAddedTags: [String]
-    createdAt: DateTime!
-    author: String
-    addedAt: DateTime!
-    upvotes: Int!
-    downvotes: Int!
-  }
 
-  extend type Resource
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
 
-  type User {
-    id: ID
-    name: String!
-    username: String!
-    password: String!
-    role: String!
-    email: String!
-    bookmarks: [ID]
-    createdAt: DateTime!
-    updatedAt: DateTime!
-    session: [Session!]! @relationship(type: "HAS_SESSION", direction: OUT)
-    account: [Account!]! @relationship(type: "HAS_ACCOUNT", direction: OUT)
-  }
-
-  extend type User
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-  type Tag {
-    name: String!
-    resources: [Resource!]! @relationship(type: "HAS_TAG", direction: IN)
-  }
-
-  type Session {
-    id: ID
-    expires: DateTime
-    sessionToken: String!
-    userID: String!
-  }
-
-  type Account {
-    id: ID
-    userID: String!
-    type: String!
-    provider: String!
-    providerAccountId: String!
-    refresh_token: String!
-    access_token: String!
-    expires_at: Int!
-    token_type: String!
-    scope: String!
-    id_token: String!
-    session_state: String!
-    oauth_token_secret: String!
-    oauth_token: String!
-  }
-
-  type VerificationToken {
-    identifier: String!
-    token: String!
-  }
-
-  type Collection {
-    createdAt: DateTime!
-    updatedAt: DateTime!
-    name: String!
-    collectionTags: [String]
-  }
-
-  extend type Collection
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-  type Bookmark {
-    createdAt: DateTime!
-    updatedAt: DateTime!
-    personalTags: [String!]
-  }
-
-  extend type Bookmark
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-  type Note {
-    text: String!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
-
-  extend type Note
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-  type Comment {
-    text: String!
-    createdAt: DateTime!
-  }
-
-  extend type Comment
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-`;
 
 const driver = neo4j.driver(
     'neo4j+s://3af1e591.databases.neo4j.io',
     neo4j.auth.basic('neo4j', 'E-r9PlqZMgSwO4JKRwwr5o7nhntIkAK9w3L8dhdoAcU')
 );
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
+const ogm = new OGM({ typeDefs, driver });
+const User = ogm.model("User");
 
-export default neoSchema.getSchema().then((schema: any) => {
-    const server = new ApolloServer({
-        schema,
-    });
+const resolvers = {
+  Mutation: {
+      signUp: async (_source:any, { username, password }: any) => {
+          const [existing] = await User.find({
+              where: {
+                  username,
+              },
+          });
+
+          if (existing) {
+              throw new Error(`User with username ${username} already exists!`);
+          }
+
+          const { users } = await User.create({
+              input: [
+                  {
+                      username,
+                      password,
+                  }
+              ]
+          });
+          return   jwt.sign({ sub: users[0].id }, 'shhhhh');
+      },
+      signIn: async (_source:any, { username, password }:any) => {
+          const [user] = await User.find({
+              where: {
+                  username,
+              },
+          });
+
+          if (!user) {
+              throw new Error(`User with username ${username} not found!`);
+          }
+
+          const correctPassword = password = user.password ? true : false
+
+          if (!correctPassword) {
+              throw new Error(`Incorrect password for user with username ${username}!`);
+          }
+          return jwt.sign({ sub: user.id }, 'shhhhh');
+      },
+  },
+};
+
+
+const neoSchema = new Neo4jGraphQL({
+  typeDefs,
+  driver,
+  resolvers,
+  plugins: {
+      auth: new Neo4jGraphQLAuthJWTPlugin({
+          secret: "secret"
+      })
+  }
+});
+
+// export default neoSchema.getSchema().then((schema: any) => {
+//     const server = new ApolloServer({
+//         schema,
+//         context: ({ req }:any) => ({ req }),
+//         plugins: [
+//             ApolloServerPluginLandingPageLocalDefault({ embed: false }),
+//         ],
+//     });
   
-    server.listen()
-    // .then(({ url }) => {
-    //     console.log(`🚀 Server ready at ${url}`);
-    // });
-  })
+//     server.listen()
+//     // .then(({ url }) => {
+//     //     console.log(`🚀 Server ready at ${url}`);
+//     // });
+//   })
+
+
+Promise.all([neoSchema.getSchema(), ogm.init()]).then(([schema]) => {
+  const server = new ApolloServer({
+      schema,
+      context: ({ req }:any) => ({ req }),
+  });
+
+  server.listen().then(({ url }:any) => {
+      console.log(`🚀 Server ready at ${url}`);
+  });
+});

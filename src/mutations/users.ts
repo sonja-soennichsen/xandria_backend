@@ -64,56 +64,7 @@ const signIn = async (
   return jwt.sign({ sub: user.id }, process.env.JWT_SECRET)
 }
 
-const addResource = async (
-  _source: any,
-  {
-    headline,
-    description,
-    url,
-    imageURL,
-    rootSite,
-    author,
-    generatedTags,
-    userAddedTags,
-  }: any,
-  context: any
-) => {
-  const [existing] = await context.Resource.find({
-    where: {
-      url,
-    },
-  })
-
-  if (existing) {
-    throw new Error(`Resource with url ${url} already exists!`)
-  }
-
-  const { resource } = await context.Resource.create({
-    input: [
-      {
-        headline,
-        description,
-        url,
-        imageURL,
-        rootSite,
-        author,
-        generatedTags,
-        userAddedTags,
-        counter: 0,
-        upvotes: 0,
-        downvotes: 0,
-        createdAt: new Date().toISOString(),
-        addedAt: new Date().toISOString(),
-      },
-    ],
-  })
-  return "It worked"
-}
-
 export default {
-  Mutation: {
-    signIn,
-    signUp,
-    addResource,
-  },
+  signIn,
+  signUp,
 }

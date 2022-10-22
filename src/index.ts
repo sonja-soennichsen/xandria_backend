@@ -1,6 +1,6 @@
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 import { typeDefs } from "./types"
-import mutation from "./resolvers/mutation"
+import mutations from "./mutations/index"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 const { ApolloServer } = require("apollo-server")
 const neo4j = require("neo4j-driver")
@@ -20,7 +20,7 @@ const Resource = ogm.model("Resource")
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
   driver,
-  resolvers: mutation,
+  resolvers: mutations,
   plugins: {
     auth: new Neo4jGraphQLAuthJWTPlugin({
       secret: process.env.SECRET,

@@ -1,8 +1,6 @@
-const { gql } = require("apollo-server");
+const { gql } = require("apollo-server")
 
 export const typeDefs = gql`
-
-
   type Resource {
     id: ID
     headline: String!
@@ -41,16 +39,31 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signUp(username: String!, password: String!, name:String!, email:String!): String!
-    signIn(username: String!, password: String!): String!
-}
+    signUp(
+      username: String!
+      password: String!
+      name: String!
+      email: String!
+    ): String!
 
+    signIn(username: String!, password: String!): String!
+
+    addResource(
+      headline: String!
+      description: String!
+      url: String!
+      imageURL: String!
+      rootSite: String!
+      author: String!
+      generatedTags: [String!]
+      userAddedTags: [String!]
+    ): String!
+  }
 
   type Tag {
     name: String!
     resources: [Resource!]! @relationship(type: "HAS_TAG", direction: IN)
   }
-
 
   type Collection {
     createdAt: DateTime!
@@ -104,4 +117,7 @@ export const typeDefs = gql`
       ]
     )
 
-`;
+  type Query {
+    getUser(username: String!): User
+  }
+`

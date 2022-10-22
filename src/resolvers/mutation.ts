@@ -1,14 +1,6 @@
 import { getSalt, hash, compare } from "../helpers/passwordUtils"
 var jwt = require("jsonwebtoken")
-import { typeDefs } from "../types"
-const { OGM } = require("@neo4j/graphql-ogm")
-const neo4j = require("neo4j-driver")
-import { driver } from "../index"
-
-// const ogm = new OGM({ typeDefs, driver })
-// ogm.init()
-// const User = ogm.model("User")
-// const Resource = ogm.model("Resource")
+require("dotenv").config()
 
 const signUp = async (
   _source: any,
@@ -43,7 +35,10 @@ const signUp = async (
       },
     ],
   })
-  return jwt.sign({ sub: users[0].id, username: username }, "shhhhh")
+  return jwt.sign(
+    { sub: users[0].id, username: username },
+    process.env.JWT_SECRET
+  )
 }
 
 const signIn = async (
@@ -66,7 +61,7 @@ const signIn = async (
   if (!correctPassword) {
     throw new Error(`Incorrect password for user with username ${username}!`)
   }
-  return jwt.sign({ sub: user.id }, "shhhhh")
+  return jwt.sign({ sub: user.id }, process.env.JWT_SECRET)
 }
 
 const addResource = async (

@@ -1,20 +1,16 @@
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 import { typeDefs } from "./types"
+import mutation from "./resolvers/mutation"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 const { ApolloServer } = require("apollo-server")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
 var jwt = require("jsonwebtoken")
-import { compare, hash, getSalt } from "./helpers/passwordUtils"
-import { startStandaloneServer } from "@apollo/server/standalone"
-import { addMocksToSchema } from "@graphql-tools/mock"
-import { makeExecutableSchema } from "@graphql-tools/schema"
-import mutation from "./resolvers/mutation"
 
 export const driver = neo4j.driver(
-  "neo4j+s://3af1e591.databases.neo4j.io",
-  neo4j.auth.basic("neo4j", "E-r9PlqZMgSwO4JKRwwr5o7nhntIkAK9w3L8dhdoAcU")
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 )
 
 const ogm = new OGM({ typeDefs, driver })
@@ -27,7 +23,7 @@ const neoSchema = new Neo4jGraphQL({
   resolvers: mutation,
   plugins: {
     auth: new Neo4jGraphQLAuthJWTPlugin({
-      secret: "secret",
+      secret: process.env.SECRET,
     }),
   },
 })

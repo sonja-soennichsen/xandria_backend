@@ -61,7 +61,7 @@ const signIn = async (
   if (!correctPassword) {
     throw new Error(`Incorrect password for user with username ${username}!`)
   }
-  return jwt.sign({ sub: user.id }, process.env.JWT_SECRET)
+  return jwt.sign({ sub: user.id, username: username }, process.env.JWT_SECRET)
 }
 
 export default {

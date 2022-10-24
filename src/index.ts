@@ -1,12 +1,12 @@
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 import { typeDefs } from "./types"
 import mutations from "./mutations/index"
+import { getUser } from "./helpers/user"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 const { ApolloServer } = require("apollo-server")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
-var jwt = require("jsonwebtoken")
 
 export const driver = neo4j.driver(
   process.env.NEO4J_URI,
@@ -32,11 +32,17 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
   ([schema]) => {
     const server = new ApolloServer({
       schema,
-      context: ({ req }: any) => ({
-        req,
-        User,
-        Resource,
-      }),
+      context: async ({ req }: any) => {
+        // Get the user token from the headers.
+        const token = req.headers.authorization || ""
+
+
+        return {
+          req,
+          User,
+          Resource,
+        }
+      },
     })
 
     server.listen().then(({ url }: any) => {

@@ -1,12 +1,23 @@
-import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
+const express = require("express")
 import { typeDefs } from "./types"
-import mutations from "./mutations/index"
-import { getUser } from "./helpers/user"
-const { Neo4jGraphQL } = require("@neo4j/graphql")
-const { ApolloServer } = require("apollo-server")
+const { Neo4jGraphQL, GraphQLError } = require("@neo4j/graphql")
+const { ApolloServer, AuthenticationError } = require("apollo-server-express")
+const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
+const cookieParser = require("cookie-parser")
+var jwt = require("jsonwebtoken")
+import resolvers from "./mutations"
+
+const app = express()
+const corsOptions = {
+  origin: ["http://localhost:4000", "https://studio.apollographql.com"],
+  credentials: true,
+}
+
+app.use(cors(corsOptions))
+app.use(cookieParser())
 
 export const driver = neo4j.driver(
   process.env.NEO4J_URI,
@@ -20,33 +31,39 @@ const Resource = ogm.model("Resource")
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
   driver,
-  resolvers: mutations,
-  plugins: {
-    auth: new Neo4jGraphQLAuthJWTPlugin({
-      secret: process.env.SECRET,
-    }),
-  },
+  resolvers,
 })
 
 export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
-  ([schema]) => {
+  async ([schema]) => {
     const server = new ApolloServer({
       schema,
-      context: async ({ req }: any) => {
-        // Get the user token from the headers.
-        const token = req.headers.authorization || ""
-
-
-        return {
-          req,
-          User,
-          Resource,
+      context: async ({ res, req }: any) => {
+        if (req.url == "/login") {
+          return { req, res, User }
+        } else {
+          const token = req.headers["jwt"] || ""
+          const userJWT = jwt.verify(token, process.env.JWT_SECRET)
+          const userID = userJWT.sub
+          const [currentUser] = await User.find({
+            where: { id: userID },
+          })
+          return {
+            req,
+            res,
+            User,
+            Resource,
+            currentUser,
+          }
         }
       },
+      introspection: true,
     })
 
-    server.listen().then(({ url }: any) => {
-      console.log(`🚀 Server ready at ${url}`)
-    })
+    await server.start()
+    server.applyMiddleware({ app, path: "/graphql", cors: false })
+    app.use(express.urlencoded({ extended: true }))
+
+    app.listen(4000, () => console.log(`🚀 Server ready at 4000`))
   }
 )

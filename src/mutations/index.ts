@@ -1,9 +1,9 @@
 import resources from "./resources"
-import users from "./users"
+import auth from "./auth"
 
 export default {
   Mutation: {
     ...resources,
-    ...users,
+    ...auth,
   },
 }

@@ -35,10 +35,18 @@ const signUp = async (
       },
     ],
   })
-  return jwt.sign(
+  const token = jwt.sign(
     { sub: users[0].id, username: username },
     process.env.JWT_SECRET
   )
+  context.res.cookie("jwt", token, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    sameSite: "none",
+    secure: true,
+  })
+
+  return token
 }
 
 const signIn = async (
@@ -47,9 +55,7 @@ const signIn = async (
   context: any
 ) => {
   const [user] = await context.User.find({
-    where: {
-      username,
-    },
+    where: { username: username },
   })
 
   if (!user) {
@@ -61,7 +67,20 @@ const signIn = async (
   if (!correctPassword) {
     throw new Error(`Incorrect password for user with username ${username}!`)
   }
-  return jwt.sign({ sub: user.id, username: username }, process.env.JWT_SECRET)
+
+  const token = jwt.sign(
+    { sub: user.id, username: username },
+    process.env.JWT_SECRET
+  )
+
+  context.res.cookie("jwt", token, {
+    httpOnly: true,
+    // maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    // sameSite: "none",
+    // secure: true,
+  })
+
+  return token
 }
 
 export default {

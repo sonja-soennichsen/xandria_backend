@@ -13,7 +13,11 @@ import resolvers from "./mutations"
 
 const app = express()
 const corsOptions = {
-  origin: ["http://localhost:4000", "https://studio.apollographql.com"],
+  origin: [
+    "http://localhost:4000",
+    "https://studio.apollographql.com",
+    "http://localhost:3000",
+  ],
   credentials: true,
 }
 
@@ -80,6 +84,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
         }
       },
       introspection: true,
+      playground: true,
     })
 
     await server.start()

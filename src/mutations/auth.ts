@@ -32,6 +32,7 @@ const signUp = async (
         bookmarks: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        isAuthenticated: true,
       },
     ],
   })

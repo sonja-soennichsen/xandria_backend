@@ -34,13 +34,7 @@ export const typeDefs = gql`
     bookmarks: [ID]
     createdAt: DateTime!
     updatedAt: DateTime!
-    isAuthenticated: Boolean @private
-  }
-
-  type Query {
-    me: User
-      @cypher(statement: "MATCH (u:User { id: $auth.jwt.sub }) RETURN u")
-      @auth(rules: [{ isAuthenticated: true }])
+    isAuthenticated: Boolean
   }
 
   type Mutation {

@@ -35,7 +35,7 @@ const neoSchema = new Neo4jGraphQL({
   resolvers,
   plugins: {
     auth: new Neo4jGraphQLAuthJWTPlugin({
-      secret: "super-secret",
+      secret: process.env.JWT_SECRET,
     }),
     config: {
       auth: {
@@ -55,18 +55,19 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
           return { req, res, User }
         } else {
           try {
-            const token = req.headers["jwt"] || ""
+            const token = req.cookies["jwt"] || ""
             const userJWT = jwt.verify(token, process.env.JWT_SECRET)
             const [currentUser] = await User.find({
               where: { id: userJWT.sub },
             })
 
-            console.log("Is Authenticated:", currentUser.isAuthenticated)
-            console.log(userJWT.sub)
+            // console.log("Is Authenticated:", currentUser.isAuthenticated)
+            // console.log(userJWT.sub)
 
             return {
               req,
               res,
+              driver,
               User,
               Resource,
               currentUser,

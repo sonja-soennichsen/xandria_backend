@@ -27,11 +27,11 @@ export const typeDefs = gql`
     id: ID @id
     username: String!
     password: String @private
-    salt: String @private
+    salt: String! @private
     name: String!
     role: String!
     email: String!
-    bookmarks: [ID]
+    bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
     createdAt: DateTime!
     updatedAt: DateTime!
     isAuthenticated: Boolean
@@ -61,7 +61,6 @@ export const typeDefs = gql`
 
   type Tag {
     name: String!
-    resources: [Resource!]! @relationship(type: "HAS_TAG", direction: IN)
   }
 
   type Collection {
@@ -79,19 +78,6 @@ export const typeDefs = gql`
           isAuthenticated: true
           allow: { id: "$jwt.sub" }
         }
-      ]
-    )
-
-  type Bookmark {
-    createdAt: DateTime!
-    updatedAt: DateTime!
-    personalTags: [String!]
-  }
-
-  extend type Bookmark
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
       ]
     )
 

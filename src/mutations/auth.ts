@@ -29,10 +29,10 @@ const signUp = async (
         name,
         role: "User",
         email,
-        bookmarks: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         isAuthenticated: true,
+        bookmarks: [],
       },
     ],
   })

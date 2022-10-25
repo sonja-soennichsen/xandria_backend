@@ -55,7 +55,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
       schema,
       context: async ({ res, req }: any) => {
         if (req.url == "/login") {
-          console.log("login")
+          //console.log("login")
           return { req, res, User }
         } else {
           try {

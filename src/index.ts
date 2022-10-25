@@ -1,7 +1,7 @@
 const express = require("express")
 import { typeDefs } from "./types"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
-const { ApolloServer } = require("apollo-server-express")
+const { ApolloServer, AuthenticationError } = require("apollo-server-express")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 const cors = require("cors")
 const neo4j = require("neo4j-driver")
@@ -54,21 +54,27 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
           console.log("login")
           return { req, res, User }
         } else {
-          const token = req.headers["jwt"] || ""
-          const userJWT = jwt.verify(token, process.env.JWT_SECRET)
-          const userID = userJWT.sub
-          const [currentUser] = await User.find({
-            where: { id: userID },
-          })
+          try {
+            const token = req.headers["jwt"] || ""
+            const userJWT = jwt.verify(token, process.env.JWT_SECRET)
+            const [currentUser] = await User.find({
+              where: { id: userJWT.sub },
+            })
 
-          console.log("Is Autthenticated:", currentUser.isAuthenticated)
+            console.log("Is Authenticated:", currentUser.isAuthenticated)
+            console.log(userJWT.sub)
 
-          return {
-            req,
-            res,
-            User,
-            Resource,
-            currentUser,
+            return {
+              req,
+              res,
+              User,
+              Resource,
+              currentUser,
+            }
+          } catch (e) {
+            throw new AuthenticationError(
+              "Authentication token is invalid, please log in"
+            )
           }
         }
       },

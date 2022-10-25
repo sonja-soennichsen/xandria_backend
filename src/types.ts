@@ -20,9 +20,7 @@ export const typeDefs = gql`
 
   extend type Resource
     @auth(
-      rules: [
-        { operations: [CREATE, UPDATE, DELETE, READ], isAuthenticated: true }
-      ]
+      rules: [{ operations: [CREATE, UPDATE, DELETE], isAuthenticated: true }]
     )
 
   type User {
@@ -36,7 +34,13 @@ export const typeDefs = gql`
     bookmarks: [ID]
     createdAt: DateTime!
     updatedAt: DateTime!
-    isAuthenticated: Boolean
+    isAuthenticated: Boolean @private
+  }
+
+  type Query {
+    me: User
+      @cypher(statement: "MATCH (u:User { id: $auth.jwt.sub }) RETURN u")
+      @auth(rules: [{ isAuthenticated: true }])
   }
 
   type Mutation {

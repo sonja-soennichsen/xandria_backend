@@ -22,6 +22,8 @@ const addResource = async (
     throw new Error(`Resource with url ${url} already exists!`)
   }
 
+  console.log(context.auth)
+
   const { resource } = await context.Resource.create({
     input: [
       {

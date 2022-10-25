@@ -21,7 +21,7 @@ export const typeDefs = gql`
   extend type Resource
     @auth(
       rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
+        { operations: [CREATE, UPDATE, DELETE, READ], isAuthenticated: true }
       ]
     )
 
@@ -36,6 +36,7 @@ export const typeDefs = gql`
     bookmarks: [ID]
     createdAt: DateTime!
     updatedAt: DateTime!
+    isAuthenticated: Boolean
   }
 
   type Mutation {
@@ -75,7 +76,11 @@ export const typeDefs = gql`
   extend type Collection
     @auth(
       rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
+        {
+          operations: [CREATE, READ, UPDATE, DELETE]
+          isAuthenticated: true
+          allow: { id: "$jwt.sub" }
+        }
       ]
     )
 
@@ -100,9 +105,7 @@ export const typeDefs = gql`
 
   extend type Note
     @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
+      rules: [{ operations: [CREATE, UPDATE, DELETE], isAuthenticated: true }]
     )
 
   type Comment {
@@ -116,8 +119,4 @@ export const typeDefs = gql`
         { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
       ]
     )
-
-  type Query {
-    getUser(username: String!): User
-  }
 `

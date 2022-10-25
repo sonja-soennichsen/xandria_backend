@@ -1,7 +1,8 @@
 const express = require("express")
 import { typeDefs } from "./types"
-const { Neo4jGraphQL, GraphQLError } = require("@neo4j/graphql")
-const { ApolloServer, AuthenticationError } = require("apollo-server-express")
+const { Neo4jGraphQL } = require("@neo4j/graphql")
+const { ApolloServer } = require("apollo-server-express")
+import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
@@ -32,6 +33,16 @@ const neoSchema = new Neo4jGraphQL({
   typeDefs,
   driver,
   resolvers,
+  plugins: {
+    auth: new Neo4jGraphQLAuthJWTPlugin({
+      secret: "super-secret",
+    }),
+    config: {
+      auth: {
+        isAuthenticated: true,
+      },
+    },
+  },
 })
 
 export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
@@ -40,6 +51,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
       schema,
       context: async ({ res, req }: any) => {
         if (req.url == "/login") {
+          console.log("login")
           return { req, res, User }
         } else {
           const token = req.headers["jwt"] || ""
@@ -48,6 +60,9 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
           const [currentUser] = await User.find({
             where: { id: userID },
           })
+
+          console.log("Is Autthenticated:", currentUser.isAuthenticated)
+
           return {
             req,
             res,

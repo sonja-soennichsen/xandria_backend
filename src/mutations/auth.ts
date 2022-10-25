@@ -73,6 +73,8 @@ const signIn = async (
     process.env.JWT_SECRET
   )
 
+  console.log("Is Authenticated:", context.currentUser.isAuthenticated)
+
   context.res.cookie("jwt", token, {
     httpOnly: true,
     // maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days

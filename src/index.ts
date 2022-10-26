@@ -32,6 +32,7 @@ export const driver = neo4j.driver(
 const ogm = new OGM({ typeDefs, driver })
 const User = ogm.model("User")
 const Resource = ogm.model("Resource")
+const Tag = ogm.model("Tag")
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
@@ -74,6 +75,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
               driver,
               User,
               Resource,
+              Tag,
               currentUser,
             }
           } catch (e) {

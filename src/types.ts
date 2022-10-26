@@ -52,7 +52,7 @@ export const typeDefs = gql`
       imageURL: String!
       rootSite: String!
       author: String!
-      generatedTags: [String!]
+      tags: String!
       userAddedTags: [String!]
     ): String!
   }

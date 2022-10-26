@@ -7,7 +7,7 @@ const addResource = async (
     imageURL,
     rootSite,
     author,
-    generatedTags,
+    tagName,
     userAddedTags,
   }: any,
   context: any
@@ -31,17 +31,22 @@ const addResource = async (
         imageURL,
         rootSite,
         author,
-        generatedTags,
+        tags: {
+          connect: [
+            {
+              where: {
+                node: {
+                  name: tagName,
+                },
+              },
+            },
+          ],
+        },
         userAddedTags,
-        counter: 0,
-        upvotes: 0,
-        downvotes: 0,
-        createdAt: new Date().toISOString(),
-        addedAt: new Date().toISOString(),
       },
     ],
   })
-  return { data: "It worked" }
+  return resource
 }
 
 const makeBookmark = async (

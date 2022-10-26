@@ -31,7 +31,6 @@ const signUp = async (
         email,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        bookmarks: [],
       },
     ],
   })

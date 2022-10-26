@@ -9,8 +9,14 @@ export const typeDefs = gql`
     imageURL: String
     rootSite: String!
     tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
+    users: [User!]! @relationship(direction: IN, type: "BOOKMARKED")
     userAddedTags: [String]
     author: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    upvotes: Int!
+    downvotes: Int!
+    counter: Int!
   }
 
   extend type Resource
@@ -43,7 +49,7 @@ export const typeDefs = gql`
 
     signIn(username: String!, password: String!): String!
 
-    makeBookmark(resourceID: String!): String!
+    makeBookmark(resourceURL: String!): String!
 
     addResource(
       headline: String!

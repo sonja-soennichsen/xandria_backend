@@ -8,14 +8,9 @@ export const typeDefs = gql`
     url: String!
     imageURL: String
     rootSite: String!
-    counter: Int!
-    generatedTags: [String!]
+    tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
     userAddedTags: [String]
-    createdAt: DateTime!
     author: String
-    addedAt: DateTime!
-    upvotes: Int!
-    downvotes: Int!
   }
 
   extend type Resource

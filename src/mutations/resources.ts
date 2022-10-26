@@ -60,7 +60,7 @@ const makeBookmark = async (
   }
 
   try {
-    const result = await context.driver.session.run(
+    const result = await context.driver.run(
       "MATCH (a:User), (b:Resource)  WHERE a.username = $userID AND b.url = $rescourceID  CREATE (a)-[r: BOOKMARKED]->(b) RETURN a,b ",
       { userID: context.currentUser.id, rescourceID: resourceID }
     )

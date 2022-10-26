@@ -31,7 +31,6 @@ const signUp = async (
         email,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        isAuthenticated: true,
         bookmarks: [],
       },
     ],
@@ -80,6 +79,7 @@ const signIn = async (
     sameSite: "none",
     secure: true,
   })
+  console.log(context.auth.isAuthenticated)
 
   return token
 }

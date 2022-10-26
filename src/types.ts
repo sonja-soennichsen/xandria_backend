@@ -2,7 +2,7 @@ const { gql } = require("apollo-server")
 
 export const typeDefs = gql`
   type Resource {
-    id: ID
+    id: ID @id
     headline: String!
     description: String
     url: String!
@@ -20,7 +20,9 @@ export const typeDefs = gql`
 
   extend type Resource
     @auth(
-      rules: [{ operations: [CREATE, UPDATE, DELETE], isAuthenticated: true }]
+      rules: [
+        { operations: [CREATE, UPDATE, DELETE, READ], isAuthenticated: true }
+      ]
     )
 
   type User {
@@ -34,7 +36,6 @@ export const typeDefs = gql`
     bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
     createdAt: DateTime!
     updatedAt: DateTime!
-    isAuthenticated: Boolean
   }
 
   type Mutation {
@@ -46,6 +47,8 @@ export const typeDefs = gql`
     ): String!
 
     signIn(username: String!, password: String!): String!
+
+    makeBookmark(resourceID: String!): String!
 
     addResource(
       headline: String!
@@ -103,4 +106,27 @@ export const typeDefs = gql`
         { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
       ]
     )
+
+  type Query {
+    me: User
+      @cypher(
+        statement: """
+        MATCH (user:User {id: $auth.jwt.sub})
+        RETURN user
+        """
+      )
+  }
+
+  type Query {
+    addBookmark: Resource
+      @cypher(
+        statement: """
+        MATCH (a:User), (b:Resource)  WHERE a.id = '21d43772-8c8c-4d55-bf50-c893bd27ef56' AND b.url = 'google.com'  CREATE (a)-[r: BOOKMARKED]->(b) RETURN b
+        """
+      )
+  }
+
+  type Query {
+    randomNumber: Float @cypher(statement: "RETURN rand()")
+  }
 `

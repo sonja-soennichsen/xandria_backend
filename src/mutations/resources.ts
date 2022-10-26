@@ -22,8 +22,6 @@ const addResource = async (
     throw new Error(`Resource with url ${url} already exists!`)
   }
 
-  console.log(context.auth)
-
   const { resource } = await context.Resource.create({
     input: [
       {
@@ -46,6 +44,34 @@ const addResource = async (
   return { data: "It worked" }
 }
 
+const makeBookmark = async (
+  _source: any,
+  { resourceID }: any,
+  context: any
+) => {
+  const [user] = await context.User.find({
+    where: {
+      id: context.currentUser.id,
+    },
+  })
+
+  if (!context.auth.isAuthenticated) {
+    throw new Error(`User not found`)
+  }
+
+  try {
+    const result = await context.driver.session.run(
+      "MATCH (a:User), (b:Resource)  WHERE a.username = $userID AND b.url = $rescourceID  CREATE (a)-[r: BOOKMARKED]->(b) RETURN a,b ",
+      { userID: context.currentUser.id, rescourceID: resourceID }
+    )
+  } catch (e) {
+    return e
+  }
+
+  return { data: "It worked" }
+}
+
 export default {
   addResource,
+  makeBookmark,
 }

@@ -58,7 +58,8 @@ export const typeDefs = gql`
   }
 
   type Tag {
-    name: String!
+    id: ID @id
+    name: String! @unique
   }
 
   type Collection {

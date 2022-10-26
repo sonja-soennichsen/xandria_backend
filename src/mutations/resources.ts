@@ -7,7 +7,7 @@ const addResource = async (
     imageURL,
     rootSite,
     author,
-    tagName,
+    tags,
     userAddedTags,
   }: any,
   context: any
@@ -22,6 +22,8 @@ const addResource = async (
     throw new Error(`Resource with url ${url} already exists!`)
   }
 
+  console.log(tags)
+
   const { resource } = await context.Resource.create({
     input: [
       {
@@ -32,21 +34,16 @@ const addResource = async (
         rootSite,
         author,
         tags: {
-          connect: [
-            {
-              where: {
-                node: {
-                  name: tagName,
-                },
-              },
-            },
-          ],
+          connectOrCreate: {
+            where: { node: { name: tags } },
+            onCreate: { node: { name: tags } },
+          },
         },
         userAddedTags,
       },
     ],
   })
-  return resource
+  return { resource }
 }
 
 const makeBookmark = async (

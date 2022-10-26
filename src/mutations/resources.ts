@@ -22,31 +22,35 @@ const addResource = async (
     throw new Error(`Resource with url ${url} already exists!`)
   }
 
-  const { resource } = await context.Resource.create({
-    input: [
-      {
-        headline,
-        description,
-        url,
-        imageURL,
-        rootSite,
-        author,
-        tags: {
-          connectOrCreate: {
-            where: { node: { name: tags } },
-            onCreate: { node: { name: tags } },
+  try {
+    await context.Resource.create({
+      input: [
+        {
+          headline,
+          description,
+          url,
+          imageURL,
+          rootSite,
+          author,
+          tags: {
+            connectOrCreate: {
+              where: { node: { name: tags } },
+              onCreate: { node: { name: tags } },
+            },
           },
+          userAddedTags,
+          counter: 0,
+          upvotes: 0,
+          downvotes: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
-        userAddedTags,
-        counter: 0,
-        upvotes: 0,
-        downvotes: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    ],
-  })
-  return { resource }
+      ],
+    })
+    return "it worked"
+  } catch (e) {
+    return e
+  }
 }
 
 const makeBookmark = async (
@@ -54,29 +58,32 @@ const makeBookmark = async (
   { resourceURL }: any,
   context: any
 ) => {
-  console.log(context.currentUser)
-  const { user } = await context.User.update({
-    where: {
-      username: context.currentUser.username,
-    },
-    update: {
-      bookmarks: [
-        {
-          connect: [
-            {
-              where: {
-                node: {
-                  url: resourceURL,
+  try {
+    await context.User.update({
+      where: {
+        username: context.currentUser.username,
+      },
+      update: {
+        bookmarks: [
+          {
+            connect: [
+              {
+                where: {
+                  node: {
+                    url: resourceURL,
+                  },
                 },
               },
-            },
-          ],
-        },
-      ],
-    },
-  })
+            ],
+          },
+        ],
+      },
+    })
 
-  return { data: "it worked" }
+    return "it worked"
+  } catch (e) {
+    return e
+  }
 }
 
 export default {

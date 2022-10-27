@@ -33,6 +33,7 @@ const ogm = new OGM({ typeDefs, driver })
 const User = ogm.model("User")
 const Resource = ogm.model("Resource")
 const Tag = ogm.model("Tag")
+const Comment = ogm.model("Comment")
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
@@ -66,9 +67,6 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
               where: { id: userJWT.sub },
             })
 
-            // console.log("Is Authenticated:", currentUser.isAuthenticated)
-            // console.log(userJWT.sub)
-
             return {
               req,
               res,
@@ -76,6 +74,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
               User,
               Resource,
               Tag,
+              Comment,
               currentUser,
             }
           } catch (e) {

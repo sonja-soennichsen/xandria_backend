@@ -10,6 +10,7 @@ export const typeDefs = gql`
     rootSite: String!
     tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
     users: [User!]! @relationship(direction: IN, type: "BOOKMARKED")
+    comments: [Comment!]! @relationship(direction: IN, type: "HAS_COMMENT")
     userAddedTags: [String]
     author: String
     createdAt: DateTime!
@@ -37,6 +38,7 @@ export const typeDefs = gql`
     bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
     createdAt: DateTime!
     updatedAt: DateTime!
+    comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
   }
 
   type Mutation {
@@ -50,6 +52,8 @@ export const typeDefs = gql`
     signIn(username: String!, password: String!): String!
 
     makeBookmark(resourceURL: String!): String!
+
+    addComment(resourceURL: String!, text: String!): String!
 
     addResource(
       headline: String!
@@ -98,8 +102,10 @@ export const typeDefs = gql`
     )
 
   type Comment {
+    id: ID @id
     text: String!
-    createdAt: DateTime!
+    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
+    author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
   }
 
   extend type Comment
@@ -108,27 +114,4 @@ export const typeDefs = gql`
         { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
       ]
     )
-
-  type Query {
-    me: User
-      @cypher(
-        statement: """
-        MATCH (user:User {id: $auth.jwt.sub})
-        RETURN user
-        """
-      )
-  }
-
-  type Query {
-    addBookmark: Resource
-      @cypher(
-        statement: """
-        MATCH (a:User), (b:Resource)  WHERE a.id = '21d43772-8c8c-4d55-bf50-c893bd27ef56' AND b.url = 'google.com'  CREATE (a)-[r: BOOKMARKED]->(b) RETURN b
-        """
-      )
-  }
-
-  type Query {
-    randomNumber: Float @cypher(statement: "RETURN rand()")
-  }
 `

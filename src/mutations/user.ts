@@ -1,9 +1,36 @@
-// currently not in use
+const makeBookmark = async (
+  _source: any,
+  { resourceURL }: any,
+  context: any
+) => {
+  try {
+    await context.User.update({
+      where: {
+        username: context.currentUser.username,
+      },
+      update: {
+        bookmarks: [
+          {
+            connect: [
+              {
+                where: {
+                  node: {
+                    url: resourceURL,
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    })
 
-const getUser = async (_source: any, context: any) => {
-  return context.currentUser
+    return "it worked"
+  } catch (e) {
+    return e
+  }
 }
 
 export default {
-  getUser,
+  makeBookmark,
 }

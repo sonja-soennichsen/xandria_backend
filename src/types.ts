@@ -150,4 +150,24 @@ export const typeDefs = gql`
       userAddedTags: [String!]
     ): String!
   }
+
+  type Query {
+    me: User
+      @cypher(
+        statement: """
+        MATCH (user:User {id: $auth.jwt.sub})
+        RETURN user
+        """
+      )
+  }
+
+  type Query {
+    getKnowledgeNetwork: Resource
+      @cypher(
+        statement: """
+        MATCH (n:Resource )-[r:HAS_TAG]-(t:Tag)
+        RETURN n, t
+        """
+      )
+  }
 `

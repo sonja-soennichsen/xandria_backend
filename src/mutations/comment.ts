@@ -4,6 +4,7 @@ const addComment = async (
   context: any
 ) => {
   try {
+    if (!context.currentUser) return null
     await context.Comment.create({
       input: [
         {

@@ -1,64 +1,58 @@
-// import { request } from "graphql-request"
-// import { signIn, signUp } from "../__mocks__/graphql"
-// import { getConfig } from "../helpers/testHelpers"
-// import { signUpData, loginData } from "../__mocks__/user"
+//import { makeExecutableSchema } from "@graphql-tools/schema"
+const { addMocksToSchema } = require("@graphql-tools/mock")
+import { graphql } from "graphql"
+import { typeDefs } from "../../src/types"
+import resolvers from "../../src/mutations"
 
-// const config = getConfig()
+const { makeExecutableSchema } = require("@graphql-tools/schema")
 
-// test("successfully create a user", async () => {
-//   try {
-//     const data: any = await request(config.url, signUp, signUpData)
-
-//     expect(data).toHaveProperty("signup")
-//     expect(data.signup.signUpData.name).toEqual(signUpData.name)
-//   } catch (e) {
-//     console.log("error", e)
+// const typeDefs = /* GraphQL */ `
+//   type Query {
+//     movie(id: ID): Movie
+//     actor(id: ID): Actor
 //   }
-// })
 
-// test("successfully get token on login", async () => {
-//   const data: any = await request(config.url, signIn, loginData)
+//   type Actor {
+//     id: String!
+//     name: String!
+//     age: Int
+//     movies: Movie
+//   }
 
-//   expect(data).toHaveProperty("signin")
-//   expect(data.login.accessToken).toBeDefined()
-// })
+//   type Movie {
+//     id: String
+//     name: String!
+//     genre: String
+//     actor: Actor
+//   }
 
-const { ApolloServer } = require("apollo-server")
-import { addMocksToSchema } from "@graphql-tools/mock"
-import { makeExecutableSchema } from "@graphql-tools/schema"
-import { startStandaloneServer } from "@apollo/server/standalone"
-import server from "../../src/index"
+//   type Movies {
+//     movies: [Movie]
+//   }
 
-const typeDefs = `
-  type Query {
-    hello(name: String): String!
+//   type Actors {
+//     actor: [Actors]
+//   }
+// `
+
+const query = /* GraphQL */ `
+  query Resources {
+    resources {
+      id
+      headline
+      description
+    }
   }
 `
 
-const resolvers = {
-  Query: {
-    hello: (_: any, { name }: any) => `Hello ${name}!`,
-  },
-}
-
-const testServer = new ApolloServer({
+// Make a GraphQL schema with no resolvers
+const schema = makeExecutableSchema({
   typeDefs,
-  resolvers,
-  schema: addMocksToSchema({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
-  }),
 })
 
-const { url } = await startStandaloneServer(testServer, {
-  listen: { port: 4000 },
-})
+// Create a new schema with mocks
+const schemaWithMocks = addMocksToSchema({ schema })
 
-it("returns hello with the provided name", async () => {
-  const response = await testServer.executeOperation({
-    query: "query SayHelloWorld($name: String) { hello(name: $name) }",
-    variables: { name: "world" },
-  })
-
-  // expect(response.body.singleResult.errors).toBeUndefined()
-  // expect(response.body.singleResult.data?.hello).toBe("Hello world!")
-})
+graphql({ schema: schemaWithMocks, source: query }).then((result) =>
+  console.log("Got result", result)
+)

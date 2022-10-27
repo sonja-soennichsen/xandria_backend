@@ -12,6 +12,7 @@ const addResource = async (
   }: any,
   context: any
 ) => {
+  if (!context.currentUser) return null
   const [existing] = await context.Resource.find({
     where: {
       url,

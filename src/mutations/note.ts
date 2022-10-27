@@ -3,6 +3,7 @@ const addNote = async (
   { resourceURL, text }: any,
   context: any
 ) => {
+  if (!context.currentUser) return null
   try {
     await context.Note.create({
       input: [

@@ -4,6 +4,7 @@ const makeBookmark = async (
   context: any
 ) => {
   try {
+    if (!context.currentUser) return null
     await context.User.update({
       where: {
         username: context.currentUser.username,

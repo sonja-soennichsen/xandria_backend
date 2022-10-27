@@ -11,6 +11,7 @@ export const typeDefs = gql`
     tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
     users: [User!]! @relationship(direction: IN, type: "BOOKMARKED")
     comments: [Comment!]! @relationship(direction: IN, type: "HAS_COMMENT")
+    notes: [Note!]! @relationship(direction: IN, type: "HAS_NOTE")
     userAddedTags: [String]
     author: String
     createdAt: DateTime!
@@ -32,6 +33,7 @@ export const typeDefs = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
+    notes: [Note!]! @relationship(direction: OUT, type: "WROTE_NOTE")
   }
 
   type Tag {
@@ -50,6 +52,8 @@ export const typeDefs = gql`
     text: String!
     createdAt: DateTime!
     updatedAt: DateTime!
+    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_NOTE")
+    author: [User!]! @relationship(direction: IN, type: "WROTE_NOTE")
   }
 
   type Comment {
@@ -102,7 +106,14 @@ export const typeDefs = gql`
 
   extend type Note
     @auth(
-      rules: [{ operations: [CREATE, UPDATE, DELETE], isAuthenticated: true }]
+      rules: [
+        {
+          operations: [UPDATE, DELETE, READ, CREATE]
+          isAuthenticated: true
+          allow: { author: { id: "$jwt.sub" } }
+          bind: { author: { id: "$jwt.sub" } }
+        }
+      ]
     )
 
   extend type Resource
@@ -125,6 +136,8 @@ export const typeDefs = gql`
     makeBookmark(resourceURL: String!): String!
 
     addComment(resourceURL: String!, text: String!): String!
+
+    addNote(resourceURL: String!, text: String!): String!
 
     addResource(
       headline: String!

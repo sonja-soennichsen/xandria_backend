@@ -34,6 +34,7 @@ const User = ogm.model("User")
 const Resource = ogm.model("Resource")
 const Tag = ogm.model("Tag")
 const Comment = ogm.model("Comment")
+const Note = ogm.model("Note")
 
 const neoSchema = new Neo4jGraphQL({
   typeDefs,
@@ -75,6 +76,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
               Resource,
               Tag,
               Comment,
+              Note,
               currentUser,
             }
           } catch (e) {

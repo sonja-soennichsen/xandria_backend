@@ -55,6 +55,8 @@ export const typeDefs = gql`
   type Comment {
     id: ID @id
     text: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
     author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
   }

@@ -41,6 +41,18 @@ export const typeDefs = gql`
     comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
   }
 
+  extend type User
+    @auth(
+      rules: [
+        {
+          operations: [READ, UPDATE, DELETE]
+          isAuthenticated: true
+          allow: { id: "$jwt.sub" }
+        }
+        { operations: [CREATE], isAuthenticated: true }
+      ]
+    )
+
   type Mutation {
     signUp(
       username: String!
@@ -82,11 +94,7 @@ export const typeDefs = gql`
   extend type Collection
     @auth(
       rules: [
-        {
-          operations: [CREATE, READ, UPDATE, DELETE]
-          isAuthenticated: true
-          allow: { id: "$jwt.sub" }
-        }
+        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
       ]
     )
 
@@ -111,7 +119,16 @@ export const typeDefs = gql`
   extend type Comment
     @auth(
       rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
+        {
+          operations: [UPDATE, DELETE]
+          isAuthenticated: true
+          allow: { author: { id: "$jwt.sub" } }
+        }
+        {
+          operations: [CREATE]
+          isAuthenticated: true
+          bind: { author: { id: "$jwt.sub" } }
+        }
       ]
     )
 `

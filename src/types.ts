@@ -20,13 +20,6 @@ export const typeDefs = gql`
     counter: Int!
   }
 
-  extend type Resource
-    @auth(
-      rules: [
-        { operations: [CREATE, UPDATE, DELETE, READ], isAuthenticated: true }
-      ]
-    )
-
   type User {
     id: ID @id
     username: String!
@@ -41,6 +34,54 @@ export const typeDefs = gql`
     comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
   }
 
+  type Tag {
+    id: ID @id
+    name: String! @unique
+  }
+
+  type Collection {
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String!
+    collectionTags: [String]
+  }
+
+  type Note {
+    text: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+  }
+
+  type Comment {
+    id: ID @id
+    text: String!
+    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
+    author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
+  }
+
+  extend type Comment
+    @auth(
+      rules: [
+        {
+          operations: [UPDATE, DELETE]
+          isAuthenticated: true
+          allow: { author: { id: "$jwt.sub" } }
+        }
+        {
+          operations: [CREATE]
+          isAuthenticated: true
+          bind: { author: { id: "$jwt.sub" } }
+        }
+      ]
+    )
+
+  extend type Collection
+    @auth(
+      rules: [
+        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
+      ]
+    )
+
   extend type User
     @auth(
       rules: [
@@ -49,7 +90,23 @@ export const typeDefs = gql`
           isAuthenticated: true
           allow: { id: "$jwt.sub" }
         }
-        { operations: [CREATE], isAuthenticated: true }
+        {
+          operations: [CREATE]
+          isAuthenticated: true
+          bind: { id: "$jwt.sub" }
+        }
+      ]
+    )
+
+  extend type Note
+    @auth(
+      rules: [{ operations: [CREATE, UPDATE, DELETE], isAuthenticated: true }]
+    )
+
+  extend type Resource
+    @auth(
+      rules: [
+        { operations: [CREATE, UPDATE, DELETE, READ], isAuthenticated: true }
       ]
     )
 
@@ -78,57 +135,4 @@ export const typeDefs = gql`
       userAddedTags: [String!]
     ): String!
   }
-
-  type Tag {
-    id: ID @id
-    name: String! @unique
-  }
-
-  type Collection {
-    createdAt: DateTime!
-    updatedAt: DateTime!
-    name: String!
-    collectionTags: [String]
-  }
-
-  extend type Collection
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-  type Note {
-    text: String!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
-
-  extend type Note
-    @auth(
-      rules: [{ operations: [CREATE, UPDATE, DELETE], isAuthenticated: true }]
-    )
-
-  type Comment {
-    id: ID @id
-    text: String!
-    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
-    author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
-  }
-
-  extend type Comment
-    @auth(
-      rules: [
-        {
-          operations: [UPDATE, DELETE]
-          isAuthenticated: true
-          allow: { author: { id: "$jwt.sub" } }
-        }
-        {
-          operations: [CREATE]
-          isAuthenticated: true
-          bind: { author: { id: "$jwt.sub" } }
-        }
-      ]
-    )
 `

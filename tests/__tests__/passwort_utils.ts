@@ -15,8 +15,6 @@ test("hashed password with scrypt", () => {
   const hash1 = hash(password1, salt)
   const hash2 = hash(password2, salt)
 
-  console.log(hash1)
-
   expect(compare(password1, hash1, salt)).toBe(true)
   expect(compare(password1, hash2, salt)).toBe(false)
   expect(compare(password2, hash1, salt)).toBe(false)

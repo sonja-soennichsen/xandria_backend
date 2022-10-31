@@ -1,10 +1,10 @@
-//import { makeExecutableSchema } from "@graphql-tools/schema"
-const { addMocksToSchema } = require("@graphql-tools/mock")
-import { graphql } from "graphql"
-import { typeDefs } from "../../src/types"
-import resolvers from "../../src/mutations"
+// //import { makeExecutableSchema } from "@graphql-tools/schema"
+// const { addMocksToSchema } = require("@graphql-tools/mock")
+// import { graphql } from "graphql"
+// // import { typeDefs } from "../../src/types"
+// // import resolvers from "../../src/mutations"
 
-const { makeExecutableSchema } = require("@graphql-tools/schema")
+// const { makeExecutableSchema } = require("@graphql-tools/schema")
 
 // const typeDefs = /* GraphQL */ `
 //   type Query {
@@ -35,24 +35,35 @@ const { makeExecutableSchema } = require("@graphql-tools/schema")
 //   }
 // `
 
-const query = /* GraphQL */ `
-  query Resources {
-    resources {
-      id
-      headline
-      description
-    }
-  }
-`
+// const query = /* GraphQL */ `
+//   query getmoviewithid {
+//     movie(id: 6) {
+//       name
+//       genre
+//     }
+//   }
+// `
 
-// Make a GraphQL schema with no resolvers
-const schema = makeExecutableSchema({
-  typeDefs,
+// // Make a GraphQL schema with no resolvers
+// const schema = makeExecutableSchema({
+//   typeDefs,
+// })
+
+// // Create a new schema with mocks
+// const schemaWithMocks = addMocksToSchema({ schema })
+
+// graphql({ schema: schemaWithMocks, source: query }).then((result) =>
+//   console.log("Got result", result)
+// )
+
+import { describe, expect, test } from "@jest/globals"
+
+function sum(a: number, b: number) {
+  return a + b
+}
+
+describe("sum module", () => {
+  test("adds 1 + 2 to equal 3", () => {
+    expect(sum(1, 2)).toBe(3)
+  })
 })
-
-// Create a new schema with mocks
-const schemaWithMocks = addMocksToSchema({ schema })
-
-graphql({ schema: schemaWithMocks, source: query }).then((result) =>
-  console.log("Got result", result)
-)

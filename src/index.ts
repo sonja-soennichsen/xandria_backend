@@ -68,14 +68,6 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
               where: { id: userJWT.sub },
             })
 
-            if (!currentUser)
-              throw new GraphQLError("User is not authenticated", {
-                extensions: {
-                  code: "UNAUTHENTICATED",
-                  http: { status: 401 },
-                },
-              })
-
             return {
               req,
               res,
@@ -88,12 +80,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
               currentUser,
             }
           } catch (e) {
-            throw new GraphQLError("User is not authenticated", {
-              extensions: {
-                code: "UNAUTHENTICATED",
-                http: { status: 401 },
-              },
-            })
+            throw new Error(e)
           }
         }
       },

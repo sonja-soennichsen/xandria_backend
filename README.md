@@ -118,6 +118,20 @@ mutation AddResource($headline: String!, $description: String!, $url: String!, $
 }
 ```
 
+## Relate Tag to another Tag
+
+Relates tag1 to tag2 if tag2 exists, otherwise creates a new one
+
+```
+mutation RelateTag($tag1: String!, $tag2: String!) {
+  relateTag(tag1: $tag1, tag2: $tag2)
+}
+{
+  "tag1": tagname,
+  "tag2": tagname
+}
+```
+
 ## Query
 
 ### Get User

@@ -39,6 +39,12 @@ export const typeDefs = gql`
   type Tag {
     id: ID @id
     name: String! @unique
+    related: [Tag!]!
+      @relationship(
+        direction: OUT
+        type: "RELATED"
+        queryDirection: DEFAULT_UNDIRECTED
+      )
   }
 
   type Collection {
@@ -140,6 +146,8 @@ export const typeDefs = gql`
     addNote(resourceURL: String!, text: String!): String!
 
     addTagToResource(resourceURL: String, tagName: String): String!
+
+    relateTag(tag1: String!, tag2: String!): String!
 
     addResource(
       headline: String!

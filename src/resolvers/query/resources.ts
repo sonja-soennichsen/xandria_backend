@@ -3,7 +3,7 @@ const getResourcesByTag = async (
   { tagName }: any,
   context: any
 ) => {
-  const [resources] = await context.Resource.find({
+  const resources = await context.Resource.find({
     where: {
       tagsConnection_SOME: {
         node: {
@@ -13,8 +13,7 @@ const getResourcesByTag = async (
     },
   })
 
-  console.log(resources)
-  return [resources]
+  return resources
 }
 
 export default {

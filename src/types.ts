@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server")
 
 export const typeDefs = gql`
-  type Resource implements ResourceCore {
+  type Resource {
     id: ID! @id
     headline: String!
     description: String
@@ -19,16 +19,6 @@ export const typeDefs = gql`
     upvotes: Int
     downvotes: Int
     counter: Int
-  }
-
-  interface ResourceCore {
-    id: ID @id
-    headline: String!
-    description: String
-    url: String!
-    imageURL: String
-    rootSite: String!
-    tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
   }
 
   type User {
@@ -149,7 +139,7 @@ export const typeDefs = gql`
 
     addNote(resourceURL: String!, text: String!): String!
 
-    addTagToResource(resourceURL: String, tagName: String): ResourceCore!
+    addTagToResource(resourceURL: String, tagName: String): Resource!
 
     addResource(
       headline: String!

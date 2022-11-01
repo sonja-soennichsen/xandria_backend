@@ -139,7 +139,7 @@ export const typeDefs = gql`
 
     addNote(resourceURL: String!, text: String!): String!
 
-    addTagToResource(resourceURL: String, tagName: String): Resource!
+    addTagToResource(resourceURL: String, tagName: String): String!
 
     addResource(
       headline: String!
@@ -159,16 +159,6 @@ export const typeDefs = gql`
         statement: """
         MATCH (user:User {id: $auth.jwt.sub})
         RETURN user
-        """
-      )
-  }
-
-  type Query {
-    getKnowledgeNetwork: Resource
-      @cypher(
-        statement: """
-        MATCH (n:Resource )-[r:HAS_TAG]-(t:Tag)
-        RETURN n, t
         """
       )
   }

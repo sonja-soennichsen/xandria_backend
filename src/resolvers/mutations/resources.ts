@@ -72,10 +72,7 @@ const addTagToResource = async (
 
   try {
     await context.Resource.update({
-      where: {
-        url: resourceURL,
-      },
-      connect: {
+      connectOrCreate: {
         tags: [
           {
             where: {
@@ -83,8 +80,16 @@ const addTagToResource = async (
                 name: tagName,
               },
             },
+            onCreate: {
+              node: {
+                name: tagName,
+              },
+            },
           },
         ],
+      },
+      where: {
+        url: resourceURL,
       },
     })
     return "it worked"

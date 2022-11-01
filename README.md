@@ -86,7 +86,9 @@ mutation AddNote($resourceUrl: String!, $text: String!) {
 }
 ```
 
-### Add existing Tag to Resource
+### Add Tag to Resource
+
+Adds a tag to the selected resource. If the tag doesn't exist, it creates a new one
 
 ```
 mutation AddTagToResource($resourceUrl: String, $tagName: String) {

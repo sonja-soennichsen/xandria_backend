@@ -54,6 +54,46 @@ const addResource = async (
   }
 }
 
+const addTagToResource = async (
+  _source: any,
+  { resourceURL, tagName }: any,
+  context: any
+) => {
+  if (!context.currentUser) return null
+  const [existing] = await context.Resource.find({
+    where: {
+      url: resourceURL,
+    },
+  })
+
+  if (!existing) {
+    throw new Error(`Resource doesn't exist`)
+  }
+
+  try {
+    await context.Resource.update({
+      where: {
+        url: resourceURL,
+      },
+      connect: {
+        tags: [
+          {
+            where: {
+              node: {
+                name: tagName,
+              },
+            },
+          },
+        ],
+      },
+    })
+    return "it worked"
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
   addResource,
+  addTagToResource,
 }

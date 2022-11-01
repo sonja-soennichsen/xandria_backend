@@ -139,6 +139,8 @@ export const typeDefs = gql`
 
     addNote(resourceURL: String!, text: String!): String!
 
+    addTagToResource(resourceURL: String, tagName: String): String!
+
     addResource(
       headline: String!
       description: String!

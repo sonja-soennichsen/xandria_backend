@@ -1,20 +1,35 @@
-import { ApolloServer, gql } from "apollo-server"
-import { Neo4jGraphQL } from "@neo4j/graphql"
-import { typeDefs } from "../../src/types"
-const neo4j = require("neo4j-driver")
+import { ApolloServer } from "@apollo/server"
+import { startStandaloneServer } from "@apollo/server/standalone"
+import { addMocksToSchema } from "@graphql-tools/mock"
+import { makeExecutableSchema } from "@graphql-tools/schema"
 
-const driver = neo4j.driver(
-  "neo4j+s://3af1e591.databases.neo4j.io",
-  neo4j.auth.basic("neo4j", "E-r9PlqZMgSwO4JKRwwr5o7nhntIkAK9w3L8dhdoAcU")
-)
+const typeDefs = `#graphql
+  type Query {
+    hello: String
+    resolved: String
+  }
+`
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver })
+const resolvers = {
+  Query: {
+    resolved: () => "Resolved",
+  },
+}
 
-const serverPromise = neoSchema.getSchema().then((schema: any) => {
-  const server = new ApolloServer({
-    schema,
-  })
-  server.listen()
+const mocks = {
+  Int: () => 6,
+  Float: () => 22.1,
+  String: () => "Hello",
+}
+
+export const server = new ApolloServer({
+  schema: addMocksToSchema({
+    schema: makeExecutableSchema({ typeDefs, resolvers }),
+    mocks,
+    preserveResolvers: true,
+  }),
 })
 
-export { serverPromise }
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
+})

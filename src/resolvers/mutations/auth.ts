@@ -1,4 +1,4 @@
-import { getSalt, hash, compare } from "../helpers/passwordUtils"
+import { getSalt, hash, compare } from "../../helpers/passwordUtils"
 var jwt = require("jsonwebtoken")
 require("dotenv").config()
 

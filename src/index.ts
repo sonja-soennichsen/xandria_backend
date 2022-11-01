@@ -9,7 +9,7 @@ require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
 const cookieParser = require("cookie-parser")
 var jwt = require("jsonwebtoken")
-import resolvers from "./mutations"
+import resolvers from "./resolvers"
 
 const app = express()
 const corsOptions = {
@@ -36,7 +36,7 @@ const Tag = ogm.model("Tag")
 const Comment = ogm.model("Comment")
 const Note = ogm.model("Note")
 
-const neoSchema = new Neo4jGraphQL({
+export const neoSchema = new Neo4jGraphQL({
   typeDefs,
   driver,
   resolvers,

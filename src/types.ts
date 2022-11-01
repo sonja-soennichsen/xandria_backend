@@ -172,4 +172,8 @@ export const typeDefs = gql`
         """
       )
   }
+
+  type Query {
+    getResourcesByTag(tagName: String!): [Resource!]
+  }
 `

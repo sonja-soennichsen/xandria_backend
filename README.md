@@ -200,3 +200,37 @@ query GetResourcesByTag($tagName: String!) {
   "tagName": tagname
 }
 ```
+
+### get all resources related to a tag and its related tags
+
+````
+
+query Tags($where: TagWhere) {
+  tags(where: $where) {
+    related {
+      resources {
+        headline
+        description
+        url
+        tags {
+          name
+        }
+      }
+    }
+    resources {
+      headline
+      description
+      id
+      url
+      imageURL
+    }
+  }
+}
+
+{
+  "where": {
+    "name": "wohooo"
+  }
+}
+```
+````

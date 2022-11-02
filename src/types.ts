@@ -14,8 +14,8 @@ export const typeDefs = gql`
     notes: [Note!]! @relationship(direction: IN, type: "HAS_NOTE")
     userAddedTags: [String]
     author: String
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
+    createdAt: DateTime @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
     upvotes: Int
     downvotes: Int
     counter: Int
@@ -39,8 +39,8 @@ export const typeDefs = gql`
   type Tag {
     id: ID @id
     name: String! @unique
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
+    createdAt: DateTime @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
     resources: [Resource!]! @relationship(direction: IN, type: "HAS_TAG")
     related: [Tag!]!
       @relationship(

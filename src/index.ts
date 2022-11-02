@@ -10,6 +10,7 @@ const { OGM } = require("@neo4j/graphql-ogm")
 const cookieParser = require("cookie-parser")
 var jwt = require("jsonwebtoken")
 import resolvers from "./resolvers"
+const depthLimit = require("graphql-depth-limit")
 
 const app = express()
 const corsOptions = {
@@ -56,6 +57,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
   async ([schema]) => {
     const server = new ApolloServer({
       schema,
+      validationRules: [depthLimit(10)],
       context: async ({ res, req }: any) => {
         if (req.url == "/login") {
           //console.log("login")
@@ -71,7 +73,6 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
             return {
               req,
               res,
-              driver,
               User,
               Resource,
               Tag,
@@ -89,7 +90,11 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
     })
 
     await server.start()
-    server.applyMiddleware({ app, path: "/graphql", cors: false })
+    server.applyMiddleware({
+      app,
+      path: "/graphql",
+      cors: false,
+    })
     app.use(express.urlencoded({ extended: true }))
 
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

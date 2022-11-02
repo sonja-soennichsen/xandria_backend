@@ -7,6 +7,7 @@ const signUp = async (
   { username, password, name, email }: any,
   context: any
 ) => {
+  // test whether error is thrown correctly
   const [existing] = await context.User.find({
     where: {
       username,
@@ -20,6 +21,9 @@ const signUp = async (
   const salt = getSalt()
   const hashedPassword = hash(password, salt)
 
+  // test whether login is possible
+  // in-memory db
+  // rewrite neo4j -> clone only accepting create, find: stub
   const { users } = await context.User.create({
     input: [
       {

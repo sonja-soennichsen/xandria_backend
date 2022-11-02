@@ -4,7 +4,7 @@ export const typeDefs = gql`
   type Resource {
     id: ID! @id
     headline: String!
-    description: String
+    description: String!
     url: String!
     imageURL: String
     rootSite: String!
@@ -14,8 +14,8 @@ export const typeDefs = gql`
     notes: [Note!]! @relationship(direction: IN, type: "HAS_NOTE")
     userAddedTags: [String]
     author: String
-    createdAt: DateTime
-    updatedAt: DateTime
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
     upvotes: Int
     downvotes: Int
     counter: Int
@@ -30,8 +30,8 @@ export const typeDefs = gql`
     role: String!
     email: String!
     bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
     comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
     notes: [Note!]! @relationship(direction: OUT, type: "WROTE_NOTE")
   }
@@ -39,6 +39,9 @@ export const typeDefs = gql`
   type Tag {
     id: ID @id
     name: String! @unique
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
+    resources: [Resource!]! @relationship(direction: IN, type: "HAS_TAG")
     related: [Tag!]!
       @relationship(
         direction: OUT
@@ -48,16 +51,16 @@ export const typeDefs = gql`
   }
 
   type Collection {
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
     name: String!
     collectionTags: [String]
   }
 
   type Note {
     text: String!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
     resource: [Resource!]! @relationship(direction: OUT, type: "HAS_NOTE")
     author: [User!]! @relationship(direction: IN, type: "WROTE_NOTE")
   }
@@ -65,8 +68,8 @@ export const typeDefs = gql`
   type Comment {
     id: ID @id
     text: String!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: DateTime! @timestamp(operations: [CREATE])
+    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
     resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
     author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
   }
@@ -173,5 +176,9 @@ export const typeDefs = gql`
 
   type Query {
     getResourcesByTag(tagName: String!): [Resource!]
+  }
+
+  type Query {
+    getResourcesRelatedToRelatedTags(tagName: String!): [Tag!]!
   }
 `

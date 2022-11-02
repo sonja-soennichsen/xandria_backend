@@ -29,8 +29,6 @@ const signUp = async (
         name,
         role: "User",
         email,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       },
     ],
   })

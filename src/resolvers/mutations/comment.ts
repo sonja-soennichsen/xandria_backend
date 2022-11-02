@@ -9,8 +9,6 @@ const addComment = async (
       input: [
         {
           text: text,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
           resource: {
             connect: {
               where: {

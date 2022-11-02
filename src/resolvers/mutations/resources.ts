@@ -43,8 +43,6 @@ const addResource = async (
           counter: 0,
           upvotes: 0,
           downvotes: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         },
       ],
     })

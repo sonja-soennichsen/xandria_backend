@@ -1,6 +1,7 @@
 const express = require("express")
 import { typeDefs } from "./types"
-const { Neo4jGraphQL, GraphQLError } = require("@neo4j/graphql")
+const { Neo4jGraphQL } = require("@neo4j/graphql")
+import { GraphQLError } from "graphql"
 const { ApolloServer, AuthenticationError } = require("apollo-server-express")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 const cors = require("cors")
@@ -74,9 +75,24 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
             where: { id: userJWT.sub },
           })
 
+          if (!currentUser) {
+            throw new GraphQLError(
+              "You are not authorized to perform this action.",
+              {
+                extensions: {
+                  code: "User unauthorized or not found",
+                  http: {
+                    status: 403,
+                  },
+                },
+              }
+            )
+          }
+
           return {
             req,
             res,
+            currentUser,
           }
         } catch (e) {
           throw new Error(e)

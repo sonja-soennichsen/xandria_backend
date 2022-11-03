@@ -36,11 +36,9 @@ router.post("/", jsonParser, async (req: any, res: any) => {
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    domain: "http://localhost:4000/grapqhl",
-    sameSite: false,
   })
 
-  return res.status(200).json(token)
+  return res.json(token)
 })
 
 module.exports = router

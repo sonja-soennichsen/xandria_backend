@@ -7,13 +7,12 @@ const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
-const bodyParser = require("body-parser")
-const jsonParser = bodyParser.json()
 const cookieParser = require("cookie-parser")
 var jwt = require("jsonwebtoken")
 import resolvers from "./resolvers"
 const depthLimit = require("graphql-depth-limit")
-import { compare, hash, getSalt } from "./helpers/passwordUtils"
+const login = require("./auth/login")
+const signup = require("./auth/signup")
 
 const app = express()
 const corsOptions = {
@@ -40,7 +39,7 @@ export const driver = neo4j.driver(
 )
 
 const ogm = new OGM({ typeDefs, driver })
-const User = ogm.model("User")
+export const User = ogm.model("User")
 const Resource = ogm.model("Resource")
 const Tag = ogm.model("Tag")
 const Comment = ogm.model("Comment")
@@ -93,86 +92,15 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
       playground: true,
     })
 
-    app.post("/login", jsonParser, async (req: any, res: any) => {
-      const password = req.body.password
-      const username = req.body.username
-
-      const user = await User.find({
-        where: { username: username },
-      })
-
-      if (!user) {
-        throw new Error(`User with username ${username} not found!`)
-      }
-
-      const correctPassword = compare(password, user[0].password, user[0].salt)
-
-      if (!correctPassword) {
-        throw new Error(
-          `Incorrect password for user with username ${username}!`
-        )
-      }
-
-      const token = jwt.sign(
-        { sub: user[0].id, username: username },
-        process.env.JWT_SECRET
-      )
-
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        sameSite: "none",
-        secure: true,
-      })
-
-      return res.json(token)
-    })
-
-    app.post("/signup", jsonParser, async (req: any, res: any) => {
-      const password = req.body.password
-      const username = req.body.username
-      const name = req.body.name
-      const email = req.body.email
-
-      const [existing] = await User.find({
-        where: {
-          username,
-        },
-      })
-
-      if (existing) {
-        throw new Error(`User with username ${username} already exists!`)
-      }
-
-      const salt = getSalt()
-      const hashedPassword = hash(password, salt)
-
-      const { users } = await User.create({
-        input: [
-          {
-            username,
-            password: hashedPassword,
-            salt,
-            name,
-            role: "User",
-            email,
-          },
-        ],
-      })
-      const token = jwt.sign(
-        { sub: users[0].id, username: username },
-        process.env.JWT_SECRET
-      )
-
-      return res.json(token)
-    })
-
     await server.start()
     server.applyMiddleware({
       app,
       path: "/graphql",
       cors: false,
     })
+
+    app.use("/login", login)
+    app.use("/signup", signup)
 
     app.use(express.urlencoded({ extended: true }))
 

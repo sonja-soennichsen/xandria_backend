@@ -14,6 +14,7 @@ import resolvers from "./resolvers"
 const depthLimit = require("graphql-depth-limit")
 const login = require("./auth/login")
 const signup = require("./auth/signup")
+import { createContext } from "./helpers/createContext"
 
 const app = express()
 const corsOptions = {
@@ -75,37 +76,7 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
     const server = new ApolloServer({
       schema,
       validationRules: [depthLimit(10)],
-      context: async ({ res, req }: any) => {
-        try {
-          const token = req.cookies["jwt"] || ""
-          const userJWT = jwt.verify(token, process.env.JWT_SECRET)
-          const [currentUser] = await User.find({
-            where: { id: userJWT.sub },
-          })
-
-          if (!currentUser) {
-            throw new GraphQLError(
-              "You are not authorized to perform this action.",
-              {
-                extensions: {
-                  code: "User unauthorized or not found",
-                  http: {
-                    status: 403,
-                  },
-                },
-              }
-            )
-          }
-
-          return {
-            req,
-            res,
-            currentUser,
-          }
-        } catch (e) {
-          throw new Error(e)
-        }
-      },
+      context: async ({ res, req }: any) => createContext({ res, req }),
       introspection: true,
       playground: true,
     })

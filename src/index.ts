@@ -21,6 +21,7 @@ const corsOptions = {
     "http://localhost:4000",
     "https://studio.apollographql.com",
     "http://localhost:3000",
+    "https://xandria-2jytui6ygq-ey.a.run.app/",
   ],
   credentials: true,
 }

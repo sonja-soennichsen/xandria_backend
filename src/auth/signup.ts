@@ -20,7 +20,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
 
   if (existing) {
     return res.status(400).json({
-      error: `User with username ${username} not found!`,
+      error: `User with username ${username} already exists!`,
     })
   }
 
@@ -43,6 +43,13 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     { sub: users[0].id, username: username },
     process.env.JWT_SECRET
   )
+
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    sameSite: "none",
+    secure: true,
+  })
 
   return res.status(200).json(token)
 })

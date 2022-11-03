@@ -19,7 +19,9 @@ router.post("/", jsonParser, async (req: any, res: any) => {
   })
 
   if (existing) {
-    throw new Error(`User with username ${username} already exists!`)
+    return res.status(400).json({
+      error: `User with username ${username} not found!`,
+    })
   }
 
   const salt = getSalt()
@@ -42,7 +44,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     process.env.JWT_SECRET
   )
 
-  return res.json(token)
+  return res.status(200).json(token)
 })
 
 module.exports = router

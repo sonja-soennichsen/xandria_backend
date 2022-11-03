@@ -1,4 +1,5 @@
 import { User } from "../../index"
+import { GraphQLError } from "graphql"
 
 const makeBookmark = async (
   _source: any,
@@ -6,7 +7,17 @@ const makeBookmark = async (
   context: any
 ) => {
   try {
-    if (!context.currentUser) return null
+    if (!context.currentUser) {
+      throw new GraphQLError("You are not authorized to perform this action.", {
+        extensions: {
+          code: "User unauthorized or not found",
+          http: {
+            status: 403,
+          },
+        },
+      })
+    }
+
     await User.update({
       where: {
         username: context.currentUser.username,

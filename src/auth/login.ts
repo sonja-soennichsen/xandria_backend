@@ -7,21 +7,28 @@ var jwt = require("jsonwebtoken")
 import { User } from "../index"
 
 router.post("/", jsonParser, async (req: any, res: any) => {
+  console.log(req.body)
   const password = req.body.password
   const username = req.body.username
 
-  const user = await User.find({
+  const [user] = await User.find({
     where: { username: username },
   })
 
+  console.log(user)
+
   if (!user) {
-    throw new Error(`User with username ${username} not found!`)
+    return res.status(404).json({
+      error: `User with username ${username} not found!`,
+    })
   }
 
-  const correctPassword = compare(password, user[0].password, user[0].salt)
+  const correctPassword = compare(password, user.password, user.salt)
 
   if (!correctPassword) {
-    throw new Error(`Incorrect password for user with username ${username}!`)
+    return res.status(401).json({
+      error: `Incorrect password for user with username ${username}!`,
+    })
   }
 
   const token = jwt.sign(
@@ -36,11 +43,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     secure: true,
   })
 
-  return res.json(token)
-})
-// define the about route
-router.get("/signup", (req: any, res: any) => {
-  res.send("About birds")
+  return res.status(200).json(token)
 })
 
 module.exports = router

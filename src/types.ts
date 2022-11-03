@@ -30,8 +30,8 @@ export const typeDefs = gql`
     role: String!
     email: String!
     bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
+    createdAt: DateTime @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
     comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
     notes: [Note!]! @relationship(direction: OUT, type: "WROTE_NOTE")
   }
@@ -133,15 +133,6 @@ export const typeDefs = gql`
     )
 
   type Mutation {
-    signUp(
-      username: String!
-      password: String!
-      name: String!
-      email: String!
-    ): String!
-
-    signIn(username: String!, password: String!): String!
-
     makeBookmark(resourceURL: String!): String!
 
     addComment(resourceURL: String!, text: String!): String!

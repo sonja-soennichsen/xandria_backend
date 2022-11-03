@@ -7,15 +7,12 @@ var jwt = require("jsonwebtoken")
 import { User } from "../index"
 
 router.post("/", jsonParser, async (req: any, res: any) => {
-  console.log(req.body)
   const password = req.body.password
   const username = req.body.username
 
   const [user] = await User.find({
     where: { username: username },
   })
-
-  console.log(user)
 
   if (!user) {
     return res.status(404).json({
@@ -32,7 +29,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
   }
 
   const token = jwt.sign(
-    { sub: user[0].id, username: username },
+    { sub: user.id, username: username },
     process.env.JWT_SECRET
   )
 

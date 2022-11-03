@@ -38,6 +38,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     path: "/",
     sameSite: "none",
+    secure: false,
   })
 
   return res.json(token)

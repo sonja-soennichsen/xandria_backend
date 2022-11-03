@@ -1,9 +1,11 @@
+import { Resource, Tag } from "../../index"
+
 const getResourcesByTag = async (
   _source: any,
   { tagName }: any,
   context: any
 ) => {
-  const resources = await context.Resource.find({
+  const resources = await Resource.find({
     where: {
       tagsConnection_SOME: {
         node: {
@@ -24,7 +26,7 @@ const getResourcesRelatedToRelatedTags = async (
   if (!context.currentUser) return null
 
   try {
-    const tags = await context.Tag.find({
+    const tags = await Tag.find({
       where: {
         name: tagName,
       },

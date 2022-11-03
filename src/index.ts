@@ -1,10 +1,8 @@
 const express = require("express")
-import { typeDefs } from "./types"
 const { ApolloServer } = require("apollo-server-express")
 const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
-const { OGM } = require("@neo4j/graphql-ogm")
 const cookieParser = require("cookie-parser")
 const depthLimit = require("graphql-depth-limit")
 const login = require("./auth/login")

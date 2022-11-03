@@ -48,6 +48,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     secure: true,
+    domain: "http://localhost:4000",
   })
 
   return res.status(200).json(token)

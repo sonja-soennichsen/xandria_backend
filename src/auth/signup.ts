@@ -47,7 +47,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    domain: "localhost:4000",
+    domain: "http://localhost:4000",
   })
 
   return res.status(200).json(token)

@@ -77,11 +77,6 @@ export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
           return {
             req,
             res,
-            User,
-            Resource,
-            Tag,
-            Comment,
-            Note,
             currentUser,
           }
         } catch (e) {

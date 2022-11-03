@@ -1,3 +1,5 @@
+import { Note } from "../../index"
+
 const addNote = async (
   _source: any,
   { resourceURL, text }: any,
@@ -5,7 +7,7 @@ const addNote = async (
 ) => {
   if (!context.currentUser) return null
   try {
-    await context.Note.create({
+    await Note.create({
       input: [
         {
           text: text,

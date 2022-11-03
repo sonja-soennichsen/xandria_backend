@@ -1,3 +1,5 @@
+import { User } from "../../index"
+
 const makeBookmark = async (
   _source: any,
   { resourceURL }: any,
@@ -5,7 +7,7 @@ const makeBookmark = async (
 ) => {
   try {
     if (!context.currentUser) return null
-    await context.User.update({
+    await User.update({
       where: {
         username: context.currentUser.username,
       },

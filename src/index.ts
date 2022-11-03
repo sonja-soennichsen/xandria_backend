@@ -1,14 +1,11 @@
 const express = require("express")
 import { typeDefs } from "./types"
-const { Neo4jGraphQL } = require("@neo4j/graphql")
 const { ApolloServer } = require("apollo-server-express")
-import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
 const cookieParser = require("cookie-parser")
-import resolvers from "./resolvers"
 const depthLimit = require("graphql-depth-limit")
 const login = require("./auth/login")
 const signup = require("./auth/signup")
@@ -49,6 +46,7 @@ export const Note = ogm.model("Note")
 
 export default Promise.all([initializeDatabase(driver), ogm.init()]).then(
   async ([schema]) => {
+    // rewrite request to include JWT
     app.use("/graphql", (req: any, res: any, next: any) => {
       const cookie = `Bearer ${req.cookies["jwt"]}`
       req.headers["Authorization"] = cookie
@@ -56,26 +54,29 @@ export default Promise.all([initializeDatabase(driver), ogm.init()]).then(
       next()
     })
 
+    // initialize and start server
     const server = new ApolloServer({
       schema,
       validationRules: [depthLimit(10)],
-      context: async ({ res, req }: any) => createContext({ res, req }),
+      context: createContext,
       introspection: true,
       playground: true,
     })
-
     await server.start()
+
+    // apply middleware
     server.applyMiddleware({
       app,
       path: "/graphql",
       cors: false,
     })
+    app.use(express.urlencoded({ extended: true }))
 
+    // add REST Auth Endpoints
     app.use("/login", login)
     app.use("/signup", signup)
 
-    app.use(express.urlencoded({ extended: true }))
-
+    // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))
   }
 )

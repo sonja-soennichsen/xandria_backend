@@ -11,6 +11,7 @@ const login = require("./auth/login")
 const signup = require("./auth/signup")
 import { createContext } from "./helpers/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
+import { initializeModels } from "./helpers/initializeModels"
 
 const app = express()
 const corsOptions = {
@@ -37,14 +38,9 @@ export const driver = neo4j.driver(
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 )
 
-const ogm = new OGM({ typeDefs, driver })
-export const User = ogm.model("User")
-export const Resource = ogm.model("Resource")
-export const Tag = ogm.model("Tag")
-export const Comment = ogm.model("Comment")
-export const Note = ogm.model("Note")
+export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
 
-export default Promise.all([initializeDatabase(driver), ogm.init()]).then(
+export default Promise.all([initializeDatabase(driver)]).then(
   async ([schema]) => {
     // rewrite request to include JWT
     app.use("/graphql", (req: any, res: any, next: any) => {

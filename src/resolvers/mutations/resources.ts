@@ -1,3 +1,4 @@
+import { Resource } from "../../index"
 const addResource = async (
   _source: any,
   {
@@ -13,7 +14,7 @@ const addResource = async (
   context: any
 ) => {
   if (!context.currentUser) return null
-  const [existing] = await context.Resource.find({
+  const [existing] = await Resource.find({
     where: {
       url,
     },
@@ -24,7 +25,7 @@ const addResource = async (
   }
 
   try {
-    await context.Resource.create({
+    await Resource.create({
       input: [
         {
           headline,
@@ -58,7 +59,7 @@ const addTagToResource = async (
   context: any
 ) => {
   if (!context.currentUser) return null
-  const [existing] = await context.Resource.find({
+  const [existing] = await Resource.find({
     where: {
       url: resourceURL,
     },
@@ -69,7 +70,7 @@ const addTagToResource = async (
   }
 
   try {
-    await context.Resource.update({
+    await Resource.update({
       connectOrCreate: {
         tags: [
           {

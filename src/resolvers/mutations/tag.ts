@@ -1,7 +1,9 @@
+import { Tag } from "../../index"
+
 const relateTag = async (_source: any, { tag1, tag2 }: any, context: any) => {
   if (!context.currentUser) return null
   try {
-    await context.Tag.update({
+    await Tag.update({
       where: {
         name: tag1,
       },

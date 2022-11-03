@@ -64,6 +64,13 @@ export const neoSchema = new Neo4jGraphQL({
 
 export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
   async ([schema]) => {
+    app.use("/graphql", (req: any, res: any, next: any) => {
+      const cookie = `Bearer ${req.cookies["jwt"]}`
+      req.headers["Authorization"] = cookie
+
+      next()
+    })
+
     const server = new ApolloServer({
       schema,
       validationRules: [depthLimit(10)],

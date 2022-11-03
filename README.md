@@ -25,25 +25,40 @@ npm run test
 
 # GraphQL API Reference
 
-## Mutations
-
-CREATE, UPDATE, DELETE Operations
+## Auth
 
 ### Sign-Up
 
+- POST-Request to /signup with Body
+- Respone: JWT
+
 ```
-mutation SignUp($username: String!, $password: String!, $name: String!, $email: String!) {
-  signUp(username: $username, password: $password, name: $name, email: $email)
+{
+
+  "username": "",
+  "password": "",
+  "name": "",
+  "email": ""
+
 }
 ```
 
 ### Login
 
+- POST-Request to /signup with Body
+- Respone: JWT
+
 ```
-mutation Mutation($username: String!, $password: String!) {
-signIn(username: $username, password: $password)
+{
+  "username": "",
+  "password": ""
 }
 ```
+
+## Mutations
+
+- CREATE, UPDATE, DELETE Operations to /graphql
+- JWT needs to be provided as Cookie
 
 ### Make Bookmark
 

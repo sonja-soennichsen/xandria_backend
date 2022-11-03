@@ -15,7 +15,7 @@ const addResource = async (
   }: any,
   context: any
 ) => {
-  if (!context.currentUser) {
+  if (!context.currentUser || !context.auth.isAuthenticated) {
     throw new GraphQLError("You are not authorized to perform this action.", {
       extensions: {
         code: "User unauthorized or not found",

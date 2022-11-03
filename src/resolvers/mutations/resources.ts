@@ -15,6 +15,8 @@ const addResource = async (
   }: any,
   context: any
 ) => {
+  // add context, input type
+  // check function
   if (!context.currentUser || !context.auth.isAuthenticated) {
     throw new GraphQLError("You are not authorized to perform this action.", {
       extensions: {
@@ -26,6 +28,7 @@ const addResource = async (
     })
   }
 
+  // put into function
   const [existing] = await Resource.find({
     where: {
       url,

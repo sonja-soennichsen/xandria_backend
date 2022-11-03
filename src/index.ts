@@ -1,20 +1,19 @@
 const express = require("express")
 import { typeDefs } from "./types"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
-import { GraphQLError } from "graphql"
-const { ApolloServer, AuthenticationError } = require("apollo-server-express")
+const { ApolloServer } = require("apollo-server-express")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const { OGM } = require("@neo4j/graphql-ogm")
 const cookieParser = require("cookie-parser")
-var jwt = require("jsonwebtoken")
 import resolvers from "./resolvers"
 const depthLimit = require("graphql-depth-limit")
 const login = require("./auth/login")
 const signup = require("./auth/signup")
 import { createContext } from "./helpers/createContext"
+import { initializeDatabase } from "./helpers/intializeDatabase"
 
 const app = express()
 const corsOptions = {
@@ -48,23 +47,7 @@ export const Tag = ogm.model("Tag")
 export const Comment = ogm.model("Comment")
 export const Note = ogm.model("Note")
 
-export const neoSchema = new Neo4jGraphQL({
-  typeDefs,
-  driver,
-  resolvers,
-  plugins: {
-    auth: new Neo4jGraphQLAuthJWTPlugin({
-      secret: process.env.JWT_SECRET,
-    }),
-    config: {
-      auth: {
-        isAuthenticated: true,
-      },
-    },
-  },
-})
-
-export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
+export default Promise.all([initializeDatabase(driver), ogm.init()]).then(
   async ([schema]) => {
     app.use("/graphql", (req: any, res: any, next: any) => {
       const cookie = `Bearer ${req.cookies["jwt"]}`

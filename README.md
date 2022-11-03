@@ -17,20 +17,106 @@ npm run start
 
 Open [http://localhost:4000](http://localhost:4000) with your browser to see the result.
 
+- `/login` to login (POST-Request)
+- `/signup` to sign up (POST-Request)
+- `/graphql` to access GraphQL API
+
 ## Testing
 
 ```bash
 npm run test
 ```
 
+# Datamodel
+
+All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment
+
+```
+ type Resource {
+    id: ID!
+    headline: String!
+    description: String!
+    url: String!
+    imageURL: String
+    rootSite: String!
+    tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
+    users: [User!]! @relationship(direction: IN, type: "BOOKMARKED")
+    comments: [Comment!]! @relationship(direction: IN, type: "HAS_COMMENT")
+    notes: [Note!]! @relationship(direction: IN, type: "HAS_NOTE")
+    userAddedTags: [String]
+    author: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    upvotes: Int
+    downvotes: Int
+    counter: Int
+  }
+
+  type User {
+    id: ID
+    username: String!
+    password: String  <- can't be queried
+    salt: String! <- can't be queried
+    name: String!
+    role: String!
+    email: String!
+    createdAt: DateTime
+    updatedAt: DateTime
+    bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
+    comments: [Comment!]! @relationship(direction: OUT, type: "WROTE_COMMENT")
+    notes: [Note!]! @relationship(direction: OUT, type: "WROTE_NOTE")
+  }
+
+  type Tag {
+    id: ID
+    name: String! @unique
+    createdAt: DateTime
+    updatedAt: DateTime
+    resources: [Resource!]! @relationship(direction: IN, type: "HAS_TAG")
+    related: [Tag!]!
+      @relationship(
+        direction: OUT
+        type: "RELATED"
+        queryDirection: DEFAULT_UNDIRECTED
+      )
+  }
+
+  type Collection {
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String!
+    collectionTags: [String]
+  }
+
+  type Note {
+    text: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_NOTE")
+    author: [User!]! @relationship(direction: IN, type: "WROTE_NOTE")
+  }
+
+  type Comment {
+    id: ID!
+    text: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
+    author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
+  }
+```
+
 # GraphQL API Reference
+
+Can easily be accessed via the Apollo GraphQL Studio
 
 ## Auth
 
 ### Sign-Up
 
-- POST-Request to /signup with Body
-- Respone: JWT
+- POST-Request to `/signup` (Request body following format below)
+- Request body following format below
+- Respone: JWT and set HTTPOnly Cookie for subsequent request to the GraphQL API
 
 ```
 {
@@ -45,8 +131,8 @@ npm run test
 
 ### Login
 
-- POST-Request to /signup with Body
-- Respone: JWT
+- POST-Request to `/login` (Request body following format below)
+- Respone: JWT and set HTTPOnly Cookie for subsequent request to the GraphQL API
 
 ```
 {
@@ -78,7 +164,8 @@ makeBookmark(resourceURL: $resourceUrl)
 
 Makes a comment from the currently logged in user for the selected resource
 
-```mutation Mutation($resourceUrl: String!, $text: String!) {
+```
+mutation Mutation($resourceUrl: String!, $text: String!) {
   addComment(resourceURL: $resourceUrl, text: $text)
 }
 {
@@ -218,7 +305,7 @@ query GetResourcesByTag($tagName: String!) {
 
 ### get all resources related to a tag and its related tags
 
-````
+```
 
 query Tags($where: TagWhere) {
   tags(where: $where) {
@@ -248,4 +335,3 @@ query Tags($where: TagWhere) {
   }
 }
 ```
-````

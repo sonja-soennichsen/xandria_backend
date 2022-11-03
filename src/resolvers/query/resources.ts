@@ -1,21 +1,12 @@
 import { Resource, Tag } from "../../index"
-import { GraphQLError } from "graphql"
+import { checkAuth } from "../../helpers/checkAuth"
 
 const getResourcesByTag = async (
   _source: any,
   { tagName }: any,
   context: any
 ) => {
-  if (!context.currentUser) {
-    throw new GraphQLError("You are not authorized to perform this action.", {
-      extensions: {
-        code: "User unauthorized or not found",
-        http: {
-          status: 403,
-        },
-      },
-    })
-  }
+  checkAuth(context)
   const resources = await Resource.find({
     where: {
       tagsConnection_SOME: {
@@ -34,16 +25,7 @@ const getResourcesRelatedToRelatedTags = async (
   { tagName }: any,
   context: any
 ) => {
-  if (!context.currentUser || !context.auth.isAuthenticated) {
-    throw new GraphQLError("You are not authorized to perform this action.", {
-      extensions: {
-        code: "User unauthorized or not found",
-        http: {
-          status: 403,
-        },
-      },
-    })
-  }
+  checkAuth(context)
   try {
     const tags = await Tag.find({
       where: {

@@ -1,17 +1,8 @@
 import { Tag } from "../../index"
-import { GraphQLError } from "graphql"
+import { checkAuth } from "../../helpers/checkAuth"
 
 const relateTag = async (_source: any, { tag1, tag2 }: any, context: any) => {
-  if (!context.currentUser || !context.auth.isAuthenticated) {
-    throw new GraphQLError("You are not authorized to perform this action.", {
-      extensions: {
-        code: "User unauthorized or not found",
-        http: {
-          status: 403,
-        },
-      },
-    })
-  }
+  checkAuth(context)
 
   try {
     await Tag.update({

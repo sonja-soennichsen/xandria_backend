@@ -1,5 +1,5 @@
 import { Resource } from "../../index"
-import { GraphQLError } from "graphql"
+import { checkAuth } from "../../helpers/checkAuth"
 
 const addResource = async (
   _source: any,
@@ -17,16 +17,7 @@ const addResource = async (
 ) => {
   // add context, input type
   // check function
-  if (!context.currentUser || !context.auth.isAuthenticated) {
-    throw new GraphQLError("You are not authorized to perform this action.", {
-      extensions: {
-        code: "User unauthorized or not found",
-        http: {
-          status: 403,
-        },
-      },
-    })
-  }
+  checkAuth(context)
 
   // put into function
   const [existing] = await Resource.find({

@@ -1,21 +1,12 @@
 import { Note } from "../../index"
-import { GraphQLError } from "graphql"
+import { checkAuth } from "../../helpers/checkAuth"
 
 const addNote = async (
   _source: any,
   { resourceURL, text }: any,
   context: any
 ) => {
-  if (!context.currentUser || !context.auth.isAuthenticated) {
-    throw new GraphQLError("You are not authorized to perform this action.", {
-      extensions: {
-        code: "User unauthorized or not found",
-        http: {
-          status: 403,
-        },
-      },
-    })
-  }
+  checkAuth(context)
 
   try {
     await Note.create({

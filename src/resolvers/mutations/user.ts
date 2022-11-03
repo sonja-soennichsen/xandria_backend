@@ -1,5 +1,5 @@
 import { User } from "../../index"
-import { GraphQLError } from "graphql"
+import { checkAuth } from "../../helpers/checkAuth"
 
 const makeBookmark = async (
   _source: any,
@@ -7,16 +7,7 @@ const makeBookmark = async (
   context: any
 ) => {
   try {
-    if (!context.currentUser || !context.auth.isAuthenticated) {
-      throw new GraphQLError("You are not authorized to perform this action.", {
-        extensions: {
-          code: "User unauthorized or not found",
-          http: {
-            status: 403,
-          },
-        },
-      })
-    }
+    checkAuth(context)
 
     await User.update({
       where: {

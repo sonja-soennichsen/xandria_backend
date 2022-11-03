@@ -40,10 +40,10 @@ export const driver = neo4j.driver(
 
 const ogm = new OGM({ typeDefs, driver })
 export const User = ogm.model("User")
-const Resource = ogm.model("Resource")
-const Tag = ogm.model("Tag")
-const Comment = ogm.model("Comment")
-const Note = ogm.model("Note")
+export const Resource = ogm.model("Resource")
+export const Tag = ogm.model("Tag")
+export const Comment = ogm.model("Comment")
+export const Note = ogm.model("Note")
 
 export const neoSchema = new Neo4jGraphQL({
   typeDefs,

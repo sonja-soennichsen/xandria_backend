@@ -1,3 +1,5 @@
+import { Comment } from "../../index"
+
 const addComment = async (
   _source: any,
   { resourceURL, text }: any,
@@ -5,7 +7,7 @@ const addComment = async (
 ) => {
   try {
     if (!context.currentUser) return null
-    await context.Comment.create({
+    await Comment.create({
       input: [
         {
           text: text,

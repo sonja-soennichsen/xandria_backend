@@ -29,8 +29,8 @@ router.get("/", jsonParser, async (req: any, res: any) => {
         return res.status(200).json(decode["sub"])
       }
     })
-  } catch (e) {
-    return e
+  } catch (ee) {
+    return ee
   }
 })
 

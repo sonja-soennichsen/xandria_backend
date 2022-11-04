@@ -143,6 +143,8 @@ export const typeDefs = gql`
 
     relateTag(tag1: String!, tag2: String!): String!
 
+    updateUserData(newUsername: String!, name: String!, email: String!): String!
+
     addResource(
       headline: String!
       description: String!

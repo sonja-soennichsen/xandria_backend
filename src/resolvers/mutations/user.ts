@@ -1,6 +1,30 @@
 import { User } from "../../index"
 import { checkAuth } from "../../helpers/checkAuth"
 
+const updateUserData = async (
+  _source: any,
+  { newUsername, name, email }: any,
+  context: any
+) => {
+  checkAuth(context)
+
+  try {
+    await User.update({
+      where: {
+        id: context.currentUser.id,
+      },
+      update: {
+        username: newUsername,
+        name: name,
+        email: email,
+      },
+    })
+    return "it worked"
+  } catch (e) {
+    return e
+  }
+}
+
 const makeBookmark = async (
   _source: any,
   { resourceURL }: any,
@@ -38,4 +62,5 @@ const makeBookmark = async (
 
 export default {
   makeBookmark,
+  updateUserData,
 }

@@ -1,6 +1,6 @@
-import { GraphQLError } from "graphql"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
+import { checkContextAuth } from "./checkAuth"
 
 export async function createContext({ res, req }: any) {
   try {
@@ -10,16 +10,7 @@ export async function createContext({ res, req }: any) {
       where: { id: userJWT.sub },
     })
 
-    if (!currentUser) {
-      throw new GraphQLError("You are not authorized to perform this action.", {
-        extensions: {
-          code: "User unauthorized or not found",
-          http: {
-            status: 403,
-          },
-        },
-      })
-    }
+    checkContextAuth(currentUser)
 
     return {
       req,

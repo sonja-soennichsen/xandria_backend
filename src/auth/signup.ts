@@ -52,7 +52,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     secure: true,
   })
 
-  return res.status(200).json(token)
+  return res.status(200).json("succesfully signed up")
 })
 
 module.exports = router

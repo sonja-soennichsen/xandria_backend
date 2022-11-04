@@ -1,17 +1,22 @@
-const {scrypt} = require('node:crypto');
-const {randomBytes} = require('node:crypto');
+const { scryptSync } = require("node:crypto")
+const { randomBytes } = require("node:crypto")
 
-export function compare( inputPassword:string, dbPassword: string, salt: string) {
-    return dbPassword == hash(inputPassword, salt) ? true : false
+export function compare(
+  inputPassword: string,
+  dbPassword: Buffer,
+  salt: string
+) {
+  const hashedPassword = hash(inputPassword, salt)
+  const result = dbPassword == hashedPassword
+
+  return result
 }
 
-export function hash( inputPassword:string, salt: string) {
-    const hashedInputPassword= scrypt(inputPassword, salt, 64, (err:any, derivedKey:any) => {if (err) throw err;});
-
-    return hashedInputPassword
+export function hash(inputPassword: string, salt: string) {
+  return scryptSync(inputPassword, salt, 64).toString("hex")
 }
 
 export function getSalt() {
-    return String.fromCharCode(randomBytes(32,  (err:any) => {if (err) throw err;})) 
+  const salt = randomBytes(32)
+  return salt.toString("ascii")
 }
-

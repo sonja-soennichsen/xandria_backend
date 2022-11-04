@@ -1,15 +1,25 @@
 import { ApolloServer } from "@apollo/server"
-import { signUpData } from "../__mocks__/user"
-import { resolvers } from "../../src"
+import { startStandaloneServer } from "@apollo/server/standalone"
 import { addMocksToSchema } from "@graphql-tools/mock"
-import { typeDefs } from "../../src/types"
 import { makeExecutableSchema } from "@graphql-tools/schema"
+
+const typeDefs = `#graphql
+  type Query {
+    hello: String
+    resolved: String
+  }
+`
+
+const resolvers = {
+  Query: {
+    resolved: () => "Resolved",
+  },
+}
 
 const mocks = {
   Int: () => 6,
   Float: () => 22.1,
   String: () => "Hello",
-  getUser: () => signUpData,
 }
 
 export const server = new ApolloServer({
@@ -18,4 +28,8 @@ export const server = new ApolloServer({
     mocks,
     preserveResolvers: true,
   }),
+})
+
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
 })

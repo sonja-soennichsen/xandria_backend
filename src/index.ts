@@ -1,46 +1,78 @@
-import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
-import { typeDefs } from "./types"
-import mutations from "./mutations/index"
-const { Neo4jGraphQL } = require("@neo4j/graphql")
-const { ApolloServer } = require("apollo-server")
+const express = require("express")
+const { ApolloServer } = require("apollo-server-express")
+const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
-const { OGM } = require("@neo4j/graphql-ogm")
-var jwt = require("jsonwebtoken")
+const cookieParser = require("cookie-parser")
+const depthLimit = require("graphql-depth-limit")
+const login = require("./auth/login")
+const signup = require("./auth/signup")
+const signout = require("./auth/signOut")
+import { createContext } from "./helpers/createContext"
+import { initializeDatabase } from "./helpers/intializeDatabase"
+import { initializeModels } from "./helpers/initializeModels"
 
+const app = express()
+const corsOptions = {
+  origin: [
+    "http://localhost:4000",
+    "https://studio.apollographql.com",
+    "http://localhost:3000",
+    "https://xandria-2jytui6ygq-ey.a.run.app/",
+  ],
+  credentials: true,
+}
+
+app.use(cors(corsOptions))
+app.use(cookieParser())
+
+// if running the test replace env with docker container thingies
+// docker container setting up database that is destroyed after tests
+// test would act like frontend
+// send post request to localhost server and checks response
+// between each test run -> clean up db
+// how to call resolver function?
 export const driver = neo4j.driver(
   process.env.NEO4J_URI,
   neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 )
 
-const ogm = new OGM({ typeDefs, driver })
-const User = ogm.model("User")
-const Resource = ogm.model("Resource")
+export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
 
-const neoSchema = new Neo4jGraphQL({
-  typeDefs,
-  driver,
-  resolvers: mutations,
-  plugins: {
-    auth: new Neo4jGraphQLAuthJWTPlugin({
-      secret: process.env.SECRET,
-    }),
-  },
-})
+export default Promise.all([initializeDatabase(driver)]).then(
+  async ([schema]) => {
+    // rewrite request to include JWT
+    app.use("/graphql", (req: any, res: any, next: any) => {
+      const cookie = `Bearer ${req.cookies["jwt"]}`
+      req.headers["Authorization"] = cookie
 
-export default Promise.all([neoSchema.getSchema(), ogm.init()]).then(
-  ([schema]) => {
+      next()
+    })
+
+    // initialize and start server
     const server = new ApolloServer({
       schema,
-      context: ({ req }: any) => ({
-        req,
-        User,
-        Resource,
-      }),
+      validationRules: [depthLimit(10)],
+      context: createContext,
+      introspection: true,
+      playground: true,
     })
+    await server.start()
 
-    server.listen().then(({ url }: any) => {
-      console.log(`🚀 Server ready at ${url}`)
+    // apply middleware
+    server.applyMiddleware({
+      app,
+      path: "/graphql",
+      cors: false,
     })
+    app.use(express.urlencoded({ extended: true }))
+
+    // add REST Auth Endpoints
+    app.use("/login", login)
+    app.use("/signup", signup)
+    app.use("/signout", signout)
+
+    // start the whole thing
+    app.listen(4000, () => console.log(`🚀 Server ready at 4000`))
   }
 )

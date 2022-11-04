@@ -1,9 +1,7 @@
 import resources from "./resources"
-import users from "./users"
 
 export default {
-  Mutation: {
+  Query: {
     ...resources,
-    ...users,
   },
 }

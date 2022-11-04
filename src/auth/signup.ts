@@ -5,6 +5,7 @@ const jsonParser = bodyParser.json()
 import { getSalt, hash } from "../helpers/passwordUtils"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
+const { passwordStrength } = require("check-password-strength")
 
 router.post("/", jsonParser, async (req: any, res: any) => {
   const password = req.body.password
@@ -21,6 +22,14 @@ router.post("/", jsonParser, async (req: any, res: any) => {
   if (existing) {
     return res.status(400).json({
       error: `User with username ${username} already exists!`,
+    })
+  }
+
+  const passStrength = passwordStrength(password)
+  if (passStrength.id < 3) {
+    return res.status(400).json({
+      error: `Choose stronger password. Should contain at least a lowercase, uppercase, symbol and a number`,
+      data: passStrength,
     })
   }
 

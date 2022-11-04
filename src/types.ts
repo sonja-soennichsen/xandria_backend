@@ -145,6 +145,8 @@ export const typeDefs = gql`
 
     updateUserData(newUsername: String!, name: String!, email: String!): String!
 
+    changePassword(oldPassword: String!, newPassword: String!): String
+
     addResource(
       headline: String!
       description: String!

@@ -24,13 +24,14 @@ router.get("/", jsonParser, async (req: any, res: any) => {
           maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
           path: "/",
           sameSite: "none",
+          secure: true,
         })
 
         return res.status(200).json(decode["sub"])
       }
     })
-  } catch (ee) {
-    return ee
+  } catch (e) {
+    return e
   }
 })
 

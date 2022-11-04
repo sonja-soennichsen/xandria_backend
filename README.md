@@ -234,6 +234,21 @@ mutation RelateTag($tag1: String!, $tag2: String!) {
 }
 ```
 
+### Update Password
+
+- only works for currently logged in user
+- checks if old password is correct, only then sets the new password
+
+```
+mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
+  changePassword(oldPassword: $oldPassword, newPassword: $newPassword)
+}
+{
+  "oldPassword": "new",
+  "newPassword": "old"
+}
+```
+
 ## Query
 
 ### Get User

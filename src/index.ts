@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser")
 const depthLimit = require("graphql-depth-limit")
 const login = require("./auth/login")
 const signup = require("./auth/signup")
+const signout = require("./auth/signOut")
 import { createContext } from "./helpers/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
 import { initializeModels } from "./helpers/initializeModels"
@@ -69,6 +70,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     // add REST Auth Endpoints
     app.use("/login", login)
     app.use("/signup", signup)
+    app.use("/signout", signout)
 
     // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

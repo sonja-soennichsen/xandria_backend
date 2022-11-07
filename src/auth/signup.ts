@@ -1,62 +1,67 @@
 const express = require("express")
 const router = express.Router()
-const bodyParser = require("body-parser")
-const jsonParser = bodyParser.json()
 import { getSalt, hash } from "../helpers/passwordUtils"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
 const { passwordStrength } = require("check-password-strength")
 import { cookieConfig } from "../types"
+import { body, validationResult } from "express-validator"
 
-router.post("/", jsonParser, async (req: any, res: any) => {
-  const password = req.body.password
-  const username = req.body.username
-  const name = req.body.name
-  const email = req.body.email
+router.post(
+  "/",
+  body("username", "Please provide a username").exists(),
+  body("email", "Invalid email").exists().isEmail(),
+  body("name", "Please fill in a name").exists(),
+  body("password", "Password must be at least 8 characters")
+    .exists()
+    .isLength({ min: 8 }),
+  async (req: any, res: any) => {
+    const { password, username, name, email } = req.body
 
-  const [existing] = await User.find({
-    where: {
-      username,
-    },
-  })
-
-  if (existing) {
-    return res.status(400).json({
-      error: `User with username ${username} already exists!`,
-    })
-  }
-
-  const passStrength = passwordStrength(password)
-  if (passStrength.id < 3) {
-    return res.status(400).json({
-      error: `Choose stronger password. Should contain at least a lowercase, uppercase, symbol and a number`,
-      data: passStrength,
-    })
-  }
-
-  const salt = getSalt()
-  const hashedPassword = hash(password, salt)
-
-  const { users } = await User.create({
-    input: [
-      {
+    const [existing] = await User.find({
+      where: {
         username,
-        password: hashedPassword,
-        salt,
-        name,
-        role: "User",
-        email,
       },
-    ],
-  })
-  const token = jwt.sign(
-    { sub: users[0].id, username: username },
-    process.env.JWT_SECRET
-  )
+    })
 
-  res.cookie("jwt", token, cookieConfig)
+    if (existing) {
+      return res.status(400).json({
+        error: `User with username ${username} already exists!`,
+      })
+    }
 
-  return res.status(200).json("succesfully signed up")
-})
+    const passStrength = passwordStrength(password)
+    if (passStrength.id < 3) {
+      return res.status(400).json({
+        error: `Choose stronger password. Should contain at least a lowercase, uppercase, symbol and a number`,
+        data: passStrength,
+      })
+    }
+
+    const salt = getSalt()
+    const hashedPassword = hash(password, salt)
+
+    const { users } = await User.create({
+      input: [
+        {
+          username,
+          password: hashedPassword,
+          salt,
+          name,
+          role: "User",
+          email,
+        },
+      ],
+    })
+    const token = jwt.sign(
+      { sub: users[0].id, username: username },
+      process.env.JWT_SECRET
+    )
+
+    res.cookie("jwt", token, cookieConfig)
+
+    return res.status(200).json("succesfully signed up")
+  }
+)
 
 module.exports = router

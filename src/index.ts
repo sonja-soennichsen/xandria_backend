@@ -12,6 +12,7 @@ const refresh = require("./auth/refresh")
 import { createContext } from "./helpers/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
 import { initializeModels } from "./helpers/initializeModels"
+const bodyParser = require("body-parser")
 
 const app = express()
 const corsOptions = {
@@ -63,6 +64,8 @@ export default Promise.all([initializeDatabase(driver)]).then(
       playground: true,
     })
     await server.start()
+
+    app.use(bodyParser.json())
 
     // apply middleware
     server.applyMiddleware({

@@ -3,6 +3,7 @@ import user from "./user"
 import comment from "./comment"
 import note from "./note"
 import tag from "./tag"
+import bookmarks from "./bookmarks"
 
 export default {
   Mutation: {
@@ -11,5 +12,6 @@ export default {
     ...comment,
     ...note,
     ...tag,
+    ...bookmarks,
   },
 }

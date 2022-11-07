@@ -1,5 +1,11 @@
 import { User } from "../../index"
 import { checkAuth } from "../../helpers/checkAuth"
+import { compare, hash } from "../../helpers/passwordUtils"
+import { GraphQLError } from "graphql"
+
+const bodyParser = require("body-parser")
+const jsonParser = bodyParser.json()
+var jwt = require("jsonwebtoken")
 
 const updateUserData = async (
   _source: any,
@@ -25,42 +31,45 @@ const updateUserData = async (
   }
 }
 
-const makeBookmark = async (
+const changePassword = async (
   _source: any,
-  { resourceURL }: any,
+  { oldPassword, newPassword }: any,
   context: any
 ) => {
-  try {
-    checkAuth(context)
+  checkAuth(context)
 
-    await User.update({
-      where: {
-        username: context.currentUser.username,
-      },
-      update: {
-        bookmarks: [
-          {
-            connect: [
-              {
-                where: {
-                  node: {
-                    url: resourceURL,
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      },
+  try {
+    const [user] = await User.find({
+      where: { id: context.currentUser.id },
     })
 
-    return "it worked"
+    if (compare(oldPassword, user.password, user.salt)) {
+      const hashed = hash(newPassword, user.salt)
+      await User.update({
+        where: {
+          id: context.currentUser.id,
+        },
+        update: {
+          password: hashed,
+        },
+      })
+      return "it worked"
+    } else {
+      throw new GraphQLError("Wrong Password", {
+        extensions: {
+          code: "Please try again",
+          http: {
+            status: 406,
+          },
+        },
+      })
+    }
   } catch (e) {
     return e
   }
 }
 
 export default {
-  makeBookmark,
   updateUserData,
+  changePassword,
 }

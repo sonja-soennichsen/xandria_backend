@@ -7,7 +7,8 @@ const cookieParser = require("cookie-parser")
 const depthLimit = require("graphql-depth-limit")
 const login = require("./auth/login")
 const signup = require("./auth/signup")
-const signout = require("./auth/signOut")
+const signout = require("./auth/signout")
+const refresh = require("./auth/refresh")
 import { createContext } from "./helpers/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
 import { initializeModels } from "./helpers/initializeModels"
@@ -43,8 +44,12 @@ export default Promise.all([initializeDatabase(driver)]).then(
   async ([schema]) => {
     // rewrite request to include JWT
     app.use("/graphql", (req: any, res: any, next: any) => {
-      const cookie = `Bearer ${req.cookies["jwt"]}`
-      req.headers["Authorization"] = cookie
+      try {
+        const cookie = `Bearer ${req.cookies["jwt"]}`
+        req.headers["Authorization"] = cookie
+      } catch {
+        return res.status(403).json("Please provide JWT Token")
+      }
 
       next()
     })
@@ -68,9 +73,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     app.use(express.urlencoded({ extended: true }))
 
     // add REST Auth Endpoints
-    app.use("/login", login)
-    app.use("/signup", signup)
-    app.use("/signout", signout)
+    require("./auth/index")(app)
 
     // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

@@ -160,6 +160,18 @@ makeBookmark(resourceURL: $resourceUrl)
 
 ```
 
+### Make Bookmark and create resource if it doesn't exist yet
+
+```
+mutation MakeBookmarkToNewResource($resourceUrl: String!, $headline: String!) {
+  makeBookmarkToNewResource(resourceURL: $resourceUrl, headline: $headline)
+}
+{
+  "resourceUrl": "something new",
+  "headline": "great headline"
+}
+```
+
 ### Add Comment
 
 Makes a comment from the currently logged in user for the selected resource
@@ -231,6 +243,21 @@ mutation RelateTag($tag1: String!, $tag2: String!) {
 {
   "tag1": tagname,
   "tag2": tagname
+}
+```
+
+### Update Password
+
+- only works for currently logged in user
+- checks if old password is correct, only then sets the new password
+
+```
+mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
+  changePassword(oldPassword: $oldPassword, newPassword: $newPassword)
+}
+{
+  "oldPassword": "new",
+  "newPassword": "old"
 }
 ```
 
@@ -332,6 +359,34 @@ query Tags($where: TagWhere) {
 {
   "where": {
     "name": "wohooo"
+  }
+}
+```
+
+### Get Resource by ID
+
+```
+query Query($resourceId: ID!) {
+  getResourceByID(ResourceID: $resourceId) {
+    id
+    headline
+    description
+    ... whatever you need
+  }
+}
+{
+  "where": {
+    "resourceId": "id
+  }
+}
+```
+
+### Get all tag names
+
+```
+query Tags {
+  tags {
+    name
   }
 }
 ```

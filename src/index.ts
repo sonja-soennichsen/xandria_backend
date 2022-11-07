@@ -34,8 +34,8 @@ app.use(cookieParser())
 // between each test run -> clean up db
 // how to call resolver function?
 export const driver = neo4j.driver(
-  process.env.NEO4J_URI,
-  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+  "bolt://localhost:7687/",
+  neo4j.auth.basic("neo4j", "s3cr3t")
 )
 
 export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)

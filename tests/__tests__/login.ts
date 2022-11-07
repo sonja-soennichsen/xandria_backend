@@ -1,26 +1,26 @@
-// import request from "graphql-request"
-// // https://www.npmjs.com/package/graphql-request
-// const axios = require("axios")
+import request from "graphql-request"
+// https://www.npmjs.com/package/graphql-request
+const axios = require("axios")
 
-// const data = {
-//   username: "tesUser",
-//   password: "Ne1nfeefgew",
-//   name: "null",
-//   email: "null",
-// }
+const data = {
+  username: "tesUser",
+  password: "Ne1nfeefgew",
+  name: "null",
+  email: "null",
+}
 
-// const login = {
-//   username: "tesUser",
-//   password: "Ne1nfeefgew",
-// }
+const login = {
+  username: "tesUser",
+  password: "Ne1nfeefgew",
+}
 
-// let header: {}
-// it("signs up", async () => {
-//    await axios.post("http://localhost:4000/signup", data).then((res: any) => {
-//     console.log(`Status: ${res.status}`)
-//     expect(res.status).toBe(200)
-//   })
-// })
+let header: {}
+it("signs up", async () => {
+  await axios.post("http://localhost:4000/signup", data).then((res: any) => {
+    console.log(`Status: ${res.status}`)
+    expect(res.status).toBe(200)
+  })
+})
 
 // it("logs in", async () => {
 //   await axios.post("http://localhost:4000/login", login).then((res: any) => {

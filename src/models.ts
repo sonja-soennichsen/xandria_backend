@@ -174,5 +174,6 @@ export const typeDefs = gql`
     getResourcesByTag(tagName: String!): [Resource!]
     getResourceByID(ResourceID: ID!): [Resource!]
     getResourcesRelatedToRelatedTags(tagName: String!): [Tag!]!
+    resources: [Resource!]
   }
 `

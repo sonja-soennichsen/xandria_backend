@@ -73,10 +73,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     app.use(express.urlencoded({ extended: true }))
 
     // add REST Auth Endpoints
-    app.use("/login", login)
-    app.use("/signup", signup)
-    app.use("/signout", signout)
-    app.use("/refresh", refresh)
+    require("./auth/routes")(app)
 
     // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

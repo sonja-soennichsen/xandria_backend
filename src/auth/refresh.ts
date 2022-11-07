@@ -22,7 +22,7 @@ router.get("/", jsonParser, async (req: any, res: any) => {
 
         res.cookie("jwt", token, cookieConfig)
 
-        return res.status(200).json(decode["sub"])
+        return res.status(200)
       }
     })
   } catch (e) {

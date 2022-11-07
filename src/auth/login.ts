@@ -36,7 +36,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
 
   res.cookie("jwt", token, cookieConfig)
 
-  return res.status(200).json({ token })
+  return res.status(200).json("logged in")
 })
 
 module.exports = router

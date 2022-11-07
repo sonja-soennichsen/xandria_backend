@@ -366,20 +366,17 @@ query Tags($where: TagWhere) {
 ### Get Resource by ID
 
 ```
-query Query($where: ResourceWhere) {
-  resources(where: $where) {
+query Query($resourceId: ID!) {
+  getResourceByID(ResourceID: $resourceId) {
+    id
     headline
     description
-    id
-    url
-    rootSite
-    imageURL
     ... whatever you need
   }
 }
 {
   "where": {
-    "id": "id
+    "resourceId": "id
   }
 }
 ```

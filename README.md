@@ -362,3 +362,34 @@ query Tags($where: TagWhere) {
   }
 }
 ```
+
+### Get Resource by ID
+
+```
+query Query($where: ResourceWhere) {
+  resources(where: $where) {
+    headline
+    description
+    id
+    url
+    rootSite
+    imageURL
+    ... whatever you need
+  }
+}
+{
+  "where": {
+    "id": "id
+  }
+}
+```
+
+### Get all tag names
+
+```
+query Tags {
+  tags {
+    name
+  }
+}
+```

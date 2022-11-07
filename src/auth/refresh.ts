@@ -4,6 +4,7 @@ const bodyParser = require("body-parser")
 const jsonParser = bodyParser.json()
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
+import { cookieConfig } from "../types"
 
 router.get("/", jsonParser, async (req: any, res: any) => {
   const token = req.cookies["jwt"]
@@ -19,13 +20,7 @@ router.get("/", jsonParser, async (req: any, res: any) => {
           process.env.JWT_SECRET
         )
 
-        res.cookie("jwt", token, {
-          httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-          path: "/",
-          sameSite: "none",
-          secure: true,
-        })
+        res.cookie("jwt", token, cookieConfig)
 
         return res.status(200).json(decode["sub"])
       }

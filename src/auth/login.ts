@@ -5,6 +5,7 @@ const jsonParser = bodyParser.json()
 import { compare } from "../helpers/passwordUtils"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
+import { cookieConfig } from "../types"
 
 router.post("/", jsonParser, async (req: any, res: any) => {
   const password = req.body.password
@@ -33,13 +34,7 @@ router.post("/", jsonParser, async (req: any, res: any) => {
     process.env.JWT_SECRET
   )
 
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    path: "/",
-    sameSite: "none",
-    secure: true,
-  })
+  res.cookie("jwt", token, cookieConfig)
 
   return res.status(200).json({ token })
 })

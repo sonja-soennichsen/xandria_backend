@@ -6,16 +6,23 @@ import { User } from "../index"
 const { passwordStrength } = require("check-password-strength")
 import { cookieConfig } from "../types"
 import { body, validationResult } from "express-validator"
+import { Request, Response } from "express"
 
 router.post(
   "/",
-  body("username", "Please provide a username").exists(),
+  body("username", "Please provide a username").exists().isString(),
   body("email", "Invalid email").exists().isEmail(),
-  body("name", "Please fill in a name").exists(),
+  body("name", "Please fill in a name").exists().isString(),
   body("password", "Password must be at least 8 characters")
     .exists()
-    .isLength({ min: 8 }),
-  async (req: any, res: any) => {
+    .isLength({ min: 8 })
+    .isString(),
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() })
+    }
+
     const { password, username, name, email } = req.body
 
     const [existing] = await User.find({

@@ -1,12 +1,10 @@
 const express = require("express")
 const router = express.Router()
-const bodyParser = require("body-parser")
-const jsonParser = bodyParser.json()
 var jwt = require("jsonwebtoken")
-import { User } from "../index"
 import { cookieConfig } from "../types"
+import { Request, Response } from "express"
 
-router.get("/", jsonParser, async (req: any, res: any) => {
+router.get("/", async (req: Request, res: Response) => {
   const token = req.cookies["jwt"]
 
   try {

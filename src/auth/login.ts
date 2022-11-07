@@ -11,7 +11,7 @@ router.post(
   "/",
   body("username", "Please provide a username").isString(),
   body("password", "Password must be at least 8 characters").isString(),
-  async (req: any, res: any) => {
+  async (req: Request, res: Response) => {
     const password: string = req.body.password
     const username: string = req.body.username
 

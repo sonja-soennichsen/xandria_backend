@@ -3,6 +3,7 @@ name: Build, Push and Deploy NodeJS Image w/ Google Cloud Platform
 on:
   push:
     branches: [main]
+
 jobs:
   build-push-gcr:
     name: Build and Push Docker Image to GCP Artifact Registry

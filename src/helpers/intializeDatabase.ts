@@ -1,4 +1,4 @@
-import { typeDefs } from "../types"
+import { typeDefs } from "../models"
 import resolvers from "../resolvers"
 const neo4j = require("neo4j-driver")
 const { Neo4jGraphQL } = require("@neo4j/graphql")

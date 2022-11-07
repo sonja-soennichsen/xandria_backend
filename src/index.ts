@@ -44,8 +44,12 @@ export default Promise.all([initializeDatabase(driver)]).then(
   async ([schema]) => {
     // rewrite request to include JWT
     app.use("/graphql", (req: any, res: any, next: any) => {
-      const cookie = `Bearer ${req.cookies["jwt"]}`
-      req.headers["Authorization"] = cookie
+      try {
+        const cookie = `Bearer ${req.cookies["jwt"]}`
+        req.headers["Authorization"] = cookie
+      } catch {
+        return res.status(403).json("Please provide JWT Token")
+      }
 
       next()
     })

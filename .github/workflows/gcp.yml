@@ -2,7 +2,7 @@
 name: Build, Push and Deploy NodeJS Image w/ Google Cloud Platform
 on:
   push:
-    branches: [main]
+    branches: [schema]
 
 jobs:
   build-push-gcr:

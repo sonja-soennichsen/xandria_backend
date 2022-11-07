@@ -5,3 +5,9 @@ export const cookieConfig = {
   sameSite: "none",
   secure: true,
 }
+
+export const signoutConfig = {
+  httpOnly: true,
+  sameSite: "none",
+  secure: true,
+}

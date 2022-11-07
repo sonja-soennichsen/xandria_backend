@@ -94,7 +94,7 @@ const addTagToResource = async (
         url: resourceURL,
       },
     })
-    return "it worked"
+    return
   } catch (e) {
     return e
   }

@@ -34,7 +34,7 @@ const addComment = async (
         },
       ],
     })
-    return "it worked"
+    return
   } catch (e) {
     return e
   }

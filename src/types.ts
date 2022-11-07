@@ -5,7 +5,7 @@ export const typeDefs = gql`
     id: ID! @id
     headline: String!
     description: String!
-    url: String!
+    url: String! @unique
     imageURL: String
     rootSite: String!
     tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
@@ -133,17 +133,18 @@ export const typeDefs = gql`
     )
 
   type Mutation {
-    makeBookmark(resourceURL: String!): String!
+    makeBookmark(resourceURL: String!): String
+    makeBookmarkToNewResource(resourceURL: String!, headline: String!): String
 
-    addComment(resourceURL: String!, text: String!): String!
+    addComment(resourceURL: String!, text: String!): String
 
-    addNote(resourceURL: String!, text: String!): String!
+    addNote(resourceURL: String!, text: String!): String
 
-    addTagToResource(resourceURL: String, tagName: String): String!
+    addTagToResource(resourceURL: String, tagName: String): String
 
-    relateTag(tag1: String!, tag2: String!): String!
+    relateTag(tag1: String!, tag2: String!): String
 
-    updateUserData(newUsername: String!, name: String!, email: String!): String!
+    updateUserData(newUsername: String!, name: String!, email: String!): String
 
     changePassword(oldPassword: String!, newPassword: String!): String
 

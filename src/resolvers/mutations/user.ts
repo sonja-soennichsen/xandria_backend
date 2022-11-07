@@ -104,7 +104,50 @@ const makeBookmark = async (
   }
 }
 
+const makeBookmarkToNewResource = async (
+  _source: any,
+  { resourceURL, headline }: any,
+  context: any
+) => {
+  try {
+    checkAuth(context)
+
+    await User.update({
+      where: {
+        id: context.currentUser.id,
+      },
+      connectOrCreate: {
+        bookmarks: [
+          {
+            where: {
+              node: {
+                url: resourceURL,
+              },
+            },
+            onCreate: {
+              node: {
+                headline: headline,
+                description: "null",
+                url: resourceURL,
+                imageURL: "null",
+                rootSite: "null",
+                userAddedTags: ["tag"],
+                author: "null",
+              },
+            },
+          },
+        ],
+      },
+    })
+
+    return
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
+  makeBookmarkToNewResource,
   makeBookmark,
   updateUserData,
   changePassword,

@@ -160,6 +160,18 @@ makeBookmark(resourceURL: $resourceUrl)
 
 ```
 
+### Make Bookmark and create resource if it doesn't exist yet
+
+```
+mutation MakeBookmarkToNewResource($resourceUrl: String!, $headline: String!) {
+  makeBookmarkToNewResource(resourceURL: $resourceUrl, headline: $headline)
+}
+{
+  "resourceUrl": "something new",
+  "headline": "great headline"
+}
+```
+
 ### Add Comment
 
 Makes a comment from the currently logged in user for the selected resource

@@ -1,6 +1,8 @@
 import request from "graphql-request"
 // https://www.npmjs.com/package/graphql-request
 
+console.log(process.env.NODE_ENV)
+
 it("requests resources", async () => {
   request({
     url: "http://localhost:4000/graphql/login",

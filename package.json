@@ -8,7 +8,8 @@
     "dev": "nodemon",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
-    "test": "jest --config jest.config.ts ./tests"
+    "test": "NODE_ENV=test && npm run mock && jest --config jest.config.ts ./tests",
+    "mock": "docker run --restart=no --publish=7474:7474 --publish=7687:7687 -d --env NEO4J_AUTH=none neo4j"
   },
   "repository": {
     "type": "git",

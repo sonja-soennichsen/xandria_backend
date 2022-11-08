@@ -4,14 +4,14 @@ const axios = require("axios")
 
 const signUp = {
   username: "tesUser",
-  password: "Ne1nfeefgew",
+  password: "Ne1nfee!fgew",
   name: "null",
   email: "null@test.de",
 }
 
 const login = {
   username: "tesUser",
-  password: "Ne1nfeefgew",
+  password: "Ne1nfeefge!w",
 }
 
 let header: {}

@@ -51,8 +51,13 @@ if (process.env.NODE_ENV ==='test'){
 }
 
 export const driver = neo4j.driver(
+<<<<<<< HEAD
   dbURI,
   DEV_AUTH
+=======
+  "bolt://localhost:7687/",
+  neo4j.auth.basic("neo4j", "s3cr3t")
+>>>>>>> test
 )
 
 export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)

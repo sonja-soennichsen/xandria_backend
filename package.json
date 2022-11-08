@@ -8,8 +8,10 @@
     "dev": "nodemon",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
-    "test": "NODE_ENV=test && npm run mock && jest --config jest.config.ts ./tests",
-    "mock": "docker run --restart=no --publish=7474:7474 --publish=7687:7687 -d --env NEO4J_AUTH=none neo4j"
+    "test": "NODE_ENV=test && npm run mock && jest --config jest.config.ts ./tests && npm run kill-mock",
+    "mock": "docker run --name=neo4j-test --restart=no --publish=7474:7474 --publish=7687:7687 -d --env NEO4J_AUTH=none neo4j",
+    "kill-mock": "docker rm -f neo4j-test",
+    "dev-test": "concurrently --kill-others \"npm run dev\" \"npm run test\""
   },
   "repository": {
     "type": "git",
@@ -57,6 +59,7 @@
     "@types/jest": "^29.2.0",
     "@types/node": "^18.11.0",
     "babel-jest": "^29.2.2",
+    "concurrently": "^7.5.0",
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
     "testcontainers": "^9.0.0",

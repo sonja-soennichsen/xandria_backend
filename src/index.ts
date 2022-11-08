@@ -13,6 +13,7 @@ import { createContext } from "./helpers/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
 import { initializeModels } from "./helpers/initializeModels"
 const bodyParser = require("body-parser")
+const expressValidator = require('express-validator')
 
 const app = express()
 const corsOptions = {
@@ -65,7 +66,9 @@ export default Promise.all([initializeDatabase(driver)]).then(
     })
     await server.start()
 
+    // Apply Validation and Sanitation Plugins
     app.use(bodyParser.json())
+    app.use(expressValidator())
 
     // apply middleware
     server.applyMiddleware({

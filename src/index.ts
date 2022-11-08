@@ -36,6 +36,7 @@ let NEO4J_PASSWORD
 let DEV_AUTH
 
 if (process.env.NODE_ENV === "development") {
+  console.log("DEVELOPMENEEEEEEEEEET")
   dbURI = process.env.NEO4J_URI
   NEO4J_USER = process.env.NEO4J_USER
   NEO4J_PASSWORD = process.env.NEO4J_PASSWORD

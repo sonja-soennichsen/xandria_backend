@@ -3,8 +3,6 @@ import request from "graphql-request"
 const axios = require("axios")
 import { AxiosError, AxiosResponse } from "axios"
 
-console.log(process.env.NODE_ENV)
-
 const signUp = {
   username: "testUser",
   password: "Ne1nfee!fgew",
@@ -29,44 +27,45 @@ it("signs up", async () => {
   await axios
     .post("http://localhost:4000/signup", signUp)
     .then((res: AxiosResponse) => {
-      console.log(res)
       expect(res.status).toBe(200)
+      expect(res.data).toMatch("succesfully signed up")
     })
     .catch((err: AxiosError) => {
-      console.log(err)
       expect(err).toBeFalsy
     })
 })
 
-// it("refuses signup with the same username", async () => {
-//   await axios
-//     .post("http://localhost:4000/signup", signUp)
-//     .then((res: any) => {
-//       expect(res.status).toBe(400)
-//     })
-//     .catch((err: AxiosError) => {
-//       // write test for failure here
-//       expect(err.response?.data).toMatchObject({
-//         error: "User with username testUser already exists!",
-//       })
-//     })
-// })
-// it("refuses sign up with bad signup data", async () => {
-//   await axios
-//     .post("http://localhost:4000/signup", signUpWrong)
-//     .then((res: any) => {
-//       expect(res.status).toBe(400)
-//     })
-//     .catch((err: any) => {
-//       expect(err).toBeTruthy()
-//     })
-// })
+it("refuses signup with the same username", async () => {
+  await axios
+    .post("http://localhost:4000/signup", signUp)
+    .then((res: any) => {
+      expect(res).toBeFalsy
+    })
+    .catch((err: AxiosError) => {
+      // write test for failure here
+      expect(err.response?.data).toMatchObject({
+        error: "User with username testUser already exists!",
+      })
+    })
+})
+
+it("refuses sign up with bad signup data", async () => {
+  await axios
+    .post("http://localhost:4000/signup", signUpWrong)
+    .then((res: any) => {
+      expect(res.status).toBe(400)
+    })
+    .catch((err: any) => {
+      expect(err).toBeTruthy()
+    })
+})
 
 it("logs in", async () => {
   await axios
     .post("http://localhost:4000/login", login)
     .then((res: any) => {
       expect(res.status).toBe(200)
+      expect(res.data).toMatch("logged in")
     })
     .catch((err: any) => {
       // write test for failure here

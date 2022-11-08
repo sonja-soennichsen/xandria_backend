@@ -1,6 +1,7 @@
 import request from "graphql-request"
 // https://www.npmjs.com/package/graphql-request
 const axios = require("axios")
+console.log(process.env.NODE_ENV)
 
 const signUp = {
   username: "tesUser",

@@ -5,10 +5,6 @@ const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const cookieParser = require("cookie-parser")
 const depthLimit = require("graphql-depth-limit")
-const login = require("./auth/login")
-const signup = require("./auth/signup")
-const signout = require("./auth/signout")
-const refresh = require("./auth/refresh")
 import { createContext } from "./helpers/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
 import { initializeModels } from "./helpers/initializeModels"

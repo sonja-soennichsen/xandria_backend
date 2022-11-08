@@ -3,7 +3,6 @@ const router = express.Router()
 const bodyParser = require("body-parser")
 const jsonParser = bodyParser.json()
 var jwt = require("jsonwebtoken")
-import { User } from "../index"
 import { cookieConfig } from "../types"
 
 router.get("/", jsonParser, async (req: any, res: any) => {

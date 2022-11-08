@@ -2,11 +2,11 @@ import request from "graphql-request"
 // https://www.npmjs.com/package/graphql-request
 const axios = require("axios")
 
-const data = {
+const signUp = {
   username: "tesUser",
   password: "Ne1nfeefgew",
   name: "null",
-  email: "null",
+  email: "null@test.de",
 }
 
 const login = {
@@ -16,11 +16,28 @@ const login = {
 
 let header: {}
 it("signs up", async () => {
-  await axios.post("http://localhost:4000/signup", data).then((res: any) => {
-    console.log(`Status: ${res.status}`)
-    expect(res.status).toBe(200)
-  })
+  await axios
+    .post("http://localhost:4000/signup", signUp)
+    .then((res: any) => {
+      console.log(`Status: ${res.status}`)
+      expect(res.status).toBe(200)
+    })
+    .catch((err: any) => {
+      // write test for failure here
+      console.log(err)
+    })
 })
+
+// axios(url, {
+//   method: 'post',
+//   timeout: 1000,
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   data: {
+//     property: "value",
+//   },
+// })
 
 // it("logs in", async () => {
 //   await axios.post("http://localhost:4000/login", login).then((res: any) => {

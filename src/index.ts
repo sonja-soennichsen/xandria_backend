@@ -34,31 +34,23 @@ app.use(cookieParser())
 // between each test run -> clean up db
 // how to call resolver function?
 
-let dbURI;
-let NEO4J_USER;
-let NEO4J_PASSWORD;
-let DEV_AUTH;
+let dbURI
+let NEO4J_USER
+let NEO4J_PASSWORD
+let DEV_AUTH
 
-if (process.env.NODE_ENV ==='development'){
+if (process.env.NODE_ENV === "development") {
   dbURI = process.env.NEO4J_URI
   NEO4J_USER = process.env.NEO4J_USER
   NEO4J_PASSWORD = process.env.NEO4J_PASSWORD
   DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
 }
-if (process.env.NODE_ENV ==='test'){
-  console.log('Gets here?')
+if (process.env.NODE_ENV === "test") {
+  console.log("Gets here?")
   dbURI = process.env.DATABASE_TEST_DB
 }
 
-export const driver = neo4j.driver(
-<<<<<<< HEAD
-  dbURI,
-  DEV_AUTH
-=======
-  "bolt://localhost:7687/",
-  neo4j.auth.basic("neo4j", "s3cr3t")
->>>>>>> test
-)
+export const driver = neo4j.driver(dbURI, DEV_AUTH)
 
 export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
 

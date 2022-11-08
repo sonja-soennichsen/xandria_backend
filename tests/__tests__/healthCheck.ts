@@ -3,7 +3,7 @@
 
 // it("requests resources", async () => {
 //   request({
-//     url: "http://localhost:4000/graphql/login",
+//     url: "http://localhost:4000/login",
 //     document: `query Query {
 //       resources {
 //         headline
@@ -18,4 +18,6 @@
 //   }).then((data) => expect(data).toBeTruthy)
 // })
 
-expect(true).toBeTruthy
+it("signs up", () => {
+  expect(true).toBeTruthy
+})

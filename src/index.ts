@@ -36,22 +36,22 @@ let NEO4J_PASSWORD
 let DEV_AUTH
 console.log(process.env.NODE_ENV)
 
-// if (process.env.NODE_ENV === "development") {
-//   console.log("Gets to dev.")
-//   dbURI = process.env.NEO4J_URI
-//   NEO4J_USER = process.env.NEO4J_USER
-//   NEO4J_PASSWORD = process.env.NEO4J_PASSWORD
-//   DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
-// }
-// if (process.env.NODE_ENV === "test") {
-//   console.log("Gets to test.")
-//   dbURI = process.env.DATABASE_TEST_DB
-// }
+if (process.env.NODE_ENV === "development") {
+  console.log("Gets to dev.")
+  dbURI = process.env.NEO4J_URI
+  NEO4J_USER = process.env.NEO4J_USER
+  NEO4J_PASSWORD = process.env.NEO4J_PASSWORD
+  DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
+}
+if (process.env.NODE_ENV === "test") {
+  console.log("Gets to test.")
+  dbURI = process.env.DATABASE_TEST_DB
+  NEO4J_USER = process.env.NEO4J_USER
+  NEO4J_PASSWORD = process.env.NEO4J_PASSWORD_TEST
+  DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
+}
 
-export const driver = neo4j.driver(
-  "bolt://localhost:7687",
-  neo4j.auth.basic("neo4j", "password")
-)
+export const driver = neo4j.driver(dbURI, DEV_AUTH)
 
 export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
 

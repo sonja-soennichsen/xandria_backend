@@ -2,6 +2,11 @@ import request from "graphql-request"
 // https://www.npmjs.com/package/graphql-request
 const axios = require("axios")
 import { AxiosError, AxiosResponse } from "axios"
+import { clearDatabase } from "../helpers/clearDatabase"
+
+afterAll(async () => {
+  clearDatabase()
+})
 
 const signUp = {
   username: "testUser",
@@ -23,7 +28,8 @@ const login = {
 }
 
 let header: {}
-it("signs up", async () => {
+
+test("signs up", async () => {
   await axios
     .post("http://localhost:4000/signup", signUp)
     .then((res: AxiosResponse) => {
@@ -35,7 +41,7 @@ it("signs up", async () => {
     })
 })
 
-it("refuses signup with the same username", async () => {
+test("refuses signup with the same username", async () => {
   await axios
     .post("http://localhost:4000/signup", signUp)
     .then((res: any) => {
@@ -49,7 +55,7 @@ it("refuses signup with the same username", async () => {
     })
 })
 
-it("refuses sign up with bad signup data", async () => {
+test("refuses sign up with bad signup data", async () => {
   await axios
     .post("http://localhost:4000/signup", signUpWrong)
     .then((res: any) => {
@@ -60,7 +66,7 @@ it("refuses sign up with bad signup data", async () => {
     })
 })
 
-it("logs in", async () => {
+test("logs in", async () => {
   await axios
     .post("http://localhost:4000/login", login)
     .then((res: any) => {

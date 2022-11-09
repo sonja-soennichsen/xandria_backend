@@ -23,18 +23,10 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(cookieParser())
 
-// if running the test replace env with docker container thingies
-// docker container setting up database that is destroyed after tests
-// test would act like frontend
-// send post request to localhost server and checks response
-// between each test run -> clean up db
-// how to call resolver function?
-
 let dbURI
 let NEO4J_USER
 let NEO4J_PASSWORD
 let DEV_AUTH
-console.log(process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === "development") {
   dbURI = process.env.NEO4J_URI

@@ -79,18 +79,38 @@ describe("testing auth functionns", () => {
 
   it("requests resource with token", async () => {
     const token = getToken(userID)
-    request({
+    await request({
       url: "http://localhost:4000/graphql",
-      document: `query Query {
-        resources {
-          headline
-          description
-          url
+      document: `query Me {
+        me {
+          email
+          name
+          username
         }
-      }`,
+      }
+      `,
       requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
     }).then((data) => {
-      expect(data).toBeTruthy
+      expect(data.me.email).toBe("null@test.de")
+      expect(data.me.name).toBe("Test User")
+      expect(data.me.username).toBe("testUser")
     })
   })
+
+  // it("requests resource with token", async () => {
+  //   const token = getToken(userID)
+  //   request({
+  //     url: "http://localhost:4000/graphql",
+  //     document: `query Query {
+  //       resources {
+  //         headline
+  //         description
+  //         url
+  //       }
+  //     }`,
+  //     requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
+  //   }).then((data) => {
+  //     expect(data).toBeTruthy
+  //   })
+  // })
 })

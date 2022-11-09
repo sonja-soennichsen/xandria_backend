@@ -1,14 +1,14 @@
 export const signUp = {
   username: "testUser",
   password: "Ne1nfee!fgew",
-  name: "null",
+  name: "Test User",
   email: "null@test.de",
 }
 
 export const signUpWrong = {
   username: "otherUser",
   password: "tooEasy",
-  name: "null",
+  name: "Test User",
   email: "null@test.de",
 }
 

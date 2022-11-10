@@ -1,5 +1,4 @@
 const depthLimit = require("graphql-depth-limit")
-const costAnalysis = require("graphql-cost-analysis")
 import { ApolloError } from "apollo-server-express"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"

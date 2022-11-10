@@ -5,9 +5,13 @@ const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const cookieParser = require("cookie-parser")
 const depthLimit = require("graphql-depth-limit")
-import { createContext } from "./helpers/createContext"
+const costAnalysis = require("graphql-cost-analysis")
+// https://github.com/pa-bru/graphql-cost-analysis
+import { createContext } from "./config/createContext"
 import { initializeDatabase } from "./helpers/intializeDatabase"
 import { initializeModels } from "./helpers/initializeModels"
+import { ApolloError } from "apollo-server-express"
+import { serverConfig } from "./config/serverConfig"
 
 const app = express()
 const corsOptions = {
@@ -62,10 +66,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     // initialize and start server
     const server = new ApolloServer({
       schema,
-      validationRules: [depthLimit(10)],
-      context: createContext,
-      introspection: true,
-      playground: true,
+      ...serverConfig,
     })
     await server.start()
 

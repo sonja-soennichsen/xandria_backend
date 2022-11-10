@@ -4,13 +4,8 @@ const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const cookieParser = require("cookie-parser")
-const depthLimit = require("graphql-depth-limit")
-const costAnalysis = require("graphql-cost-analysis")
-// https://github.com/pa-bru/graphql-cost-analysis
-import { createContext } from "./config/createContext"
-import { initializeDatabase } from "./helpers/intializeDatabase"
-import { initializeModels } from "./helpers/initializeModels"
-import { ApolloError } from "apollo-server-express"
+import { initializeDatabase } from "./config/intializeDatabase"
+import { initializeModels } from "./config/initializeModels"
 import { serverConfig } from "./config/serverConfig"
 
 const app = express()
@@ -59,7 +54,6 @@ export default Promise.all([initializeDatabase(driver)]).then(
       } catch {
         return res.status(403).json("Please provide JWT Token")
       }
-
       next()
     })
 

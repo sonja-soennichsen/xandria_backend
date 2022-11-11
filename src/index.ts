@@ -25,21 +25,20 @@ app.use(cors(corsOptions))
 app.use(cookieParser())
 
 let dbURI
-let NEO4J_USER
-let NEO4J_PASSWORD
 let DEV_AUTH
 
-if (process.env.NODE_ENV === "development") {
-  dbURI = process.env.NEO4J_URI
-  NEO4J_USER = process.env.NEO4J_USER
-  NEO4J_PASSWORD = process.env.NEO4J_PASSWORD
-  DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
-}
 if (process.env.NODE_ENV === "test") {
   dbURI = process.env.NEO4J_URI_TEST
-  NEO4J_USER = process.env.NEO4J_USER
-  NEO4J_PASSWORD = process.env.NEO4J_PASSWORD_TEST
-  DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
+  DEV_AUTH = neo4j.auth.basic(
+    process.env.NEO4J_USER,
+    process.env.NEO4J_PASSWORD_TEST
+  )
+} else {
+  dbURI = process.env.NEO4J_URI
+  DEV_AUTH = neo4j.auth.basic(
+    process.env.NEO4J_USER,
+    process.env.NEO4J_PASSWORD
+  )
 }
 
 export const driver = neo4j.driver(dbURI, DEV_AUTH)

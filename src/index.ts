@@ -4,17 +4,10 @@ const cors = require("cors")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const cookieParser = require("cookie-parser")
-<<<<<<< HEAD
 import { initializeDatabase } from "./config/intializeDatabase"
 import { initializeModels } from "./config/initializeModels"
 import { serverConfig } from "./config/serverConfig"
-=======
-const depthLimit = require("graphql-depth-limit")
-import { createContext } from "./helpers/createContext"
-import { initializeDatabase } from "./helpers/intializeDatabase"
-import { initializeModels } from "./helpers/initializeModels"
 const bodyParser = require("body-parser")
->>>>>>> main
 const helmet = require("helmet")
 
 const app = express()

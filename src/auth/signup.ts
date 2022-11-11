@@ -37,10 +37,6 @@ router.post(
       })
     }
 
-<<<<<<< HEAD
-  return res.status(200).json(users[0].id)
-})
-=======
     const passStrength = passwordStrength(password)
     if (passStrength.id < 3) {
       return res.status(400).json({
@@ -74,6 +70,5 @@ router.post(
     return res.status(200).json("succesfully signed up")
   }
 )
->>>>>>> main
 
 module.exports = router

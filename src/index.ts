@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === "development") {
   DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)
 }
 if (process.env.NODE_ENV === "test") {
-  dbURI = process.env.DATABASE_TEST_DB
+  dbURI = process.env.NEO4J_URI_TEST
   NEO4J_USER = process.env.NEO4J_USER
   NEO4J_PASSWORD = process.env.NEO4J_PASSWORD_TEST
   DEV_AUTH = neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD)

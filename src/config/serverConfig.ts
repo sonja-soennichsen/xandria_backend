@@ -3,9 +3,10 @@ import { ApolloError } from "apollo-server-express"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
 import { checkContextAuth } from "../helpers/checkAuth"
+const { createComplexityLimitRule } = require("graphql-validation-complexity")
 
 export const serverConfig = {
-  validationRules: [depthLimit(10)],
+  validationRules: [depthLimit(10), createComplexityLimitRule(1000)],
   context: async ({ res, req }: any) => {
     try {
       const token = req.cookies["jwt"] || "" || req.headers["jwt"]

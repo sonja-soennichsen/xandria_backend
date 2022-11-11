@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser")
 import { initializeDatabase } from "./config/intializeDatabase"
 import { initializeModels } from "./config/initializeModels"
 import { serverConfig } from "./config/serverConfig"
+const helmet = require("helmet")
 
 const app = express()
 const corsOptions = {
@@ -71,6 +72,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
       cors: false,
     })
     app.use(express.urlencoded({ extended: true }))
+    app.use(helmet())
 
     // add REST Auth Endpoints
     require("./auth/index")(app)

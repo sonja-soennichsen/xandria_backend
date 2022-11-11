@@ -6,7 +6,7 @@ import { checkContextAuth } from "../helpers/checkAuth"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
 
 export const serverConfig = {
-  validationRules: [depthLimit(10), createComplexityLimitRule(1000)],
+  validationRules: [depthLimit(10), createComplexityLimitRule(2000)],
   context: async ({ res, req }: any) => {
     try {
       const token = req.cookies["jwt"] || "" || req.headers["jwt"]

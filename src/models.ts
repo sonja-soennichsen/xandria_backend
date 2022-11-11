@@ -173,7 +173,7 @@ export const typeDefs = gql`
 
   type Query {
     getResourcesByTag(tagName: String!): [Resource!]
-    getResourceByID(ResourceID: ID!): [Resource!]
+    getResourceByID(resourceID: String!): Resource!
     getResourcesRelatedToRelatedTags(tagName: String!): [Tag!]!
     resources: [Resource!]
   }

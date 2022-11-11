@@ -22,17 +22,17 @@ const getResourcesByTag = async (
 
 const getResourceByID = async (
   _source: any,
-  { ResourceId }: any,
+  { resourceID }: any,
   context: any
 ) => {
   checkAuth(context)
   const [resource] = await Resource.find({
     where: {
-      id: ResourceId,
+      id: resourceID,
     },
   })
 
-  return [resource]
+  return resource
 }
 
 const getResourcesRelatedToRelatedTags = async (

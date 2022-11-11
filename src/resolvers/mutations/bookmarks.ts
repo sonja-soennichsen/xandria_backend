@@ -1,7 +1,7 @@
 import { User, Resource } from "../../index"
-import { checkAuth } from "../../helpers/checkAuth"
+import { checkAuth } from "../../helpers/check"
 import { GraphQLError } from "graphql"
-import { checkResourceExists } from "../../helpers/checkAuth"
+import { checkResourceExists } from "../../helpers/check"
 
 const makeBookmark = async (
   _source: any,

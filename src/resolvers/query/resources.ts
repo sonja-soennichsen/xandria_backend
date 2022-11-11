@@ -1,5 +1,5 @@
 import { Resource, Tag } from "../../index"
-import { checkAuth } from "../../helpers/checkAuth"
+import { checkAuth } from "../../helpers/check"
 
 const getResourcesByTag = async (
   _source: any,

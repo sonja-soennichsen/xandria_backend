@@ -1,5 +1,5 @@
 import { Comment } from "../../index"
-import { checkAuth } from "../../helpers/checkAuth"
+import { checkAuth } from "../../helpers/check"
 
 const addComment = async (
   _source: any,

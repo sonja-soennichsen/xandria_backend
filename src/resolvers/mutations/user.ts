@@ -1,5 +1,5 @@
 import { User } from "../../index"
-import { checkAuth } from "../../helpers/checkAuth"
+import { checkAuth } from "../../helpers/check"
 import { compare, hash } from "../../helpers/passwordUtils"
 import { GraphQLError } from "graphql"
 

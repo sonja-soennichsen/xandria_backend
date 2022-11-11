@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql"
-import { Resource } from "../index"
+import { Resource, User } from "../index"
 
 export function checkAuth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {

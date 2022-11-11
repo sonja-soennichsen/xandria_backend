@@ -67,7 +67,7 @@ router.post(
 
     res.cookie("jwt", token, cookieConfig)
 
-    return res.status(200).json("succesfully signed up")
+    return res.status(200).json(users[0].id)
   }
 )
 

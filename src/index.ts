@@ -68,7 +68,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
 
     // Apply Validation and Sanitation Plugins
     app.use(bodyParser.json())
-    // app.use(helmet())
+    app.use(helmet())
 
     // apply middleware
     server.applyMiddleware({
@@ -77,7 +77,6 @@ export default Promise.all([initializeDatabase(driver)]).then(
       cors: false,
     })
     app.use(express.urlencoded({ extended: true }))
-    app.use(helmet())
 
     // add REST Auth Endpoints
     require("./auth/index")(app)

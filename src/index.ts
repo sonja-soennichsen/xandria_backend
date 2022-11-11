@@ -67,7 +67,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
 
     // Apply Validation and Sanitation Plugins
     app.use(bodyParser.json())
-    app.use(helmet())
+    //app.use(helmet())
 
     // apply middleware
     server.applyMiddleware({

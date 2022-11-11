@@ -3,6 +3,8 @@ import { checkAuth } from "../../helpers/check"
 import { GraphQLError } from "graphql"
 import { checkResourceExists } from "../../helpers/check"
 
+import fetch from "node-fetch"
+
 const makeBookmark = async (
   _source: any,
   { resourceURL }: any,
@@ -10,6 +12,17 @@ const makeBookmark = async (
 ) => {
   try {
     checkAuth(context)
+
+    const rawResponse = await fetch(
+      "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
+      {
+        method: "POST",
+        body: JSON.stringify({ url: resourceURL }),
+      }
+    )
+    const content = await rawResponse.json()
+
+    console.log(content)
 
     await User.update({
       where: {
@@ -32,7 +45,7 @@ const makeBookmark = async (
       },
     })
 
-    return
+    return rawResponse
   } catch (e) {
     return e
   }

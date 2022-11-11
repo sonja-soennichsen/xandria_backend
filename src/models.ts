@@ -134,6 +134,7 @@ export const typeDefs = gql`
 
   type Mutation {
     makeBookmark(resourceURL: String!): String
+    removeBookmark(resourceURL: String!): String
     makeBookmarkToNewResource(resourceURL: String!, headline: String!): String
 
     addComment(resourceURL: String!, text: String!): String

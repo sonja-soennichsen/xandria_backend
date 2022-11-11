@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql"
+import { Resource } from "../index"
 
 export function checkAuth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {
@@ -20,6 +21,23 @@ export function checkContextAuth(currentUser: any) {
         code: "User unauthorized or not found",
         http: {
           status: 403,
+        },
+      },
+    })
+  }
+}
+
+export async function checkResourceExists(resourceURL: String) {
+  const [exists] = await Resource.find({
+    where: { url: resourceURL },
+  })
+
+  if (!exists) {
+    throw new GraphQLError("Wrong URL provided", {
+      extensions: {
+        code: "The Resource doesn't exist",
+        http: {
+          status: 404,
         },
       },
     })

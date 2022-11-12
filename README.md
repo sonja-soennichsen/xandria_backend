@@ -29,6 +29,8 @@ npm run test
 
 # Datamodel
 
+![Xandria Data Model](https://lucid.app/publicSegments/view/c72477d8-1329-446b-8cf9-0ff7ad06e37d/image.pdf "Data Model")
+
 All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment
 
 ```
@@ -121,10 +123,10 @@ Can easily be accessed via the Apollo GraphQL Studio
 ```
 {
 
-  "username": "",
-  "password": "",
-  "name": "",
-  "email": ""
+  "username":String,
+  "password": String,
+  "name": String,
+  "email": String
 
 }
 ```
@@ -136,10 +138,18 @@ Can easily be accessed via the Apollo GraphQL Studio
 
 ```
 {
-  "username": "",
-  "password": ""
+  "username": String,
+  "password": String
 }
 ```
+
+### Refresh Token
+
+- `/refresh` when a valid JWT is provided, it sets a new httpOnly cookie with a new token
+
+### Signout
+
+- `/signout` simply deletes the JWT cookie
 
 ## Mutations
 
@@ -155,7 +165,7 @@ mutation MakeBookmark($resourceUrl: String!) {
 makeBookmark(resourceURL: $resourceUrl)
 }
 {
-"resourceUrl": resource url
+"resourceUrl": String
 }
 
 ```
@@ -167,8 +177,19 @@ mutation MakeBookmarkToNewResource($resourceUrl: String!, $headline: String!) {
   makeBookmarkToNewResource(resourceURL: $resourceUrl, headline: $headline)
 }
 {
-  "resourceUrl": "something new",
-  "headline": "great headline"
+  "resourceUrl": String,
+  "headline": String
+}
+```
+
+### Remove Bookmark
+
+```
+mutation RemoveBookmark($resourceUrl: String!) {
+  removeBookmark(resourceURL: $resourceUrl)
+}
+{
+  "resourceUrl": String
 }
 ```
 
@@ -181,8 +202,8 @@ mutation Mutation($resourceUrl: String!, $text: String!) {
   addComment(resourceURL: $resourceUrl, text: $text)
 }
 {
-  "resourceUrl": resourceUrl,
-  "text": text
+  "resourceUrl": String,
+  "text": String
 }
 ```
 

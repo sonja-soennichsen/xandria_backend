@@ -10,6 +10,7 @@ import { serverConfig } from "./config/serverConfig"
 const bodyParser = require("body-parser")
 const helmet = require("helmet")
 
+const isDevelopment = process.env.NODE_ENV == "development"
 const app = express()
 const corsOptions = {
   origin: [
@@ -26,7 +27,6 @@ app.use(cookieParser())
 
 let dbURI
 let DEV_AUTH
-
 if (process.env.NODE_ENV === "test") {
   dbURI = process.env.NEO4J_URI_TEST
   DEV_AUTH = neo4j.auth.basic(
@@ -41,9 +41,7 @@ if (process.env.NODE_ENV === "test") {
   )
 }
 
-const isDevelopment = process.env.NODE_ENV == "development"
-
-export const driver = neo4j.driver(dbURI, DEV_AUTH)
+const driver = neo4j.driver(dbURI, DEV_AUTH)
 
 export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
 
@@ -67,7 +65,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     })
     await server.start()
 
-    // Apply Validation and Sanitation Plugins
+    // apply validation and sanitation plugins
     app.use(bodyParser.json())
     app.use(
       helmet({
@@ -76,7 +74,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
       })
     )
 
-    // apply middleware
+    // apply middleware to graphql endpoint
     server.applyMiddleware({
       app,
       path: "/graphql",

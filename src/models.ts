@@ -8,7 +8,8 @@ export const typeDefs = gql`
     url: String! @unique
     imageURL: String
     rootSite: String!
-    tags: [Tag!]! @relationship(direction: OUT, type: "HAS_TAG")
+    tags: [Tag!]!
+      @relationship(direction: OUT, type: "HAS_TAG", properties: "hasTag")
     users: [User!]! @relationship(direction: IN, type: "BOOKMARKED")
     comments: [Comment!]! @relationship(direction: IN, type: "HAS_COMMENT")
     notes: [Note!]! @relationship(direction: IN, type: "HAS_NOTE")
@@ -36,12 +37,17 @@ export const typeDefs = gql`
     notes: [Note!]! @relationship(direction: OUT, type: "WROTE_NOTE")
   }
 
+  interface hasTag @relationshipProperties {
+    name: String!
+  }
+
   type Tag {
     id: ID @id
     name: String! @unique
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
-    resources: [Resource!]! @relationship(direction: IN, type: "HAS_TAG")
+    resources: [Resource!]!
+      @relationship(direction: IN, type: "HAS_TAG", properties: "hasTag")
     related: [Tag!]!
       @relationship(
         direction: OUT
@@ -141,7 +147,7 @@ export const typeDefs = gql`
 
     addNote(resourceURL: String!, text: String!): String
 
-    addTagToResource(resourceURL: String, tagName: String): String
+    addTagToResource(resourceURL: String!, tagName: String!): String
 
     relateTag(tag1: String!, tag2: String!): String
 

@@ -40,7 +40,14 @@ const addResource = async (
           tags: {
             connectOrCreate: {
               where: { node: { name: tags } },
-              onCreate: { node: { name: tags } },
+              onCreate: {
+                node: {
+                  name: tags,
+                },
+                edge: {
+                  name: tags,
+                },
+              },
             },
           },
           userAddedTags,
@@ -84,6 +91,9 @@ const addTagToResource = async (
             },
             onCreate: {
               node: {
+                name: tagName,
+              },
+              edge: {
                 name: tagName,
               },
             },

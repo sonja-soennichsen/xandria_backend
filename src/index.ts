@@ -41,6 +41,8 @@ if (process.env.NODE_ENV === "test") {
   )
 }
 
+const isDevelopment = process.env.NODE_ENV == "development"
+
 export const driver = neo4j.driver(dbURI, DEV_AUTH)
 
 export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
@@ -67,7 +69,12 @@ export default Promise.all([initializeDatabase(driver)]).then(
 
     // Apply Validation and Sanitation Plugins
     app.use(bodyParser.json())
-    //app.use(helmet())
+    app.use(
+      helmet({
+        crossOriginEmbedderPolicy: !isDevelopment,
+        contentSecurityPolicy: !isDevelopment,
+      })
+    )
 
     // apply middleware
     server.applyMiddleware({

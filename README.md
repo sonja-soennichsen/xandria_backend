@@ -24,12 +24,10 @@ Open [http://localhost:4000](http://localhost:4000) with your browser to see the
 ## Testing
 
 ```bash
-npm run test
+npm run dev-test
 ```
 
 # Datamodel
-
-![Xandria Data Model](https://lucid.app/publicSegments/view/c72477d8-1329-446b-8cf9-0ff7ad06e37d/image.pdf "Data Model")
 
 All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment
 
@@ -108,11 +106,56 @@ All types can be viewed in detail in the Apollo GraphQL Studio, when opening up 
   }
 ```
 
-# GraphQL API Reference
+## Indexes
 
-Can easily be accessed via the Apollo GraphQL Studio
+To improve query performance there are a number of indexes applied
+
+- User by name
+
+```sql
+# Query
+MATCH (n:User) WHERE n.name = $param
+
+# Index
+CREATE INDEX user_index FOR (n:User) ON (n.name)
+```
+
+- Resource by name of tag-relationship, url and headline
+
+```sql
+# Query
+MATCH (n:Resource) - [r:HAS_TAG] - (t:Tag)
+WHERE r.name = $param
+return n, r, t
+
+# Index
+CREATE TEXT INDEX tag_resource_rel FOR ()-[r:HAS_TAG]-() ON (r.name)
+CREATE TEXT INDEX resource_url FOR (n:Resource) ON (n.url)
+CREATE TEXT INDEX resource_headline FOR (n:Resource) ON (n.headline)
+```
+
+- Nodes by label
+
+```sql
+CREATE LOOKUP INDEX node_label_lookup_index FOR (n) ON EACH labels(n)#
+```
+
+- Relationship by type
+
+```sql
+CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]-() ON EACH type(r)
+```
+
+<br> <br>
+
+# API Reference
+
+- List of all active endpoints
+- Development starts at `http:localhost:4000`
 
 ## Auth
+
+REST Endpoints can be accessed via cURL or [Postman](https://www.postman.com/)
 
 ### Sign-Up
 
@@ -151,10 +194,11 @@ Can easily be accessed via the Apollo GraphQL Studio
 
 - `/signout` simply deletes the JWT cookie
 
-## Mutations
+## GraphQL Mutations
 
-- CREATE, UPDATE, DELETE Operations to /graphql
+- GraphQL Queries can be sent to `/graphql` including CRUD-Operations and resolvers as listed below
 - JWT needs to be provided as Cookie
+- Can easily be accessed via the Apollo GraphQL Studio (when deployed locally) on `/graphql`
 
 ### Make Bookmark
 

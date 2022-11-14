@@ -1,6 +1,14 @@
-# xandria-BE
+# Xandria
 
-Deployment: [https://xandria-2jytui6ygq-ey.a.run.app](https://xandria-2jytui6ygq-ey.a.run.app)
+Xandria is a collaborative search engine and bookmarking tool. Users can bookmark a website with a browser extension that imports the link and additional information about it to the platform to make the resource discoverable for other users, which also have the ability to bookmark it for themselves. A Resource is considered anything that people find worth bookmarking such as Articles, Tutorials, Videos, Online Courses etc. They are discoverable in the form of a visual hypergraph, sorted into different “bubbles” according to their tags/topics, which are assigned when importing the resource, but which users can also add on their own. On the platform resources are represented as nodes in the graph and, when clicked, display a short description, a picture, additional information and a link to the website. The information is imported alongside the resources and gathered by a distributed scraper which is triggered by the browser extension. Users are able to write private notes and public comments on the resource.
+
+## High-Level Backend Architecture
+
+[Dataflow](https://lucid.app/lucidchart/b166b3cb-8b14-48f0-ba71-6757a1814617/edit?viewport_loc=362%2C132%2C1363%2C765%2C0_0&invitationId=inv_e5425ce7-ba1f-4c8a-94e3-1af7d14eb1b9)
+
+## Deployed Version
+
+[https://xandria-2jytui6ygq-ey.a.run.app](https://xandria-2jytui6ygq-ey.a.run.app)
 
 ## Development
 
@@ -29,7 +37,8 @@ npm run dev-test
 
 # Datamodel
 
-All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment
+All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment <br>
+[Database Model](https://lucid.app/lucidchart/6c38858c-a8c5-4263-8493-dbcbdf3e9218/edit?viewport_loc=-2512%2C-2101%2C6624%2C3717%2C5JU8BlX8iaSE&invitationId=inv_7ebd40b3-085f-452f-a088-37de2821ea27)
 
 ```
  type Resource {

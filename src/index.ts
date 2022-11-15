@@ -17,6 +17,7 @@ const corsOptions = {
     "https://studio.apollographql.com",
     "http://localhost:3000",
     "https://xandria-2jytui6ygq-ey.a.run.app/",
+    "https://xandria-web-joshuaknauber.vercel.app/",
   ],
   credentials: true,
 }

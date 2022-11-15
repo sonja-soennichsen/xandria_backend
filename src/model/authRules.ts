@@ -27,8 +27,9 @@ export const authRules = gql`
   extend type User
     @auth(
       rules: [
+        { operations: [READ], isAuthenticated: true }
         {
-          operations: [READ, UPDATE, DELETE]
+          operations: [UPDATE, DELETE, READ]
           isAuthenticated: true
           allow: { id: "$jwt.sub" }
         }

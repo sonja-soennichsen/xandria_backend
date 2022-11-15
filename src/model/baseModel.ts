@@ -22,34 +22,14 @@ export const baseModel = gql`
     counter: Int
   }
 
-  type ResourceResponse {
-    id: ID! @id
-    headline: String!
-    description: String!
-    url: String! @unique
-    imageURL: String
-    rootSite: String!
-    tags: [Tag!]
-    users: [User!]
-    comments: [Comment!]
-    notes: [Note!]
-    userAddedTags: [String]
-    author: String
-    createdAt: DateTime
-    updatedAt: DateTime
-    upvotes: Int
-    downvotes: Int
-    counter: Int
-  }
-
   type User {
     id: ID @id
-    username: String!
+    username: String! @unique
     password: String @private
     salt: String! @private
     name: String!
     role: String!
-    email: String!
+    email: String! @private
     bookmarks: [Resource!]! @relationship(direction: OUT, type: "BOOKMARKED")
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
@@ -95,8 +75,8 @@ export const baseModel = gql`
   type Comment {
     id: ID @id
     text: String!
-    createdAt: DateTime! @timestamp(operations: [CREATE])
-    updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
+    createdAt: DateTime @timestamp(operations: [CREATE])
+    updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
     resource: Resource! @relationship(direction: OUT, type: "HAS_COMMENT")
     author: User! @relationship(direction: IN, type: "WROTE_COMMENT")
   }

@@ -18,6 +18,7 @@ export const mutations = gql`
   type Mutation {
     addNote(resourceId: String!, text: String!): String
     updateNote(noteId: String!, text: String!): String
+    deleteNote(noteId: String!): String
   }
   type Mutation {
     addTagToResource(resourceId: String!, tagName: String!): String

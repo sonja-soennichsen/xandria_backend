@@ -61,7 +61,22 @@ const updateNote = async (
   }
 }
 
+const deleteNote = async (_source: any, { noteId }: any, context: any) => {
+  try {
+    checkAuth(context)
+    await Note.delete({
+      where: {
+        id: noteId,
+      },
+    })
+    return
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
   addNote,
   updateNote,
+  deleteNote,
 }

@@ -100,64 +100,6 @@ export const baseModel = gql`
     author: User! @relationship(direction: IN, type: "WROTE_COMMENT")
   }
 
-  extend type Comment
-    @auth(
-      rules: [
-        {
-          operations: [UPDATE, DELETE]
-          isAuthenticated: true
-          allow: { author: { id: "$jwt.sub" } }
-        }
-        {
-          operations: [CREATE]
-          isAuthenticated: true
-          bind: { author: { id: "$jwt.sub" } }
-        }
-      ]
-    )
-
-  extend type Collection
-    @auth(
-      rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
-      ]
-    )
-
-  extend type User
-    @auth(
-      rules: [
-        {
-          operations: [READ, UPDATE, DELETE]
-          isAuthenticated: true
-          allow: { id: "$jwt.sub" }
-        }
-        {
-          operations: [CREATE]
-          isAuthenticated: true
-          bind: { id: "$jwt.sub" }
-        }
-      ]
-    )
-
-  extend type Note
-    @auth(
-      rules: [
-        {
-          operations: [UPDATE, DELETE, READ, CREATE]
-          isAuthenticated: true
-          allow: { author: { id: "$jwt.sub" } }
-          bind: { author: { id: "$jwt.sub" } }
-        }
-      ]
-    )
-
-  extend type Resource
-    @auth(
-      rules: [
-        { operations: [CREATE, UPDATE, DELETE, READ], isAuthenticated: true }
-      ]
-    )
-
   type Mutation {
     makeBookmark(resourceURL: String!): String
     removeBookmark(resourceURL: String!): String

@@ -20,6 +20,7 @@ const corsOptions = {
     "https://xandria-web-joshuaknauber.vercel.app/",
   ],
   crendentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 }
 
 app.use(cors(corsOptions))

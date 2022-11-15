@@ -3,7 +3,7 @@ import { checkAuth } from "../utils/check"
 
 const addComment = async (
   _source: any,
-  { resourceURL, text }: any,
+  { resourceId, text }: any,
   context: any
 ) => {
   try {
@@ -17,7 +17,7 @@ const addComment = async (
             connect: {
               where: {
                 node: {
-                  url: resourceURL,
+                  id: resourceId,
                 },
               },
             },

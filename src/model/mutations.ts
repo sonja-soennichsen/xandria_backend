@@ -2,17 +2,21 @@ const { gql } = require("apollo-server")
 
 export const mutations = gql`
   type Mutation {
-    makeBookmark(resourceURL: String!): String
-    removeBookmark(resourceURL: String!): String
-    makeBookmarkToNewResource(resourceURL: String!, headline: String!): String
+    makeBookmark(resourceId: String!): String
+    removeBookmark(resourceId: String!): String
+    makeBookmarkToNewResource(
+      resourceId: String!
+      resourceUrl: String
+      headline: String!
+    ): String
   }
 
   type Mutation {
-    addComment(resourceURL: String!, text: String!): String
-    addNote(resourceURL: String!, text: String!): String
+    addComment(resourceId: String!, text: String!): String
+    addNote(resourceId: String!, text: String!): String
   }
   type Mutation {
-    addTagToResource(resourceURL: String!, tagName: String!): String
+    addTagToResource(resourceId: String!, tagName: String!): String
     relateTag(tag1: String!, tag2: String!): String
   }
   type Mutation {

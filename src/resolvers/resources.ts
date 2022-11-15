@@ -65,13 +65,13 @@ const addResource = async (
 
 const addTagToResource = async (
   _source: any,
-  { resourceURL, tagName }: any,
+  { resourceId, tagName }: any,
   context: any
 ) => {
   checkAuth(context)
   const [existing] = await Resource.find({
     where: {
-      url: resourceURL,
+      id: resourceId,
     },
   })
 
@@ -101,7 +101,7 @@ const addTagToResource = async (
         ],
       },
       where: {
-        url: resourceURL,
+        id: resourceId,
       },
     })
     return

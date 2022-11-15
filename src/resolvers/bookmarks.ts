@@ -6,7 +6,7 @@ import fetch from "node-fetch"
 
 const makeBookmark = async (
   _source: any,
-  { resourceURL }: any,
+  { resourceId }: any,
   context: any
 ) => {
   try {
@@ -34,7 +34,7 @@ const makeBookmark = async (
               {
                 where: {
                   node: {
-                    url: resourceURL,
+                    id: resourceId,
                   },
                 },
               },
@@ -52,12 +52,12 @@ const makeBookmark = async (
 
 const removeBookmark = async (
   _source: any,
-  { resourceURL }: any,
+  { resourceId }: any,
   context: any
 ) => {
   try {
     checkAuth(context)
-    checkResourceExists(resourceURL)
+    checkResourceExists(resourceId)
 
     await User.update({
       where: {
@@ -68,7 +68,7 @@ const removeBookmark = async (
           {
             where: {
               node: {
-                url: resourceURL,
+                id: resourceId,
               },
             },
           },
@@ -84,7 +84,7 @@ const removeBookmark = async (
 
 const makeBookmarkToNewResource = async (
   _source: any,
-  { resourceURL, headline }: any,
+  { resourceId, resourceUrl, headline }: any,
   context: any
 ) => {
   try {
@@ -99,14 +99,14 @@ const makeBookmarkToNewResource = async (
           {
             where: {
               node: {
-                url: resourceURL,
+                id: resourceId,
               },
             },
             onCreate: {
               node: {
                 headline: headline,
                 description: "null",
-                url: resourceURL,
+                url: resourceUrl,
                 imageURL: "null",
                 rootSite: "null",
                 userAddedTags: ["tag"],

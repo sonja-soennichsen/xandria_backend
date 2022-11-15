@@ -3,7 +3,7 @@ import { checkAuth } from "../utils/check"
 
 const addNote = async (
   _source: any,
-  { resourceURL, text }: any,
+  { resourceId, text }: any,
   context: any
 ) => {
   checkAuth(context)
@@ -18,7 +18,7 @@ const addNote = async (
               {
                 where: {
                   node: {
-                    url: resourceURL,
+                    id: resourceId,
                   },
                 },
               },

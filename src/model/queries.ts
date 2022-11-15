@@ -13,10 +13,10 @@ export const queries = gql`
   }
 
   type Query {
-    getResourceByID(resourceID: String!): Resource
+    getResourceById(resourceId: String!): Resource
       @cypher(
         statement: """
-        MATCH (res:Resource {id: $resourceID})
+        MATCH (res:Resource {id: $resourceId})
         RETURN res
         """
       )

@@ -1,6 +1,9 @@
 import { Resource } from "../index"
-import { checkAuth } from "../utils/check"
-import { UserInputError } from "apollo-server"
+import {
+  checkAuth,
+  checkResourceExists,
+  checkDoubleResource,
+} from "../utils/check"
 
 const addResource = async (
   _source: any,
@@ -18,16 +21,8 @@ const addResource = async (
 ) => {
   checkAuth(context)
 
-  const [existing] = await Resource.find({
-    where: {
-      url,
-    },
-  })
-  if (existing) {
-    return new UserInputError("Resource already exisits")
-  }
-
   try {
+    checkDoubleResource(url)
     await Resource.create({
       input: [
         {
@@ -69,17 +64,10 @@ const addTagToResource = async (
   context: any
 ) => {
   checkAuth(context)
-  const [existing] = await Resource.find({
-    where: {
-      id: resourceId,
-    },
-  })
-
-  if (!existing) {
-    throw new Error(`Resource doesn't exist`)
-  }
+  //checkResourceExists(resourceId)
 
   try {
+    checkResourceExists(resourceId)
     await Resource.update({
       connectOrCreate: {
         tags: [

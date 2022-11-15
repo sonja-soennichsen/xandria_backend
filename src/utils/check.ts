@@ -1,5 +1,6 @@
 import { GraphQLError } from "graphql"
 import { Resource, User } from "../index"
+import { UserInputError } from "apollo-server"
 
 export function checkAuth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {
@@ -36,6 +37,24 @@ export async function checkResourceExists(resourceId: String) {
     throw new GraphQLError("Wrong ID provided", {
       extensions: {
         code: "The Resource doesn't exist",
+        http: {
+          status: 404,
+        },
+      },
+    })
+  }
+}
+
+export async function checkDoubleResource(resourcceUrl: String) {
+  const [existing] = await Resource.find({
+    where: {
+      resourcceUrl,
+    },
+  })
+  if (existing) {
+    throw new GraphQLError("Resoure already exists", {
+      extensions: {
+        code: "The id to resource already exists",
         http: {
           status: 404,
         },

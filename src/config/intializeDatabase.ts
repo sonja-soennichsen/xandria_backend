@@ -1,4 +1,4 @@
-import { typeDefs } from "../models"
+import { typeDefs } from "../model/index"
 import resolvers from "../resolvers"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"

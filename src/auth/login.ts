@@ -1,9 +1,9 @@
 import express from "express"
 const router = express.Router()
-import { compare } from "../helpers/passwordUtils"
+import { compare } from "../utils/passwordUtils"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
-import { cookieConfig } from "../types"
+import { cookieConfig } from "../config/types"
 import { Request, Response } from "express"
 const { body } = require("express-validator")
 

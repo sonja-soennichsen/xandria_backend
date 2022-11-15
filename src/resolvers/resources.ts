@@ -1,5 +1,5 @@
-import { Resource } from "../../index"
-import { checkAuth } from "../../helpers/check"
+import { Resource } from "../index"
+import { checkAuth } from "../utils/check"
 import { UserInputError } from "apollo-server"
 
 const addResource = async (

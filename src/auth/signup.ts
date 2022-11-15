@@ -1,10 +1,10 @@
 const express = require("express")
 const router = express.Router()
-import { getSalt, hash } from "../helpers/passwordUtils"
+import { getSalt, hash } from "../utils/passwordUtils"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
 const { passwordStrength } = require("check-password-strength")
-import { cookieConfig } from "../types"
+import { cookieConfig } from "../config/types"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
 

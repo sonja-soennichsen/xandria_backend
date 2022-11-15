@@ -1,7 +1,6 @@
-import { User, Resource } from "../../index"
-import { checkAuth } from "../../helpers/check"
-import { GraphQLError } from "graphql"
-import { checkResourceExists } from "../../helpers/check"
+import { User } from "../index"
+import { checkAuth } from "../utils/check"
+import { checkResourceExists } from "../utils/check"
 
 import fetch from "node-fetch"
 

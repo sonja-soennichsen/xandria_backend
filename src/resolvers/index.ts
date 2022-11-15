@@ -1,7 +1,17 @@
-import mutations from "./mutations"
-import query from "./query"
+import user from "./user"
+import resources from "./resources"
+import note from "./note"
+import bookmarks from "./bookmarks"
+import comment from "./comment"
+import tag from "./tag"
 
 export default {
-  ...mutations,
-  ...query,
+  Mutation: {
+    ...resources,
+    ...user,
+    ...comment,
+    ...note,
+    ...tag,
+    ...bookmarks,
+  },
 }

@@ -57,7 +57,7 @@ const removeBookmark = async (
 ) => {
   try {
     checkAuth(context)
-    checkResourceExists(resourceId)
+    await checkResourceExists(resourceId)
 
     await User.update({
       where: {

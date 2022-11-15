@@ -22,7 +22,7 @@ const addResource = async (
   checkAuth(context)
 
   try {
-    checkDoubleResource(url)
+    await checkDoubleResource(url)
     await Resource.create({
       input: [
         {
@@ -63,11 +63,9 @@ const addTagToResource = async (
   { resourceId, tagName }: any,
   context: any
 ) => {
-  checkAuth(context)
-  //checkResourceExists(resourceId)
-
   try {
-    checkResourceExists(resourceId)
+    checkAuth(context)
+    await checkResourceExists(resourceId)
     await Resource.update({
       connectOrCreate: {
         tags: [

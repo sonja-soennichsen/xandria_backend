@@ -2,9 +2,8 @@ import { Tag } from "../index"
 import { checkAuth } from "../utils/check"
 
 const relateTag = async (_source: any, { tag1, tag2 }: any, context: any) => {
-  checkAuth(context)
-
   try {
+    checkAuth(context)
     await Tag.update({
       where: {
         name: tag1,

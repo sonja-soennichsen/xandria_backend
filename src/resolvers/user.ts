@@ -12,9 +12,8 @@ const updateUserData = async (
   { newUsername, name, email }: any,
   context: any
 ) => {
-  checkAuth(context)
-
   try {
+    checkAuth(context)
     await User.update({
       where: {
         id: context.currentUser.id,
@@ -36,9 +35,9 @@ const changePassword = async (
   { oldPassword, newPassword }: any,
   context: any
 ) => {
-  checkAuth(context)
-
   try {
+    checkAuth(context)
+
     const [user] = await User.find({
       where: { id: context.currentUser.id },
     })
@@ -53,7 +52,7 @@ const changePassword = async (
           password: hashed,
         },
       })
-      return "it worked"
+      return "password updated"
     } else {
       throw new GraphQLError("Wrong Password", {
         extensions: {

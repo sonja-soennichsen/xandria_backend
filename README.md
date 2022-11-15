@@ -390,17 +390,14 @@ query Me {
 ### get all resource by tag
 
 ```
-query GetResourcesByTag($tagName: String!) {
-  getResourcesByTag(tagName: $tagName) {
-    id
+query GetResourcesByTag($tag: String!) {
+  getResourcesByTag(tag: $tag) {
     description
-    headline
-    ... or any other information needed
+    ... others
   }
 }
-
 {
-  "tagName": tagname
+  "tag": String
 }
 ```
 
@@ -408,48 +405,31 @@ query GetResourcesByTag($tagName: String!) {
 
 ```
 
-query Tags($where: TagWhere) {
-  tags(where: $where) {
-    related {
-      resources {
-        headline
-        description
-        url
-        tags {
-          name
-        }
-      }
-    }
-    resources {
-      headline
-      description
-      id
-      url
-      imageURL
+query GetResourcesByRelatedTag($tag: String!) {
+  getResourcesByRelatedTag(tag: $tag) {
+    description
+    tags {
+      name
     }
   }
 }
-
 {
-  "where": {
-    "name": "wohooo"
-  }
+  "tag": String
 }
 ```
 
 ### Get Resource by ID
 
 ```
-query GetResourceByID($resourceID: String!) {
-  getResourceByID(resourceID: $resourceID) {
+query GetResourceByID($resourceId: String!) {
+  getResourceByID(resourceID: $resourceId) {
     id
-    headline
     description
-    url
+    ... others
   }
 }
 {
-  "resourceID": "..."
+  "resourceId": String
 }
 ```
 

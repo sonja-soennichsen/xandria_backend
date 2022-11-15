@@ -208,8 +208,28 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getResourcesByTag(tagName: String!): [Resource!]
-    getResourcesRelatedToRelatedTags(tagName: String!): [Tag!]!
+    getResourcesByTag(tag: String!): [Resource]
+      @cypher(
+        statement: """
+        MATCH (n:Resource )-[:HAS_TAG]-(t:Tag)
+        WHERE t.name = $tag
+        RETURN n
+        """
+      )
+  }
+
+  type Query {
+    getResourcesByRelatedTag(tag: String!): [Resource]
+      @cypher(
+        statement: """
+        MATCH (r:Resource )-[:HAS_TAG]-(t:Tag)-[:RELATED]-(t2:Tag)-[:HAS_TAG]-(r2:Resource)
+        WHERE t.name = $tag
+        RETURN r, r2, t, t2
+        """
+      )
+  }
+
+  type Query {
     resources: [Resource!]
   }
 `

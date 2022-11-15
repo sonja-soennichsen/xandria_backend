@@ -19,7 +19,6 @@ const corsOptions = {
     "https://xandria-2jytui6ygq-ey.a.run.app/",
     "https://xandria-web-joshuaknauber.vercel.app/",
   ],
-  credentials: true,
 }
 
 app.use(cors(corsOptions))
@@ -82,9 +81,6 @@ export default Promise.all([initializeDatabase(driver)]).then(
             ],
             "style-src": null,
           },
-        },
-        crossOriginResourcePolicy: {
-          policy: "cross-origin",
         },
       })
     )

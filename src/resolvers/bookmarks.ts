@@ -12,16 +12,16 @@ const makeBookmark = async (
   try {
     checkAuth(context)
 
-    const rawResponse = await fetch(
-      "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
-      {
-        method: "POST",
-        body: JSON.stringify({ url: resourceURL }),
-      }
-    )
-    const content = await rawResponse.json()
+    // const rawResponse = await fetch(
+    //   "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
+    //   {
+    //     method: "POST",
+    //     body: JSON.stringify({ url: resourceURL }),
+    //   }
+    // )
+    // const content = await rawResponse.json()
 
-    console.log(content)
+    // console.log(content)
 
     await User.update({
       where: {
@@ -44,7 +44,7 @@ const makeBookmark = async (
       },
     })
 
-    return rawResponse
+    return
   } catch (e) {
     return e
   }

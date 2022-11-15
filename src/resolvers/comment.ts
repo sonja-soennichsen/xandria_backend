@@ -40,6 +40,25 @@ const addComment = async (
   }
 }
 
+const deleteComment = async (
+  _source: any,
+  { commentId }: any,
+  context: any
+) => {
+  try {
+    checkAuth(context)
+    await Comment.delete({
+      where: {
+        id: commentId,
+      },
+    })
+    return
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
   addComment,
+  deleteComment,
 }

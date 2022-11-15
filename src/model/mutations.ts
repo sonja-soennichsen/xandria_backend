@@ -13,6 +13,7 @@ export const mutations = gql`
 
   type Mutation {
     addComment(resourceId: String!, text: String!): String
+    deleteComment(commentId: String!): String
   }
 
   type Mutation {

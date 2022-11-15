@@ -69,26 +69,26 @@ export default Promise.all([initializeDatabase(driver)]).then(
     // apply validation and sanitation plugins
     app.use(bodyParser.json())
 
-    app.use(
-      helmet({
-        crossOriginEmbedderPolicy: false,
-        contentSecurityPolicy: {
-          directives: {
-            "script-src": [
-              "'self'",
-              "http://localhost:4000/graphql",
-              "https://apollo-server-landing-page.cdn.apollographql.com",
-              "https://xandria-web-joshuaknauber.vercel.app/",
-              "https://xandria-2jytui6ygq-ey.a.run.app/",
-            ],
-            "style-src": null,
-          },
-        },
-        crossOriginResourcePolicy: {
-          policy: "cross-origin",
-        },
-      })
-    )
+    // app.use(
+    //   helmet({
+    //     crossOriginEmbedderPolicy: false,
+    //     contentSecurityPolicy: {
+    //       directives: {
+    //         "script-src": [
+    //           "'self'",
+    //           "http://localhost:4000/graphql",
+    //           "https://apollo-server-landing-page.cdn.apollographql.com",
+    //           "https://xandria-web-joshuaknauber.vercel.app/",
+    //           "https://xandria-2jytui6ygq-ey.a.run.app/",
+    //         ],
+    //         "style-src": null,
+    //       },
+    //     },
+    //     crossOriginResourcePolicy: {
+    //       policy: "cross-origin",
+    //     },
+    //   })
+    // )
 
     // apply middleware to graphql endpoint
     server.applyMiddleware({

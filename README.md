@@ -260,6 +260,18 @@ mutation Mutation($resourceUrl: String!, $text: String!) {
 }
 ```
 
+### Delete Comment
+
+```
+mutation DeleteComment($commentId: String!) {
+  deleteComment(commentId: $commentId)
+}
+
+{
+  "commentId": string
+}
+```
+
 ### Add Note
 
 Makes a note from the currently logged in user for the selected resource
@@ -271,6 +283,29 @@ mutation AddNote($resourceUrl: String!, $text: String!) {
 {
   "resourceUrl": null,
   "text": null
+}
+```
+
+### Update Note
+
+```
+mutation UpdateNote($noteId: String!, $text: String!) {
+  updateNote(noteId: $noteId, text: $text)
+}
+{
+  "noteId": string,
+  "text": string
+}
+```
+
+### Delete Note
+
+```
+mutation DeleteNote($noteId: String!) {
+  deleteNote(noteId: $noteId)
+}
+{
+  "noteId": string
 }
 ```
 

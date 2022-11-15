@@ -9,6 +9,7 @@ export const queries = gql`
         RETURN user
         """
       )
+      @auth(rules: [{ isAuthenticated: true }])
   }
 
   type Query {
@@ -19,6 +20,7 @@ export const queries = gql`
         RETURN res
         """
       )
+      @auth(rules: [{ isAuthenticated: true }])
   }
 
   type Query {
@@ -30,6 +32,7 @@ export const queries = gql`
         RETURN n
         """
       )
+      @auth(rules: [{ isAuthenticated: true }])
   }
 
   type Query {
@@ -41,6 +44,7 @@ export const queries = gql`
         RETURN r, r2, t, t2
         """
       )
+      @auth(rules: [{ isAuthenticated: true }])
   }
 
   type Query {

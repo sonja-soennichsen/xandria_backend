@@ -84,6 +84,7 @@ export const baseModel = gql`
   }
 
   type Note {
+    id: ID @id
     text: String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])

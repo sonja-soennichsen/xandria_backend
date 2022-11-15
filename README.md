@@ -351,7 +351,6 @@ query Me {
     name
     role
     createdAt
-    email
     updatedAt
     bookmarks {
       id
@@ -423,9 +422,17 @@ query GetResourcesByRelatedTag($tag: String!) {
 ```
 query GetResourceByID($resourceId: String!) {
   getResourceByID(resourceID: $resourceId) {
-    id
-    description
-    ... others
+    comments {
+      updatedAt
+      text
+      id
+      createdAt
+      author {
+        name
+        id
+        username
+      }
+    }
   }
 }
 {

@@ -19,6 +19,7 @@ const corsOptions = {
     "https://xandria-2jytui6ygq-ey.a.run.app/",
     "https://xandria-web-joshuaknauber.vercel.app/",
   ],
+  crendentials: true,
 }
 
 app.use(cors(corsOptions))
@@ -82,6 +83,9 @@ export default Promise.all([initializeDatabase(driver)]).then(
             "style-src": null,
           },
         },
+        crossOriginResourcePolicy: {
+          policy: "cross-origin",
+        },
       })
     )
 
@@ -89,7 +93,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     server.applyMiddleware({
       app,
       path: "/graphql",
-      cors: false,
+      cors: true,
     })
     app.use(express.urlencoded({ extended: true }))
 

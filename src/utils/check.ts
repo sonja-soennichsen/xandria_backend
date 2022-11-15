@@ -27,13 +27,13 @@ export function checkContextAuth(currentUser: any) {
   }
 }
 
-export async function checkResourceExists(resourceURL: String) {
+export async function checkResourceExists(resourceId: String) {
   const [exists] = await Resource.find({
-    where: { url: resourceURL },
+    where: { id: resourceId },
   })
 
   if (!exists) {
-    throw new GraphQLError("Wrong URL provided", {
+    throw new GraphQLError("Wrong ID provided", {
       extensions: {
         code: "The Resource doesn't exist",
         http: {

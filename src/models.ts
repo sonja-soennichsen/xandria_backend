@@ -22,6 +22,26 @@ export const typeDefs = gql`
     counter: Int
   }
 
+  type ResourceResponse {
+    id: ID! @id
+    headline: String!
+    description: String!
+    url: String! @unique
+    imageURL: String
+    rootSite: String!
+    tags: [Tag!]
+    users: [User!]
+    comments: [Comment!]
+    notes: [Note!]
+    userAddedTags: [String]
+    author: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    upvotes: Int
+    downvotes: Int
+    counter: Int
+  }
+
   type User {
     id: ID @id
     username: String!
@@ -67,8 +87,8 @@ export const typeDefs = gql`
     text: String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
-    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_NOTE")
-    author: [User!]! @relationship(direction: IN, type: "WROTE_NOTE")
+    resource: Resource! @relationship(direction: OUT, type: "HAS_NOTE")
+    author: User! @relationship(direction: IN, type: "WROTE_NOTE")
   }
 
   type Comment {
@@ -76,8 +96,8 @@ export const typeDefs = gql`
     text: String!
     createdAt: DateTime! @timestamp(operations: [CREATE])
     updatedAt: DateTime! @timestamp(operations: [CREATE, UPDATE])
-    resource: [Resource!]! @relationship(direction: OUT, type: "HAS_COMMENT")
-    author: [User!]! @relationship(direction: IN, type: "WROTE_COMMENT")
+    resource: Resource! @relationship(direction: OUT, type: "HAS_COMMENT")
+    author: User! @relationship(direction: IN, type: "WROTE_COMMENT")
   }
 
   extend type Comment
@@ -178,8 +198,17 @@ export const typeDefs = gql`
   }
 
   type Query {
+    getResourceByID(resourceID: String!): Resource
+      @cypher(
+        statement: """
+        MATCH (res:Resource {id: $resourceID})
+        RETURN res
+        """
+      )
+  }
+
+  type Query {
     getResourcesByTag(tagName: String!): [Resource!]
-    getResourceByID(resourceID: String!): Resource!
     getResourcesRelatedToRelatedTags(tagName: String!): [Tag!]!
     resources: [Resource!]
   }

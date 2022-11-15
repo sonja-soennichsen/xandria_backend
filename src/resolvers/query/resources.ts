@@ -20,21 +20,6 @@ const getResourcesByTag = async (
   return resources
 }
 
-const getResourceByID = async (
-  _source: any,
-  { resourceID }: any,
-  context: any
-) => {
-  checkAuth(context)
-  const [resource] = await Resource.find({
-    where: {
-      id: resourceID,
-    },
-  })
-
-  return resource
-}
-
 const getResourcesRelatedToRelatedTags = async (
   _source: any,
   { tagName }: any,
@@ -56,5 +41,4 @@ const getResourcesRelatedToRelatedTags = async (
 export default {
   getResourcesByTag,
   getResourcesRelatedToRelatedTags,
-  getResourceByID,
 }

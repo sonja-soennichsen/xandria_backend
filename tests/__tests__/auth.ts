@@ -2,10 +2,10 @@ import request from "graphql-request"
 // https://www.npmjs.com/package/graphql-request
 const axios = require("axios")
 import { AxiosError, AxiosResponse } from "axios"
-import { clearDatabase } from "../helpers/clearDatabase"
+import { clearDatabase } from "../utils/clearDatabase"
 import { signUp, signUpWrong, login, loginWrong } from "../__mocks__/user"
 require("dotenv").config()
-import { getToken } from "../helpers/getToken"
+import { getToken } from "../utils/getToken"
 
 afterAll(async () => {
   clearDatabase()
@@ -83,12 +83,14 @@ describe("testing auth functionns", () => {
       url: "http://localhost:4000/graphql",
       document: `query Me {
         me {
+          name
           username
         }
       }
       `,
       requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
     }).then((data) => {
+      expect(data.me.name).toBe("Test User")
       expect(data.me.username).toBe("testUser")
     })
   })

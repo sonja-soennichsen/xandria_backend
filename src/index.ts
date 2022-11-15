@@ -83,6 +83,9 @@ export default Promise.all([initializeDatabase(driver)]).then(
             "style-src": null,
           },
         },
+        crossOriginResourcePolicy: {
+          policy: "cross-origin",
+        },
       })
     )
 

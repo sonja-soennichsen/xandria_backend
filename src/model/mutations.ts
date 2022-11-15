@@ -13,7 +13,11 @@ export const mutations = gql`
 
   type Mutation {
     addComment(resourceId: String!, text: String!): String
+  }
+
+  type Mutation {
     addNote(resourceId: String!, text: String!): String
+    updateNote(noteId: String!, text: String!): String
   }
   type Mutation {
     addTagToResource(resourceId: String!, tagName: String!): String

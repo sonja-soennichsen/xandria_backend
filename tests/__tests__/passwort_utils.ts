@@ -1,4 +1,4 @@
-import { getSalt, hash, compare } from "../../src/helpers/passwordUtils"
+import { getSalt, hash, compare } from "../../src/utils/passwordUtils"
 import { Blob } from "buffer"
 const { scryptSync } = require("node:crypto")
 

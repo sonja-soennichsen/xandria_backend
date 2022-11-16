@@ -58,10 +58,10 @@ export default Promise.all([initializeDatabase(driver)]).then(
       next()
     })
 
-    app.use("/", (req: any, res: any, next: any) => {
-      res.set({ "Access-Control-Allow-Credentials": true })
-      next()
-    })
+    // app.use("/", (req: any, res: any, next: any) => {
+    //   res.set({ "Access-Control-Allow-Credentials": true })
+    //   next()
+    // })
 
     // initialize and start server
     const server = new ApolloServer({
@@ -94,7 +94,7 @@ export default Promise.all([initializeDatabase(driver)]).then(
     server.applyMiddleware({
       app,
       path: "/graphql",
-      cors: corsOptions,
+      cors: false,
     })
 
     // start the whole thing

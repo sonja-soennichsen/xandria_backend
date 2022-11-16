@@ -11,7 +11,6 @@ export const serverConfig = {
   context: async ({ res, req }: any) => {
     try {
       const token = req.cookies["jwt"] || "" || req.headers["jwt"]
-      console.log(req.headers)
       const userJWT = jwt.verify(token, process.env.JWT_SECRET)
       const [currentUser] = await User.find({
         where: { id: userJWT.sub },
@@ -34,6 +33,11 @@ export const serverConfig = {
     // Don't give the specific errors to the client
     if (err.message.startsWith("Database Error: ")) {
       return new Error("Internal server error -> Custom ;)")
+    }
+    if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
+      return new Error(
+        "Context creation failed: JsonWebTokenError: jwt must be provided custom"
+      )
     }
     // Otherwise return the original error
     return err

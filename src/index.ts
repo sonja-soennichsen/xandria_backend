@@ -68,29 +68,28 @@ export default Promise.all([initializeDatabase(driver)]).then(
     // apply validation and sanitation plugins
     app.use(bodyParser.json())
 
-    app.use(
-      helmet({
-        crossOriginEmbedderPolicy: false,
-        crossOriginOpenerPolicy: false,
-        contentSecurityPolicy: false,
-        crossOriginResourcePolicy: {
-          policy: "cross-origin",
-        },
-      })
-    )
+    // app.use(
+    //   helmet({
+    //     crossOriginEmbedderPolicy: false,
+    //     crossOriginOpenerPolicy: false,
+    //     contentSecurityPolicy: false,
+    //     crossOriginResourcePolicy: {
+    //       policy: "cross-origin",
+    //     },
+    //   })
+    // )
+
+    app.use(express.urlencoded({ extended: true }))
+
+    // add REST Auth Endpoints
+    require("./auth/index")(app)
 
     // apply middleware to graphql endpoint
     server.applyMiddleware({
       app,
       path: "/graphql",
-      cors: true,
+      cors: corsOptions,
     })
-    app.use(express.urlencoded({ extended: true }))
-
-    app.use("/graphql", cors(corsOptions))
-
-    // add REST Auth Endpoints
-    require("./auth/index")(app)
 
     // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

@@ -8,9 +8,8 @@
     "dev": "nodemon",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js",
-    "test": "jest --config jest.config.ts ./tests",
-    "dev-test": "concurrently --kill-others --raw \"cross-env NODE_ENV='test' npm run dev\" \"cross-env NODE_ENV='test' sleep 10 && npm run test\"",
-    "stop": "pkill -f node"
+    "test": "jest --config jest.config.ts ./tests --forceExit",
+    "dev-test": "concurrently --kill-others --raw \"cross-env NODE_ENV='test' npm run dev\" \"cross-env NODE_ENV='test' sleep 10 && npm run test\""
   },
   "repository": {
     "type": "git",

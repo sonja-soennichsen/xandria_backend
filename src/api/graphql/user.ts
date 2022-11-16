@@ -1,6 +1,6 @@
-import { User } from "../../../index"
-import { check_auth } from "../../../utils/check"
-import { compare, hash } from "../../../utils/password_checks"
+import { User } from "../../index"
+import { check_auth } from "../../utils/check"
+import { compare, hash } from "../../utils/password_checks"
 import { GraphQLError } from "graphql"
 
 const bodyParser = require("body-parser")

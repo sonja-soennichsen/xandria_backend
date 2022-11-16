@@ -1,5 +1,5 @@
-import { Note } from "../../../index"
-import { check_auth, check_resource_exists } from "../../../utils/check"
+import { Note } from "../../index"
+import { check_auth, check_resource_exists } from "../../utils/check"
 
 const addNote = async (
   _source: any,

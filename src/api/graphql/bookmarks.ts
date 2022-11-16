@@ -1,5 +1,5 @@
-import { User } from "../../../index"
-import { check_auth, check_resource_exists } from "../../../utils/check"
+import { User } from "../../index"
+import { check_auth, check_resource_exists } from "../../utils/check"
 
 import fetch from "node-fetch"
 

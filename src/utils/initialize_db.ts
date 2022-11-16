@@ -1,6 +1,6 @@
 const { OGM } = require("@neo4j/graphql-ogm")
-import { typeDefs } from "../api/model/index"
-import resolvers from "../api/endpoints/graphql"
+import { typeDefs } from "../model/index"
+import resolvers from "../api/graphql"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 

@@ -37,7 +37,7 @@ export default Promise.all([initialize_database(driver)]).then(
     await server.start()
 
     require("./config/middleware")(app)
-    require("./api/endpoints/auth")(app)
+    require("./api/auth")(app)
 
     server.applyMiddleware({
       app,

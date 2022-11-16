@@ -1,5 +1,5 @@
-import { Tag } from "../../../index"
-import { check_auth } from "../../../utils/check"
+import { Tag } from "../../index"
+import { check_auth } from "../../utils/check"
 
 const relateTag = async (_source: any, { tag1, tag2 }: any, context: any) => {
   try {

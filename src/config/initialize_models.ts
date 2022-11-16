@@ -1,5 +1,5 @@
 const { OGM } = require("@neo4j/graphql-ogm")
-import { typeDefs } from "../model/index"
+import { typeDefs } from "../api/model/index"
 
 export function initialize_models(driver: any) {
   const ogm = new OGM({ typeDefs, driver })

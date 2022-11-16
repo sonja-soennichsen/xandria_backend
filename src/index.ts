@@ -48,7 +48,7 @@ export default Promise.all([initialize_database(driver)]).then(
     })
 
     // add REST Auth Endpoints
-    require("./auth/index")(app)
+    require("./api/endpoints/auth")(app)
 
     // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

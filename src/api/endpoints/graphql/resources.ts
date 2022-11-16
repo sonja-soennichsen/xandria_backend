@@ -1,9 +1,9 @@
-import { Resource } from "../index"
+import { Resource } from "../../../index"
 import {
   check_auth,
   check_resource_exists,
   check_double_resource,
-} from "../utils/check"
+} from "../../../utils/check"
 
 const addResource = async (
   _source: any,

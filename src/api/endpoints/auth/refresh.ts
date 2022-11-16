@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 var jwt = require("jsonwebtoken")
-import { cookieConfig } from "../config/types"
+import { cookieConfig } from "../../../config/types"
 import { Request, Response } from "express"
 
 router.get("/", async (req: Request, res: Response) => {

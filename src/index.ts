@@ -2,9 +2,9 @@ const express = require("express")
 const { ApolloServer } = require("apollo-server-express")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
-import { initializeDatabase } from "./config/intializeDatabase"
-import { initializeModels } from "./config/initializeModels"
-import { serverConfig } from "./config/serverConfig"
+import { initialize_database } from "./config/intialize_database"
+import { initialize_models } from "./config/initialize_models"
+import { server_config } from "./config/server_config"
 
 const app = express()
 
@@ -26,14 +26,14 @@ if (process.env.NODE_ENV === "test") {
 
 const driver = neo4j.driver(dbURI, DEV_AUTH)
 
-export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
+export const { User, Resource, Tag, Comment, Note } = initialize_models(driver)
 
-export default Promise.all([initializeDatabase(driver)]).then(
+export default Promise.all([initialize_database(driver)]).then(
   async ([schema]) => {
     // initialize and start server
     const server = new ApolloServer({
       schema,
-      ...serverConfig,
+      ...server_config,
     })
     await server.start()
 

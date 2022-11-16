@@ -2,7 +2,7 @@ import { GraphQLError } from "graphql"
 import { Resource, User } from "../index"
 import { UserInputError } from "apollo-server"
 
-export function checkAuth(context: any) {
+export function check_auth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {
     throw new GraphQLError("Please log in or sign up", {
       extensions: {
@@ -15,7 +15,7 @@ export function checkAuth(context: any) {
   }
 }
 
-export function checkContextAuth(currentUser: any) {
+export function check_context_auth(currentUser: any) {
   if (!currentUser) {
     throw new GraphQLError("Please log in or sign up", {
       extensions: {
@@ -28,7 +28,7 @@ export function checkContextAuth(currentUser: any) {
   }
 }
 
-export async function checkResourceExists(resourceId: String) {
+export async function check_resource_exists(resourceId: String) {
   const [exists] = await Resource.find({
     where: { id: resourceId },
   })
@@ -45,7 +45,7 @@ export async function checkResourceExists(resourceId: String) {
   }
 }
 
-export async function checkDoubleResource(resourcceUrl: String) {
+export async function check_double_resource(resourcceUrl: String) {
   const [existing] = await Resource.find({
     where: {
       resourcceUrl,

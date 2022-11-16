@@ -1,6 +1,6 @@
 const { gql } = require("apollo-server")
 
-export const authRules = gql`
+export const auth_rules = gql`
   extend type Comment
     @auth(
       rules: [

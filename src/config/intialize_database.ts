@@ -3,7 +3,7 @@ import resolvers from "../resolvers"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 
-export async function initializeDatabase(driver: any) {
+export async function initialize_database(driver: any) {
   const neoSchema = new Neo4jGraphQL({
     typeDefs,
     driver,

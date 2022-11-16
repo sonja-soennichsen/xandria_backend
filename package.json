@@ -64,6 +64,7 @@
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
+    "standard": "^17.0.0",
     "testcontainers": "^9.0.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",

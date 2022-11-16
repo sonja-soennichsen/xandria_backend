@@ -1,5 +1,5 @@
 import { Comment } from "../index"
-import { checkAuth } from "../utils/check"
+import { check_auth } from "../utils/check"
 
 const addComment = async (
   _source: any,
@@ -7,7 +7,7 @@ const addComment = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
 
     await Comment.create({
       input: [
@@ -46,7 +46,7 @@ const deleteComment = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
     await Comment.delete({
       where: {
         id: commentId,

@@ -1,5 +1,5 @@
 import { Note } from "../index"
-import { checkAuth, checkResourceExists } from "../utils/check"
+import { check_auth, check_resource_exists } from "../utils/check"
 
 const addNote = async (
   _source: any,
@@ -7,8 +7,8 @@ const addNote = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
-    await checkResourceExists(resourceId)
+    check_auth(context)
+    await check_resource_exists(resourceId)
     await Note.create({
       input: [
         {
@@ -46,7 +46,7 @@ const updateNote = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
     await Note.update({
       where: {
         id: noteId,
@@ -63,7 +63,7 @@ const updateNote = async (
 
 const deleteNote = async (_source: any, { noteId }: any, context: any) => {
   try {
-    checkAuth(context)
+    check_auth(context)
     await Note.delete({
       where: {
         id: noteId,

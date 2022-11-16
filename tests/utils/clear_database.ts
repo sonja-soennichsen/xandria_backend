@@ -1,7 +1,7 @@
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 
-export async function clearDatabase() {
+export async function clear_database() {
   const driver = neo4j.driver(
     process.env.NEO4J_URI_TEST,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD_TEST)

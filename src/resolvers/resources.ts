@@ -1,8 +1,8 @@
 import { Resource } from "../index"
 import {
-  checkAuth,
-  checkResourceExists,
-  checkDoubleResource,
+  check_auth,
+  check_resource_exists,
+  check_double_resource,
 } from "../utils/check"
 
 const addResource = async (
@@ -19,10 +19,10 @@ const addResource = async (
   }: any,
   context: any
 ) => {
-  checkAuth(context)
+  check_auth(context)
 
   try {
-    await checkDoubleResource(url)
+    await check_double_resource(url)
     await Resource.create({
       input: [
         {
@@ -64,8 +64,8 @@ const addTagToResource = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
-    await checkResourceExists(resourceId)
+    check_auth(context)
+    await check_resource_exists(resourceId)
     await Resource.update({
       connectOrCreate: {
         tags: [

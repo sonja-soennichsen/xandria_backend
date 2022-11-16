@@ -1,6 +1,5 @@
 import { User } from "../index"
-import { checkAuth } from "../utils/check"
-import { checkResourceExists } from "../utils/check"
+import { check_auth, check_resource_exists } from "../utils/check"
 
 import fetch from "node-fetch"
 
@@ -10,7 +9,7 @@ const makeBookmark = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
 
     // const rawResponse = await fetch(
     //   "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
@@ -56,8 +55,8 @@ const removeBookmark = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
-    await checkResourceExists(resourceId)
+    check_auth(context)
+    await check_resource_exists(resourceId)
 
     await User.update({
       where: {
@@ -88,7 +87,7 @@ const makeBookmarkToNewResource = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
 
     await User.update({
       where: {

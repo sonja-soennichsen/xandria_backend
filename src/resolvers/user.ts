@@ -1,6 +1,6 @@
 import { User } from "../index"
-import { checkAuth } from "../utils/check"
-import { compare, hash } from "../utils/passwordUtils"
+import { check_auth } from "../utils/check"
+import { compare, hash } from "../utils/password_checks"
 import { GraphQLError } from "graphql"
 
 const bodyParser = require("body-parser")
@@ -13,7 +13,7 @@ const updateUserData = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
     await User.update({
       where: {
         id: context.currentUser.id,
@@ -36,7 +36,7 @@ const changePassword = async (
   context: any
 ) => {
   try {
-    checkAuth(context)
+    check_auth(context)
 
     const [user] = await User.find({
       where: { id: context.currentUser.id },

@@ -2,11 +2,11 @@ const depthLimit = require("graphql-depth-limit")
 import { ApolloError } from "apollo-server-express"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
-import { checkContextAuth } from "../utils/check"
+import { check_context_auth } from "../utils/check"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
 import { GraphQLResponse, GraphQLRequestContext } from "apollo-server-core"
 
-export const serverConfig = {
+export const server_config = {
   validationRules: [depthLimit(10), createComplexityLimitRule(2000)],
   context: async ({ res, req }: any) => {
     try {
@@ -16,7 +16,7 @@ export const serverConfig = {
         where: { id: userJWT.sub },
       })
 
-      checkContextAuth(currentUser)
+      check_context_auth(currentUser)
 
       return {
         req,

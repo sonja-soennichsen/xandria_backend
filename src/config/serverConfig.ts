@@ -32,13 +32,13 @@ export const serverConfig = {
   formatError: (err: ApolloError) => {
     // Don't give the specific errors to the client
     if (err.message.startsWith("Database Error: ")) {
-      return new Error("Internal server error -> Custom ;)")
+      return new Error("Internal server error)")
     }
-    // if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
-    //   return new Error(
-    //     "Context creation failed: JsonWebTokenError: jwt must be provided custom"
-    //   )
-    // }
+    if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
+      return new Error(
+        "Context creation failed: JsonWebTokenError: jwt must be provided"
+      )
+    }
     // Otherwise return the original error
     return err
   },

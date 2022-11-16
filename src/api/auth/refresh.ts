@@ -10,8 +10,9 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err: any, decode: any) => {
       if (err) {
-        // Wrong Refesh Token
-        return res.status(406).json({ message: "Unauthorized" })
+        return res
+          .status(406)
+          .json({ message: "Unauthorizied: Invalid token provided" })
       } else {
         const token = jwt.sign(
           { sub: decode["sub"], username: decode["username"] },

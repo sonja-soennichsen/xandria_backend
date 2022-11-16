@@ -1,6 +1,5 @@
 import { GraphQLError } from "graphql"
-import { Resource, User } from "../index"
-import { UserInputError } from "apollo-server"
+import { Resource } from "../index"
 
 export function check_auth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {

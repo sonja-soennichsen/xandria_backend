@@ -1,8 +1,6 @@
 import { User } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
 
-import fetch from "node-fetch"
-
 const makeBookmark = async (
   _source: any,
   { resourceId }: any,
@@ -10,17 +8,6 @@ const makeBookmark = async (
 ) => {
   try {
     check_auth(context)
-
-    // const rawResponse = await fetch(
-    //   "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
-    //   {
-    //     method: "POST",
-    //     body: JSON.stringify({ url: resourceURL }),
-    //   }
-    // )
-    // const content = await rawResponse.json()
-
-    // console.log(content)
 
     await User.update({
       where: {

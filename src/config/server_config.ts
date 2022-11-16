@@ -4,7 +4,6 @@ var jwt = require("jsonwebtoken")
 import { User } from "../index"
 import { check_context_auth } from "../utils/check"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
-import { GraphQLResponse, GraphQLRequestContext } from "apollo-server-core"
 
 export const server_config = {
   validationRules: [depthLimit(10), createComplexityLimitRule(2000)],

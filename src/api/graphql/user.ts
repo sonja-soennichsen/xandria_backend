@@ -3,10 +3,6 @@ import { check_auth } from "../../utils/check"
 import { compare, hash } from "../../utils/password_checks"
 import { GraphQLError } from "graphql"
 
-const bodyParser = require("body-parser")
-const jsonParser = bodyParser.json()
-var jwt = require("jsonwebtoken")
-
 const updateUserData = async (
   _source: any,
   { newUsername, name, email }: any,

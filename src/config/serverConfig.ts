@@ -38,16 +38,4 @@ export const serverConfig = {
     // Otherwise return the original error
     return err
   },
-  formatResponse: (
-    response: GraphQLResponse | null,
-    requestContext: GraphQLRequestContext<any>
-  ) => {
-    if (requestContext.response && requestContext.response.http) {
-      requestContext.response.http.headers.set(
-        "Access-Control-Allow-Credentials",
-        "true"
-      )
-    }
-    return response as GraphQLResponse
-  },
 }

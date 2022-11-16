@@ -1,6 +1,6 @@
 const express = require("express")
 const { ApolloServer } = require("apollo-server-express")
-const cors = require("cors")
+import cors from "cors"
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 const cookieParser = require("cookie-parser")
@@ -13,18 +13,16 @@ const helmet = require("helmet")
 const app = express()
 const corsOptions = {
   origin: [
-    "http://localhost:4000",
     "https://studio.apollographql.com",
-    "http://localhost:3000",
     "https://xandria-2jytui6ygq-ey.a.run.app/",
     "https://xandria-web-joshuaknauber.vercel.app",
     "xandria-web-joshuaknauber.vercel.app",
+    "https://studio.apollographql.com",
   ],
   crendentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
 }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 app.use(cookieParser())
 
 let dbURI
@@ -73,19 +71,8 @@ export default Promise.all([initializeDatabase(driver)]).then(
     app.use(
       helmet({
         crossOriginEmbedderPolicy: false,
-        contentSecurityPolicy: {
-          directives: {
-            "script-src": [
-              "'self'",
-              "http://localhost:4000/graphql",
-              "https://apollo-server-landing-page.cdn.apollographql.com",
-              "https://xandria-web-joshuaknauber.vercel.app/",
-              "xandria-web-joshuaknauber.vercel.app",
-              "https://xandria-2jytui6ygq-ey.a.run.app/",
-            ],
-            "style-src": null,
-          },
-        },
+        crossOriginOpenerPolicy: false,
+        contentSecurityPolicy: false,
         crossOriginResourcePolicy: {
           policy: "cross-origin",
         },
@@ -96,17 +83,11 @@ export default Promise.all([initializeDatabase(driver)]).then(
     server.applyMiddleware({
       app,
       path: "/graphql",
-      cors: {
-        origin: [
-          "xandria-web-joshuaknauber.vercel.app",
-          "http://localhost:4000",
-          "https://studio.apollographql.com",
-          "http://localhost:3000",
-        ],
-        credentials: true,
-      },
+      cors: true,
     })
     app.use(express.urlencoded({ extended: true }))
+
+    app.use("/graphql", cors(corsOptions))
 
     // add REST Auth Endpoints
     require("./auth/index")(app)

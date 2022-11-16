@@ -4,6 +4,7 @@ var jwt = require("jsonwebtoken")
 import { User } from "../index"
 import { checkContextAuth } from "../utils/check"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
+import { GraphQLResponse, GraphQLRequestContext } from "apollo-server-core"
 
 export const serverConfig = {
   validationRules: [depthLimit(10), createComplexityLimitRule(2000)],
@@ -36,5 +37,17 @@ export const serverConfig = {
     }
     // Otherwise return the original error
     return err
+  },
+  formatResponse: (
+    response: GraphQLResponse | null,
+    requestContext: GraphQLRequestContext<any>
+  ) => {
+    if (requestContext.response && requestContext.response.http) {
+      requestContext.response.http.headers.set(
+        "Access-Control-Allow-Credentials",
+        "true"
+      )
+    }
+    return response as GraphQLResponse
   },
 }

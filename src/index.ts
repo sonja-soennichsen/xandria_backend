@@ -2,9 +2,11 @@ const express = require("express")
 const { ApolloServer } = require("apollo-server-express")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
-import { initialize_database } from "./config/intialize_database"
-import { initialize_models } from "./config/initialize_models"
 import { server_config } from "./config/server_config"
+import {
+  initialize_database,
+  initialize_models,
+} from "./utils/initialize_sevices"
 
 const app = express()
 
@@ -26,19 +28,19 @@ if (process.env.NODE_ENV === "test") {
 
 const driver = neo4j.driver(dbURI, DEV_AUTH)
 
+// put initalize
 export const { User, Resource, Tag, Comment, Note } = initialize_models(driver)
 
 export default Promise.all([initialize_database(driver)]).then(
   async ([schema]) => {
-    // initialize and start server
     const server = new ApolloServer({
       schema,
       ...server_config,
     })
     await server.start()
 
-    // Add Middleware
     require("./config/middleware")(app)
+    require("./api/endpoints/auth")(app)
 
     // apply middleware to graphql endpoint
     server.applyMiddleware({
@@ -46,9 +48,6 @@ export default Promise.all([initialize_database(driver)]).then(
       path: "/graphql",
       cors: false,
     })
-
-    // add REST Auth Endpoints
-    require("./api/endpoints/auth")(app)
 
     // start the whole thing
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

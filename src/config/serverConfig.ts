@@ -34,11 +34,11 @@ export const serverConfig = {
     if (err.message.startsWith("Database Error: ")) {
       return new Error("Internal server error -> Custom ;)")
     }
-    if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
-      return new Error(
-        "Context creation failed: JsonWebTokenError: jwt must be provided custom"
-      )
-    }
+    // if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
+    //   return new Error(
+    //     "Context creation failed: JsonWebTokenError: jwt must be provided custom"
+    //   )
+    // }
     // Otherwise return the original error
     return err
   },

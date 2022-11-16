@@ -14,3 +14,30 @@ export const signoutConfig: {} = {
   sameSite: "none",
   secure: true,
 }
+
+export const corsOptions = {
+  origin: [
+    "http://localhost:4000",
+    "https://studio.apollographql.com",
+    "http://localhost:3000",
+    "https://xandria-2jytui6ygq-ey.a.run.app/",
+    "xandria-web-joshuaknauber.vercel.app",
+  ],
+  credentials: true,
+}
+
+export const helmetOptions = {
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      "script-src": [
+        "'self'",
+        "http://localhost:4000/graphql",
+        "https://apollo-server-landing-page.cdn.apollographql.com",
+        "https://xandria-web-joshuaknauber.vercel.app/",
+        "https://xandria-2jytui6ygq-ey.a.run.app/",
+        "xandria-web-joshuaknauber.vercel.app",
+      ],
+    },
+  },
+}

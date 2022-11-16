@@ -16,7 +16,7 @@ export function hash(inputPassword: string, salt: string) {
   return scryptSync(inputPassword, salt, 64).toString("hex")
 }
 
-export function getSalt() {
+export function get_salt() {
   const salt = randomBytes(32)
   return salt.toString("ascii")
 }

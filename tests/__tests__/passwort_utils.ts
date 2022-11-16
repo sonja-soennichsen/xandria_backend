@@ -1,4 +1,4 @@
-import { getSalt, hash, compare } from "../../src/utils/password_checks"
+import { get_salt, hash, compare } from "../../src/utils/password_checks"
 import { Blob } from "buffer"
 const { scryptSync } = require("node:crypto")
 
@@ -21,7 +21,7 @@ test("hashed password with scrypt", () => {
   expect(compare(password2, hash2, salt)).toBe(true)
 })
 test("getSalt returns 32 bit string", () => {
-  const salt = getSalt()
+  const salt = get_salt()
   let size = new Blob([salt]).size
 
   expect(salt).toBeDefined

@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-import { getSalt, hash } from "../utils/password_checks"
+import { get_salt, hash } from "../utils/password_checks"
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
 const { passwordStrength } = require("check-password-strength")
@@ -45,7 +45,7 @@ router.post(
       })
     }
 
-    const salt = getSalt()
+    const salt = get_salt()
     const hashedPassword = hash(password, salt)
 
     const { users } = await User.create({

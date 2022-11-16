@@ -18,6 +18,7 @@ const corsOptions = {
     "http://localhost:3000",
     "https://xandria-2jytui6ygq-ey.a.run.app/",
     "https://xandria-web-joshuaknauber.vercel.app",
+    "xandria-web-joshuaknauber.vercel.app",
   ],
   crendentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -95,7 +96,15 @@ export default Promise.all([initializeDatabase(driver)]).then(
     server.applyMiddleware({
       app,
       path: "/graphql",
-      cors: true,
+      cors: {
+        origin: [
+          "xandria-web-joshuaknauber.vercel.app",
+          "http://localhost:4000",
+          "https://studio.apollographql.com",
+          "http://localhost:3000",
+        ],
+        credentials: true,
+      },
     })
     app.use(express.urlencoded({ extended: true }))
 

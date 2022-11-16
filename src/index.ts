@@ -47,6 +47,7 @@ export const { User, Resource, Tag, Comment, Note } = initializeModels(driver)
 
 export default Promise.all([initializeDatabase(driver)]).then(
   async ([schema]) => {
+    app.use(cors(corsOptions))
     // rewrite request to include JWT
     app.use("/graphql", (req: any, res: any, next: any) => {
       try {
@@ -58,10 +59,10 @@ export default Promise.all([initializeDatabase(driver)]).then(
       next()
     })
 
-    // app.use("/", (req: any, res: any, next: any) => {
-    //   res.set({ "Access-Control-Allow-Credentials": true })
-    //   next()
-    // })
+    app.use("/", (req: any, res: any, next: any) => {
+      res.set({ "Access-Control-Allow-Credentials": true })
+      next()
+    })
 
     // initialize and start server
     const server = new ApolloServer({
@@ -88,7 +89,6 @@ export default Promise.all([initializeDatabase(driver)]).then(
 
     // add REST Auth Endpoints
     require("./auth/index")(app)
-    app.use(cors(corsOptions))
 
     // apply middleware to graphql endpoint
     server.applyMiddleware({

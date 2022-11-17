@@ -2,10 +2,39 @@
 name: Build, Push and Deploy NodeJS Image w/ Google Cloud Platform
 on:
   push:
-    branches: [test]
+    branches: [main]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create .env file
+        run: |
+          touch .env
+          echo NEO4J_USER=${{ secrets.NEO4J_USER }} >> .env
+          echo NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} >> .env
+          echo DEBUG=${{ secrets.DEBUG }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+          echo NEO4J_PASSWORD_TEST=${{ secrets.NEO4J_PASSWORD_TEST }} >> .env
+          echo NEO4J_URI_TEST=${{ secrets.NEO4J_URI_TEST }} >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo NEO4J_URI=${{ secrets.NEO4J_URI }} >> .env
+      - name: Run tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm run dev-test
+
   build-push-gcr:
+    needs: test
     name: Build and Push Docker Image to GCP Artifact Registry
     runs-on: ubuntu-latest
     env:

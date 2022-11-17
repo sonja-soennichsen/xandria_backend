@@ -35,6 +35,10 @@ Open [http://localhost:4000](http://localhost:4000) with your browser to see the
 npm run dev-test
 ```
 
+## Logging
+
+Errors will be logged to `error.log` by Express middleware using [Winstron](https://github.com/winstonjs/winston)
+
 # Datamodel
 
 All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment <br>

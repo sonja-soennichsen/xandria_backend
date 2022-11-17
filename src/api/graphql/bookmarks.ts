@@ -68,7 +68,7 @@ const removeBookmark = async (
   }
 }
 
-const makeBookmarkfromUrl = async (
+const makeBookmarkFromUrl = async (
   _source: any,
   { resourceUrl, headline }: any,
   context: any
@@ -143,7 +143,7 @@ const makeBookmarkfromUrl = async (
 }
 
 export default {
-  makeBookmarkfromUrl,
+  makeBookmarkFromUrl,
   makeBookmark,
   removeBookmark,
 }

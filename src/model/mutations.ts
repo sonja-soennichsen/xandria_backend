@@ -4,7 +4,7 @@ export const mutations = gql`
   type Mutation {
     makeBookmark(resourceId: String!): String
     removeBookmark(resourceId: String!): String
-    makeBookmarkfromUrl(resourceUrl: String, headline: String!): String
+    makeBookmarkFromUrl(resourceUrl: String, headline: String!): String
   }
 
   type Mutation {

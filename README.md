@@ -214,11 +214,12 @@ REST Endpoints can be accessed via cURL or [Postman](https://www.postman.com/)
 Makes a bookmark for the user sending the request (getting user id out of JWT)
 
 ```
-mutation MakeBookmark($resourceUrl: String!) {
-makeBookmark(resourceURL: $resourceUrl)
+mutation MakeBookmark($resourceId: String!, $userAddedTags: [String]!) {
+  makeBookmark(resourceId: $resourceId, userAddedTags: $userAddedTags)
 }
 {
-"resourceUrl": String
+  "resourceId": id,
+  "userAddedTags": ["example", "tag"]
 }
 
 ```

@@ -3,7 +3,7 @@ import { check_auth, check_resource_exists } from "../../utils/check"
 
 const makeBookmark = async (
   _source: any,
-  { resourceId }: any,
+  { resourceId, userAddedTags }: any,
   context: any
 ) => {
   try {
@@ -11,7 +11,7 @@ const makeBookmark = async (
 
     await User.update({
       where: {
-        username: context.currentUser.username,
+        id: context.currentUser.id,
       },
       update: {
         bookmarks: [
@@ -22,6 +22,9 @@ const makeBookmark = async (
                   node: {
                     id: resourceId,
                   },
+                },
+                edge: {
+                  userAddedTags: userAddedTags,
                 },
               },
             ],

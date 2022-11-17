@@ -2,7 +2,7 @@ const { gql } = require("apollo-server")
 
 export const mutations = gql`
   type Mutation {
-    makeBookmark(resourceId: String!): String
+    makeBookmark(resourceId: String!, userAddedTags: [String]!): String
     removeBookmark(resourceId: String!): String
     makeBookmarkFromUrl(resourceUrl: String, headline: String!): String
   }

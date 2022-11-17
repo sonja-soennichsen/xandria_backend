@@ -24,11 +24,11 @@ export const queries = gql`
   }
 
   type Query {
-    getResourcesByTag(tag: String!): [Resource]
+    getResourcesByTags(tags: [String]!): [Resource]
       @cypher(
         statement: """
         MATCH (n:Resource )-[:HAS_TAG]-(t:Tag)
-        WHERE t.name = $tag
+        WHERE t.name IN tags
         RETURN n
         """
       )

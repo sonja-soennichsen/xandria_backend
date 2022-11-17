@@ -422,17 +422,17 @@ query Me {
 }
 ```
 
-### get all resource by tag
+### get all resource by tags
 
 ```
-query GetResourcesByTag($tag: String!) {
-  getResourcesByTag(tag: $tag) {
+query GetResourcesByTags($tags: [String]!) {
+  getResourcesByTags(tags: $tags) {
     description
-    ... others
+    ... whatever
   }
 }
 {
-  "tag": String
+  "tags": ["example", "tag"]
 }
 ```
 

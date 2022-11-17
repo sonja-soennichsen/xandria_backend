@@ -37,6 +37,7 @@ export default Promise.all([initialize_database(driver)]).then(
     await server.start()
 
     require("./config/middleware")(app)
+    require("./config/logger")(app)
     require("./api/auth")(app)
 
     server.applyMiddleware({

@@ -81,7 +81,7 @@ const makeBookmarkFromUrl = async (
 
     const [existing] = await Resource.find({
       where: {
-        resourceUrl,
+        url: resourceUrl,
       },
     })
 

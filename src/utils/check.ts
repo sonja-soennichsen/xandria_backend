@@ -44,10 +44,10 @@ export async function check_resource_exists(resourceId: String) {
   }
 }
 
-export async function check_double_resource(resourcceUrl: String) {
+export async function check_double_resource(resourceUrl: String) {
   const [existing] = await Resource.find({
     where: {
-      resourcceUrl,
+      url: resourceUrl,
     },
   })
   if (existing) {

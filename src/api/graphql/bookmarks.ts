@@ -1,5 +1,6 @@
 import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
+const fetch = require('@adobe/node-fetch-retry');
 
 const makeBookmark = async (
   _source: any,
@@ -79,6 +80,8 @@ const makeBookmarkFromUrl = async (
   try {
     check_auth(context)
 
+    let content
+
     const [existing] = await Resource.find({
       where: {
         url: resourceUrl,
@@ -108,8 +111,31 @@ const makeBookmarkFromUrl = async (
       })
     } else {
       // fetch scraper
+      const returned = await fetch('https://xandria-scraper-2jytui6ygq-ey.a.run.app', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({'url': resourceUrl})
+      }, {
+        retryOptions: {
+            retryInitialDelay: 1000,
+            forceSocketTimeout: true,
+            retryMaxDuration: 300000,
+          //   retryOnHttpResponse: function (returned: any) {
+          //     if ( (returned.status >= 500) || returned.status >= 400) {
+          //         return true;
+          //     }
+          // }
+        }})
 
-      // make bookmarkgit
+        content = await returned.json();
+
+        console.log(content)
+        console.log(content['headline'])
+
+      // make bookmark
       await User.update({
         where: {
           id: context.currentUser.id,
@@ -124,14 +150,13 @@ const makeBookmarkFromUrl = async (
               },
               onCreate: {
                 node: {
-                  headline: headline,
-                  description: "null",
-                  url: resourceUrl,
-                  imageURL: "null",
-                  rootSite: "null",
-                  userAddedTags: ["tag"],
-                  author: "null",
-                },
+                  "headline": content['headline'],
+                  "description": content['description'],
+                  "url": content['url'],
+                  "imageURL": content['imageURL'],
+                  "rootSite": content['rootSite'],
+                  "author": content['author']
+              },
               },
             },
           ],
@@ -139,7 +164,7 @@ const makeBookmarkFromUrl = async (
       })
     }
 
-    return
+    return true
   } catch (e) {
     return e
   }

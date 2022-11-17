@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/athifongoqa/xandria-BE#readme",
   "dependencies": {
+    "@adobe/node-fetch-retry": "^2.2.0",
     "@apollo/client": "^3.7.0",
     "@apollo/server": "^4.0.1",
     "@neo4j/graphql": "^3.10.1",

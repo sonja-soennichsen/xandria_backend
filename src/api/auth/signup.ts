@@ -8,6 +8,8 @@ import { cookieConfig } from "../../config/types"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
 import { find_user } from "../../utils/check"
+import { create_logger } from "../../utils/create_logger"
+const logger = create_logger()
 
 router.post(
   "/",
@@ -21,6 +23,7 @@ router.post(
   async (req: Request, res: Response) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
+      logger.error(errors.array())
       return res.status(422).json({ errors: errors.array() })
     }
 

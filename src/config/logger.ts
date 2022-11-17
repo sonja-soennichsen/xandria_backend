@@ -1,16 +1,7 @@
-const winston = require("winston")
-const { createLogger, format, transports } = require("winston")
-const { combine, timestamp, label, prettyPrint } = format
+import { create_logger } from "../utils/create_logger"
 
 module.exports = function (app: any) {
-  const myWinstonOptions = {
-    format: combine(timestamp(), winston.format.json(), prettyPrint()),
-    transports: [
-      new winston.transports.File({ filename: "error.log", level: "error" }),
-      new winston.transports.Console({ format: winston.format.simple() }),
-    ],
-  }
-  const logger = new winston.createLogger(myWinstonOptions)
+  const logger = create_logger()
 
   function logRequest(req: any, res: any, next: any) {
     logger.info(req.url)

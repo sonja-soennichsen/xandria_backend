@@ -1,4 +1,4 @@
-import { User } from "../../index"
+import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
 
 const makeBookmark = async (
@@ -68,41 +68,73 @@ const removeBookmark = async (
   }
 }
 
-const makeBookmarkToNewResource = async (
+const makeBookmarkfromUrl = async (
   _source: any,
-  { resourceId, resourceUrl, headline }: any,
+  { resourceUrl, headline }: any,
   context: any
 ) => {
   try {
     check_auth(context)
 
-    await User.update({
+    const [existing] = await Resource.find({
       where: {
-        id: context.currentUser.id,
-      },
-      connectOrCreate: {
-        bookmarks: [
-          {
-            where: {
-              node: {
-                id: resourceId,
-              },
-            },
-            onCreate: {
-              node: {
-                headline: headline,
-                description: "null",
-                url: resourceUrl,
-                imageURL: "null",
-                rootSite: "null",
-                userAddedTags: ["tag"],
-                author: "null",
-              },
-            },
-          },
-        ],
+        resourceUrl,
       },
     })
+
+    if (existing) {
+      await User.update({
+        where: {
+          username: context.currentUser.username,
+        },
+        update: {
+          bookmarks: [
+            {
+              connect: [
+                {
+                  where: {
+                    node: {
+                      url: resourceUrl,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      })
+    } else {
+      // fetch scraper
+
+      // make bookmarkgit
+      await User.update({
+        where: {
+          id: context.currentUser.id,
+        },
+        connectOrCreate: {
+          bookmarks: [
+            {
+              where: {
+                node: {
+                  url: resourceUrl,
+                },
+              },
+              onCreate: {
+                node: {
+                  headline: headline,
+                  description: "null",
+                  url: resourceUrl,
+                  imageURL: "null",
+                  rootSite: "null",
+                  userAddedTags: ["tag"],
+                  author: "null",
+                },
+              },
+            },
+          ],
+        },
+      })
+    }
 
     return
   } catch (e) {
@@ -111,7 +143,7 @@ const makeBookmarkToNewResource = async (
 }
 
 export default {
-  makeBookmarkToNewResource,
+  makeBookmarkfromUrl,
   makeBookmark,
   removeBookmark,
 }

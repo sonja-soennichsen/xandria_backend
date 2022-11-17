@@ -10,7 +10,7 @@ export async function clear_database() {
 
   try {
     const result = await session.writeTransaction((tx: any) =>
-      tx.run("match (a) delete a")
+      tx.run("MATCH (n) MATCH (n)-[r]-() DELETE n,r")
     )
   } finally {
     await session.close()

@@ -117,7 +117,6 @@ describe("testing auth functionns", () => {
       document: resourceQuery,
       requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
     }).then((data) => {
-      console.log(data)
       expect(data.resources[0].headline).toBe("Test Headline")
       expect(data.resources[0].description).toBe("amazing description")
       expect(data.resources[0].url).toBe("example.com/image")

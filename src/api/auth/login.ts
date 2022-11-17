@@ -6,6 +6,7 @@ import { User } from "../../index"
 import { cookieConfig } from "../../config/types"
 import { Request, Response } from "express"
 const { body } = require("express-validator")
+import { find_user } from "../../utils/check"
 
 router.post(
   "/",
@@ -15,9 +16,7 @@ router.post(
     const password: string = req.body.password
     const username: string = req.body.username
 
-    const [user] = await User.find({
-      where: { username: username },
-    })
+    const [user] = await find_user(username)
 
     if (!user) {
       return res.status(404).json({

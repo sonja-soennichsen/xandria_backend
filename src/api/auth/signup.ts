@@ -7,6 +7,7 @@ const { passwordStrength } = require("check-password-strength")
 import { cookieConfig } from "../../config/types"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
+import { find_user } from "../../utils/check"
 
 router.post(
   "/",
@@ -25,11 +26,7 @@ router.post(
 
     const { password, username, name, email } = req.body
 
-    const [existing] = await User.find({
-      where: {
-        username,
-      },
-    })
+    const [existing] = await find_user(username)
 
     if (existing) {
       return res.status(400).json({

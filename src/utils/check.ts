@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql"
-import { Resource } from "../index"
+import { Resource, User } from "../index"
 
 export function check_auth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {
@@ -60,6 +60,14 @@ export async function find_resource(input: String) {
   return await Resource.find({
     where: {
       input,
+    },
+  })
+}
+
+export async function find_user(input: String) {
+  return await User.find({
+    where: {
+      username: input,
     },
   })
 }

@@ -21,6 +21,9 @@ export const corsOptions = {
     "https://xandria-2jytui6ygq-ey.a.run.app/",
     "xandria-web-joshuaknauber.vercel.app",
     "https://xandria.vercel.app/",
+    "https://xandria.vercel.app/*",
+    "https://xandria-web-joshuaknauber.vercel.app/",
+    "https://xandria-web-joshuaknauber.vercel.app/*",
   ],
   credentials: true,
 }

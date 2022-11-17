@@ -4,11 +4,8 @@ const neo4j = require("neo4j-driver")
 require("dotenv").config()
 import { server_config } from "./config/server_config"
 import { initialize_database, initialize_models } from "./utils/initialize_db"
-const cors = require("cors")
-import { corsOptions, helmetOptions } from "./config/types"
 
 const app = express()
-app.use(cors(corsOptions))
 
 let dbURI
 let DEV_AUTH

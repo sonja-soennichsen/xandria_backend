@@ -1,6 +1,14 @@
-# xandria-BE
+# Xandria
 
-Deployment: [https://xandria-2jytui6ygq-ey.a.run.app](https://xandria-2jytui6ygq-ey.a.run.app)
+Xandria is a collaborative search engine and bookmarking tool. Users can bookmark a website with a browser extension that imports the link and additional information about it to the platform to make the resource discoverable for other users, which also have the ability to bookmark it for themselves. A Resource is considered anything that people find worth bookmarking such as Articles, Tutorials, Videos, Online Courses etc. They are discoverable in the form of a visual hypergraph, sorted into different “bubbles” according to their tags/topics, which are assigned when importing the resource, but which users can also add on their own. On the platform resources are represented as nodes in the graph and, when clicked, display a short description, a picture, additional information and a link to the website. The information is imported alongside the resources and gathered by a distributed scraper which is triggered by the browser extension. Users are able to write private notes and public comments on the resource.
+
+## High-Level Backend Architecture
+
+[Dataflow](https://lucid.app/lucidchart/b166b3cb-8b14-48f0-ba71-6757a1814617/edit?viewport_loc=362%2C132%2C1363%2C765%2C0_0&invitationId=inv_e5425ce7-ba1f-4c8a-94e3-1af7d14eb1b9)
+
+## Deployed Version
+
+[https://xandria-2jytui6ygq-ey.a.run.app](https://xandria-2jytui6ygq-ey.a.run.app)
 
 ## Development
 
@@ -24,12 +32,17 @@ Open [http://localhost:4000](http://localhost:4000) with your browser to see the
 ## Testing
 
 ```bash
-npm run test
+npm run dev-test
 ```
+
+## Logging
+
+Errors will be logged to `error.log` by Express middleware using [Winston](https://github.com/winstonjs/winston)
 
 # Datamodel
 
-All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment
+All types can be viewed in detail in the Apollo GraphQL Studio, when opening up the local development environment <br>
+[Database Model](https://lucid.app/lucidchart/6c38858c-a8c5-4263-8493-dbcbdf3e9218/edit?viewport_loc=-2512%2C-2101%2C6624%2C3717%2C5JU8BlX8iaSE&invitationId=inv_7ebd40b3-085f-452f-a088-37de2821ea27)
 
 ```
  type Resource {
@@ -106,11 +119,56 @@ All types can be viewed in detail in the Apollo GraphQL Studio, when opening up 
   }
 ```
 
-# GraphQL API Reference
+## Indexes
 
-Can easily be accessed via the Apollo GraphQL Studio
+To improve query performance there are a number of indexes applied
+
+- User by name
+
+```sql
+# Query
+MATCH (n:User) WHERE n.name = $param
+
+# Index
+CREATE INDEX user_index FOR (n:User) ON (n.name)
+```
+
+- Resource by name of tag-relationship, url and headline
+
+```sql
+# Query
+MATCH (n:Resource) - [r:HAS_TAG] - (t:Tag)
+WHERE r.name = $param
+return n, r, t
+
+# Index
+CREATE TEXT INDEX tag_resource_rel FOR ()-[r:HAS_TAG]-() ON (r.name)
+CREATE TEXT INDEX resource_url FOR (n:Resource) ON (n.url)
+CREATE TEXT INDEX resource_headline FOR (n:Resource) ON (n.headline)
+```
+
+- Nodes by label
+
+```sql
+CREATE LOOKUP INDEX node_label_lookup_index FOR (n) ON EACH labels(n)#
+```
+
+- Relationship by type
+
+```sql
+CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]-() ON EACH type(r)
+```
+
+<br> <br>
+
+# API Reference
+
+- List of all active endpoints
+- Development starts at `http:localhost:4000`
 
 ## Auth
+
+REST Endpoints can be accessed via cURL or [Postman](https://www.postman.com/)
 
 ### Sign-Up
 
@@ -121,10 +179,10 @@ Can easily be accessed via the Apollo GraphQL Studio
 ```
 {
 
-  "username": "",
-  "password": "",
-  "name": "",
-  "email": ""
+  "username":String,
+  "password": String,
+  "name": String,
+  "email": String
 
 }
 ```
@@ -136,26 +194,36 @@ Can easily be accessed via the Apollo GraphQL Studio
 
 ```
 {
-  "username": "",
-  "password": ""
+  "username": String,
+  "password": String
 }
 ```
 
-## Mutations
+### Refresh Token
 
-- CREATE, UPDATE, DELETE Operations to /graphql
+- `/refresh` when a valid JWT is provided, it sets a new httpOnly cookie with a new token
+
+### Signout
+
+- `/signout` simply deletes the JWT cookie
+
+## GraphQL Mutations
+
+- GraphQL Queries can be sent to `/graphql` including CRUD-Operations and resolvers as listed below
 - JWT needs to be provided as Cookie
+- Can easily be accessed via the Apollo GraphQL Studio (when deployed locally) on `/graphql`
 
 ### Make Bookmark
 
 Makes a bookmark for the user sending the request (getting user id out of JWT)
 
 ```
-mutation MakeBookmark($resourceUrl: String!) {
-makeBookmark(resourceURL: $resourceUrl)
+mutation MakeBookmark($resourceId: String!, $userAddedTags: [String]!) {
+  makeBookmark(resourceId: $resourceId, userAddedTags: $userAddedTags)
 }
 {
-"resourceUrl": resource url
+  "resourceId": id,
+  "userAddedTags": ["example", "tag"]
 }
 
 ```
@@ -167,8 +235,19 @@ mutation MakeBookmarkToNewResource($resourceUrl: String!, $headline: String!) {
   makeBookmarkToNewResource(resourceURL: $resourceUrl, headline: $headline)
 }
 {
-  "resourceUrl": "something new",
-  "headline": "great headline"
+  "resourceUrl": String,
+  "headline": String
+}
+```
+
+### Remove Bookmark
+
+```
+mutation RemoveBookmark($resourceUrl: String!) {
+  removeBookmark(resourceURL: $resourceUrl)
+}
+{
+  "resourceUrl": String
 }
 ```
 
@@ -181,8 +260,20 @@ mutation Mutation($resourceUrl: String!, $text: String!) {
   addComment(resourceURL: $resourceUrl, text: $text)
 }
 {
-  "resourceUrl": resourceUrl,
-  "text": text
+  "resourceUrl": String,
+  "text": String
+}
+```
+
+### Delete Comment
+
+```
+mutation DeleteComment($commentId: String!) {
+  deleteComment(commentId: $commentId)
+}
+
+{
+  "commentId": string
 }
 ```
 
@@ -197,6 +288,29 @@ mutation AddNote($resourceUrl: String!, $text: String!) {
 {
   "resourceUrl": null,
   "text": null
+}
+```
+
+### Update Note
+
+```
+mutation UpdateNote($noteId: String!, $text: String!) {
+  updateNote(noteId: $noteId, text: $text)
+}
+{
+  "noteId": string,
+  "text": string
+}
+```
+
+### Delete Note
+
+```
+mutation DeleteNote($noteId: String!) {
+  deleteNote(noteId: $noteId)
+}
+{
+  "noteId": string
 }
 ```
 
@@ -277,7 +391,6 @@ query Me {
     name
     role
     createdAt
-    email
     updatedAt
     bookmarks {
       id
@@ -313,20 +426,17 @@ query Me {
 }
 ```
 
-### get all resource by tag
+### get all resource by tags
 
 ```
-query GetResourcesByTag($tagName: String!) {
-  getResourcesByTag(tagName: $tagName) {
-    id
+query GetResourcesByTags($tags: [String]!) {
+  getResourcesByTags(tags: $tags) {
     description
-    headline
-    ... or any other information needed
+    ... whatever
   }
 }
-
 {
-  "tagName": tagname
+  "tags": ["example", "tag"]
 }
 ```
 
@@ -334,48 +444,39 @@ query GetResourcesByTag($tagName: String!) {
 
 ```
 
-query Tags($where: TagWhere) {
-  tags(where: $where) {
-    related {
-      resources {
-        headline
-        description
-        url
-        tags {
-          name
-        }
-      }
-    }
-    resources {
-      headline
-      description
-      id
-      url
-      imageURL
+query GetResourcesByRelatedTag($tag: String!) {
+  getResourcesByRelatedTag(tag: $tag) {
+    description
+    tags {
+      name
     }
   }
 }
-
 {
-  "where": {
-    "name": "wohooo"
-  }
+  "tag": String
 }
 ```
 
 ### Get Resource by ID
 
 ```
-query GetResourceByID($resourceID: String!) {
-  getResourceByID(resourceID: $resourceID) {
-    id
-    headline
-    description
-    url
+query GetResourceByID($resourceId: String!) {
+  getResourceByID(resourceID: $resourceId) {
+    comments {
+      updatedAt
+      text
+      id
+      createdAt
+      author {
+        name
+        id
+        username
+      }
+    }
   }
 }
 {
-  "resourceID": "..."
+  "resourceId": String
 }
 ```
 

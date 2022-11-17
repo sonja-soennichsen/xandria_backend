@@ -28,11 +28,9 @@ export function check_context_auth(currentUser: any) {
 }
 
 export async function check_resource_exists(resourceId: String) {
-  const [exists] = await Resource.find({
-    where: { id: resourceId },
-  })
+  const existing = find_resource(resourceId)
 
-  if (!exists) {
+  if (!existing) {
     throw new GraphQLError("Wrong ID provided", {
       extensions: {
         code: "The Resource doesn't exist",
@@ -45,11 +43,7 @@ export async function check_resource_exists(resourceId: String) {
 }
 
 export async function check_double_resource(resourcceUrl: String) {
-  const [existing] = await Resource.find({
-    where: {
-      resourcceUrl,
-    },
-  })
+  const existing = find_resource(resourcceUrl)
   if (existing) {
     throw new GraphQLError("Resoure already exists", {
       extensions: {
@@ -60,4 +54,12 @@ export async function check_double_resource(resourcceUrl: String) {
       },
     })
   }
+}
+
+export async function find_resource(input: String) {
+  return await Resource.find({
+    where: {
+      input,
+    },
+  })
 }

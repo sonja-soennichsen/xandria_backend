@@ -17,9 +17,7 @@ export const signoutConfig: {} = {
 
 export const corsOptions = {
   origin: [
-    "http://localhost:4000",
     "https://studio.apollographql.com",
-    "http://localhost:3000",
     "https://xandria-2jytui6ygq-ey.a.run.app/",
     "xandria-web-joshuaknauber.vercel.app",
     "https://xandria.vercel.app/",

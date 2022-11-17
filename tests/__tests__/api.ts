@@ -1,18 +1,21 @@
 import request from "graphql-request"
-// https://www.npmjs.com/package/graphql-request
 const axios = require("axios")
 import { AxiosError, AxiosResponse } from "axios"
 import { clear_database } from "../utils/clear_database"
 import { signUp, signUpWrong, login, loginWrong } from "../__mocks__/user"
+import {
+  addResourceQuery,
+  resourceInput,
+  resourceQuery,
+} from "../__mocks__/resource"
 require("dotenv").config()
 import { get_token } from "../utils/get_token"
 
 afterAll(async () => {
-  clear_database()
+  await clear_database()
 })
 
 describe("testing auth functionns", () => {
-  let headers = ""
   let userID = ""
 
   test("signs up", async () => {
@@ -95,24 +98,29 @@ describe("testing auth functionns", () => {
     })
   })
 
-  // it("requests resource with token", async () => {
-  //   const token = getToken(userID)
-  //   request({
-  //     url: "http://localhost:4000/graphql",
-  //     document: `query Query {
-  //       resources {
-  //         headline
-  //         description
-  //         url
-  //       }
-  //     }`,
-  //     requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
-  //   }).then((data) => {
-  //     expect(data).toBeTruthy
-  //   })
-  // })
-})
+  it("adds a new resource", async () => {
+    const token = get_token(userID)
+    await request({
+      url: "http://localhost:4000/graphql",
+      document: addResourceQuery,
+      variables: resourceInput,
+      requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
+    }).then((data) => {
+      expect(data).toBeTruthy
+    })
+  })
 
-// it("works", () => {
-//   expect(true).toBe(true)
-// })
+  it("requests resource with token", async () => {
+    const token = get_token(userID)
+    await request({
+      url: "http://localhost:4000/graphql",
+      document: resourceQuery,
+      requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
+    }).then((data) => {
+      console.log(data)
+      expect(data.resources[0].headline).toBe("Test Headline")
+      expect(data.resources[0].description).toBe("amazing description")
+      expect(data.resources[0].url).toBe("example.com/image")
+    })
+  })
+})

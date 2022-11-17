@@ -37,7 +37,7 @@ npm run dev-test
 
 ## Logging
 
-Errors will be logged to `error.log` by Express middleware using [Winstron](https://github.com/winstonjs/winston)
+Errors will be logged to `error.log` by Express middleware using [Winston](https://github.com/winstonjs/winston)
 
 # Datamodel
 

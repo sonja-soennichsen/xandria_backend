@@ -5,7 +5,6 @@ require("dotenv").config()
 import { server_config } from "./config/server_config"
 import { corsOptions } from "./config/static"
 import { initialize_database, initialize_models } from "./utils/initialize_db"
-const cors = require("cors")
 
 const app = express()
 
@@ -27,7 +26,6 @@ if (process.env.NODE_ENV === "test") {
 
 const driver = neo4j.driver(dbURI, DEV_AUTH)
 
-// put initalize
 export const { User, Resource, Tag, Comment, Note } = initialize_models(driver)
 
 export default Promise.all([initialize_database(driver)]).then(

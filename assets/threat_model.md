@@ -11,12 +11,12 @@
 
 ### External Dependencies
 
-1. Apollo: The backend will be running on Apollo Server, the frontend will use Apollo Client to interact with the Backend
-2. GraphQL: Query language for the databse
-3. Neo4j: database
+1. Apollo: The backend runs on Apollo Server, and the frontend uses Apollo Client to interact with the Backend
+2. GraphQL: Query language for the database
+3. Neo4j: Graph database
 4. Express: REST Endpoints for Auth + Middleware for cookie handling
 5. GCP Cloud Run: Serverless deployment
-6. Github Actions: CI/CD
+6. GitHub Actions: CI/CD
 7. FastAPI: Backend will request resource details [via URL sent] from main/only endpoint
 8. Redis: URL’s queued in caches
 9. Celery: scraping task queue management
@@ -51,12 +51,12 @@
 
 ### Trust Levels
 
-| ID  | Name               | Description                                                                     | Access Rights       |
-| --- | ------------------ | ------------------------------------------------------------------------------- | ------------------- |
-| 1   | Anonymous Web User | A user who has connected to the platorm but has not provided valid credentials. | - Access HTTPS Port |
+| ID  | Name               | Description                                                                      | Access Rights       |
+| --- | ------------------ | -------------------------------------------------------------------------------- | ------------------- |
+| 1   | Anonymous Web User | A user who has connected to the platform but has not provided valid credentials. | - Access HTTPS Port |
 
 - Login with valid credentials
-- Sign up new user
+- Sign up a new user
 - (Future) Access the platform to search + read public resources |
   | 2 | Valid User | A user who has logged in with valid credentials and thus sends a valid JWT with each request. | - All that (1) can do
 - Access browser extension
@@ -64,10 +64,10 @@
 - Add notes and comments to resources
 - Update their own profile data (username, name, email, password) |
   | 3 | Invalid User | A user who has attempted to log in with invalid credentials. | - All that (1) can do |
-  | 4 | Browser Extension | Application running in a logged in user’s browser. | - If it has valid JWT → (2)
+  | 4 | Browser Extension | Application running in a logged-in user’s browser. | - If it has valid JWT → (2)
 - If it has no credentials → (1) |
-  | 5 | Database Server Administrator | The db server administrator has read and write access to the db used by Xandria. | - Full administrative rights to database |
-  | 6 | Database Read/Write User | The database user account used to access the database for read and write access. | - Read and write access to database |
+  | 5 | Database Server Administrator | The DB server administrator has read and write access to the DB used by Xandria. | - Full administrative rights to database |
+  | 6 | Database Read/Write User | The database user account is used to access the database for read and write access. | - Read and write access to database |
   | 7 | Frontend Developer | A developer that has access to the frontend code and deployments. | - Read and write access to frontend
 - Read and write access to deployment |
   | 8 | Backend Administrator | A developer that has ownership of the API and its deployment pipelines. | - Full administrative rights to backend and delivery pipeline |
@@ -75,7 +75,7 @@
 - Read and write access to scraper
 - Database Read/Write User
 - Read and write access to delivery pipeline |
-  | 10 | API | This is the process that the web server executes code as and authenticates itself against the database server as. | - Read and write access to database
+  | 10 | API | This is the process in which the web server executes code as and authenticates itself against the database server as. | - Read and write access to database
 - Write access to scraper |
   | 11 | Scraper | | |
 
@@ -88,9 +88,9 @@
 | 3                                                                              | Availability of platform | Xandria should be available 24hrs/day                                               |
 | Users should be able to interact with the resources, signup, signout and login | 5, 6, 7, 8, 9            |
 | 4                                                                              | Availability of scraper  | Users should be able to bookmark a page 24hrs/day                                   | 8, 9                                                                  |
-| 5                                                                              | JWT                      | The token stored in the browser of each logged in user (as httpOnly cookie)         | 2, 10                                                                 |
+| 5                                                                              | JWT                      | The token stored in the browser of each logged-in user (as httpOnly cookie)         | 2, 10                                                                 |
 | 6                                                                              | Scraper/API Secret       | The secrete/auth mechanism that the API uses to validate a request to the scraper   | 9, 10, 11                                                             |
-| 7                                                                              | Resources                | All resources stored in the db                                                      | - (2) All authenticated users should be able to read public resources |
+| 7                                                                              | Resources                | All resources stored in the DB                                                      | - (2) All authenticated users should be able to read public resources |
 
 - (11) Scraper should be the only one determining what the information about the resource is
 - (1, 2, 3) User shouldn’t be able to update/change information about the resource
@@ -100,7 +100,7 @@
   | 9 | Scraper Keys/Secrets | Keys and secrets used in the Scraper | - 8, 9, 10, 11 |
   | 10 | Deployment Keys/Secrets | Keys and secrets used in the delivery pipeline | - 8 |
 
-# 2. Threats and their Mitigations
+# Threats and their Mitigations
 
 Types of Actors
 
@@ -119,37 +119,32 @@ DREAD (Meier et al., 2003):
 - **Discoverability:** Determine how easy it is to discover vulnerable points in the system infrastructure.
 
 - Risk Assessment:
-
   - (A): Accept: Decide that business impact is acceptable
   - (E): Eliminate: Remove components that make the vulnerability possible
   - (M): Mitigate: Add checks or controls that reduce the risk impact or the chance of occurrence
 
-- Implementation Status
-  - (X): Not implemented
-  - (P): Implementation in progress
-  - (I): Implemented
-
-| Threat                                           | Assessment | Potential Mitigation                                                                                                                                               | STRIDE Code |
-| ------------------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
-| DDoS Scraper → Unauthenticated access to Scraper | M          | - frontend sends url and title to backend, If scraper is down, bookmark is still saved with title + logging the url to scrape it as soon as the scaper is up again |
-| - shared secret between Backend and Scraper      | D          |
-| DoS API interface                                | M          | - throttling                                                                                                                                                       | D           |
-| Websites block Scraper                           | M          | - rotating proxies                                                                                                                                                 | D           |
-| Information Disclosure                           | M          | - access resources with graphql query, that user is not authorized to access                                                                                       | I           |
-| Deploying insecure Code                          | M          | - having security check in the Pipeline → DevSecOps                                                                                                                | I           |
-| Elevation of Privilege                           | M          | - run with least privilege                                                                                                                                         | E           |
-| Tampering with Queries                           | M          | - make sure Schema Introspection is disabled                                                                                                                       |
+| Threat                                           | Assessment | Potential Mitigation                                                                                                                                                           | STRIDE Code |
+| ------------------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| DDoS Scraper → Unauthenticated access to Scraper | M          | - frontend sends URL and title to the backend, If scraper is down, the bookmark is still saved with the title + logging the URL to scrape it as soon as the scaper is up again |
+| - a shared secret between Backend and Scraper    | D          |
+| DoS API interface                                | M          | - throttling                                                                                                                                                                   | D           |
+| Websites block Scraper                           | M          | - rotating proxies                                                                                                                                                             | D           |
+| Information Disclosure                           | M          | - access resources with GraphQL query, that the user is not authorized to access → elaborate auth schema                                                                       | I           |
+| Deploying insecure Code                          | M          | - having security check in the Pipeline → DevSecOps                                                                                                                            | I           |
+| Elevation of Privilege                           | M          | - run with least privilege                                                                                                                                                     |
+| - role-based auth                                | E          |
+| Tampering with Queries                           | M          | - make sure Schema Introspection is disabled                                                                                                                                   |
 | - limit query complexity                         | T          |
-| Repudiation                                      | M          | - detailed and differentiated logging                                                                                                                              |
+| Repudiation                                      | M          | - detailed and differentiated logging                                                                                                                                          |
 
 - timestamps
 - digital signatures?
 - audit trails | R |
-  | Dirty links (from frontend/extension to the backend/scraper) → into DB | M | - sanitize resource links, description…
+  | Dirty links (from frontend/extension to the backend/scraper) → into DB | M | - sanitize resource links, descriptions…
 - block URLs from known malicious sources (Blocklist) | T |
-  | Scrape protected pages | M | - ensure no private data is scraped by disabling extension | I |
-  | Hacker could write their own website with embedded malicious code and let it be scraped | M | - sanitize scraped content (Scraper)
-- sanitize anything that is written into the databse (Server) | E |
+  | Scrape protected pages | M | - ensure no private data is scraped by disabling the extension | I |
+  | Hackers could write their own website with embedded malicious code and let it be scraped | M | - sanitize scraped content (Scraper)
+- sanitize anything that is written into the database (Server) | E |
   | External access to DB | M | - Firewall
 - Accessing DB via SSH
 - VPC
@@ -165,14 +160,14 @@ DREAD (Meier et al., 2003):
   | Scraper Availability | M | - Scaling
 - Rollbacks
 - Load balancing | D |
-  | Error Message discloses information | M | - make sure that malicious actor cannot access any information about internal resources via Error Messages or Logs
+  | Error Message discloses information | M | - make sure that malicious actors cannot access any information about internal resources via Error Messages or Logs
 - write custom error messages | I |
   | Spam by making accounts | M | - rate limit
 - verify email | S |
   | Unauthenticated read of resources | A | - auth flow | |
   | Server-Side Request Forgery | M | - Firewall policy or network access control rules to block all but essential intranet traffic
 - Sanitize and validate input data | |
-  | Cross-Site Request Forgery | M | - deploy frontend on backend on the same domain
+  | Cross-Site Request Forgery | M | - deploy frontend and backend on the same domain
   → set cookie sameSite-property to “lax” | |
 
 ## Currently Implemented Security Measures
@@ -182,18 +177,18 @@ DREAD (Meier et al., 2003):
 - TLS/SSL → HTTP-Request Encryption
 - JWT in httpOnly Cookies
   - JWT generation with secret only known to the server
-  - cannot be accesses via the client, only send with each request
+  - cannot be accessed via the client, only send with each request
   - **TODO: Deploy frontend and backend on the same domain, to set sameSite-property to avoid CSRF-Attacks**
 - CORS
 - Scraper
-  - make sure scraper can be sidestepped (extension provides title, url that is saved in the database if the scraper doesn’t respond)
-  - **TODO: prevent scraper from scraping urls from blocklists**
+  - make sure the scraper can be sidestepped (the extension provides title, URL that is saved in the database if the scraper doesn’t respond)
+  - **TODO: prevent scraper from scraping URLs from blocklists**
 - VPC:
   - Only route requests to private IPs (such as the scraper) through the VPC connector
 - Express helmet middleware (setting security headers)
-- Authentication → If JWT doesn’t hold ID of valid User context creation for GraphQL will fail
-  - seperate Auth REST Endpoint to avoid GraphQL insecurities
-  - if no JWT for graphql-endpoint provided, context creation will fail and no query executed
+- Authentication → If JWT doesn’t hold the ID of valid User context creation for GraphQL will fail
+  - separate Auth REST Endpoint to avoid GraphQL insecurities
+  - if no JWT for GraphQL-endpoint is provided, context creation will fail and no query executed
 - **TODO: Disable Introspection/schema autogeneration** (currently enabled for development reasons)
 - Resolver-based access control
   - Mutations can only be executed with `{isAuthenticated: true}` and a valid current user
@@ -225,20 +220,20 @@ KEY: **WORK IN PROGRESS**
 - CORS
 - HTTPS Redirect
 - VPC:
-  - The scraper (Cloud Run serverless instance) should only be accessible for the API (also a Cloud Run serverless instance). They are both part of the same VPC network (each connected to the VPC via Serverless VPC Access connector) with the scraper’s ingress also set to `internal only` to ensure its traffic is solely to and from the API.
+  - The scraper (Cloud Run serverless instance) should only be accessible for the API (also a Cloud Run serverless instance). They are both parts of the same VPC network (each connected to the VPC via a Serverless VPC Access connector) with the scraper’s ingress also set to `internal only` to ensure its traffic is solely to and from the API.
 - Rotating proxies
   - Avoiding blacklisting from websites by routing through short-lived HTTP(S) proxies at runtime. The proxies are stored and updated in Redis every five minutes by means of a Cloud Function.
 - Task management queue
-  - To protect against overwhelming the server’s/container’s resources, Celery is used to handle scraping jobs seperately.
+  - To protect against overwhelming the server’s/container’s resources, Celery is used to handle scraping jobs separately.
 - Headless browsers
-  - **Sandboxed launches to prevent SSRF still needed.**
+  - **Sandboxed launches to prevent SSRF are still needed.**
 - Input URL validation
   - Validating whether the URL is valid/exists and a public IP address
-  - **Robots.txt: checking whether the User-Agent is set to \* (all) & the if the disallow path != url given (or is root)**
-  - **XSS in URL currently mitigated by whitelisting safe characters.**
+  - **Robots.txt: checking whether the User-Agent is set to \* (all) & the if the disallow path != URL given (or is root)**
+  - **XSS in URL is currently mitigated by whitelisting safe characters.**
   - **Integrating Google’s Web Risk API**
 - **Container Image Security:**
-  - Integrating security checks into our delivery pipeline on Github Actions
+  - Integrating security checks into our delivery pipeline on GitHub Actions
 - **Binary Authorisation:**
   - Securing against supply chain attacks in deploying docker images on Cloud Run which are hosted in Artifact Registry in our network
 - Request security headers (**and explanations**):
@@ -269,7 +264,7 @@ KEY: **WORK IN PROGRESS**
 
 - Neo4j
   - Schema-based access control
-    - Any query can only be executed with a valid JWT that holds information to a valid user from the database
+    - Any query can only be executed with a valid JWT that holds information for a valid user from the database
     - User generation is binding → The current user can only update or delete their own user data + access only notes and bookmarks that they have written themselves
     - Salt, Email, and Password are set to private → client is not able to query these, only accessible with OGM (server)
 - Redis (MemoryStore on GCP)

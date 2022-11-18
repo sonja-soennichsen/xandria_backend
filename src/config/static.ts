@@ -9,7 +9,7 @@ export const cookieConfig: {} = {
   secure: true,
 }
 
-export const signoutConfig: {} = {
+export const signoutConfig: { [key: string]: any } = {
   httpOnly: true,
   sameSite: "none",
   secure: true,
@@ -23,6 +23,7 @@ export const corsOptions = {
     "https://xandria-web-joshuaknauber.vercel.app",
     "http://localhost:3000/",
     "http://localhost:4000/",
+    "https://xandria-web-git-main-joshuaknauber.vercel.app/",
   ],
   credentials: true,
 }
@@ -39,6 +40,7 @@ export const helmetOptions = {
         "https://xandria-web-joshuaknauber.vercel.app",
         "http://localhost:3000/",
         "http://localhost:4000/",
+        "https://xandria-web-git-main-joshuaknauber.vercel.app/",
       ],
     },
   },

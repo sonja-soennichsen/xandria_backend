@@ -3,7 +3,7 @@ const bodyParser = require("body-parser")
 const helmet = require("helmet")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
-import { corsOptions, helmetOptions } from "./types"
+import { corsOptions, helmetOptions } from "./static"
 const express = require("express")
 
 module.exports = function (app: any) {

@@ -3,7 +3,7 @@ const router = express.Router()
 import { compare } from "../../utils/password_checks"
 var jwt = require("jsonwebtoken")
 import { User } from "../../index"
-import { cookieConfig } from "../../config/types"
+import { cookieConfig } from "../../config/static"
 import { Request, Response } from "express"
 const { body } = require("express-validator")
 

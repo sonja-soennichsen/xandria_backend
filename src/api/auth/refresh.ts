@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 var jwt = require("jsonwebtoken")
-import { cookieConfig } from "../../config/types"
+import { cookieConfig } from "../../config/static"
 import { Request, Response } from "express"
 import { create_logger } from "../../utils/create_logger"
 const logger = create_logger()

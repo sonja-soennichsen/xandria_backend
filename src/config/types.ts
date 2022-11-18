@@ -21,6 +21,8 @@ export const corsOptions = {
     "https://xandria-2jytui6ygq-ey.a.run.app",
     "https://xandria.vercel.app",
     "https://xandria-web-joshuaknauber.vercel.app",
+    "http://localhost:3000/",
+    "http://localhost:4000/",
   ],
   credentials: true,
 }

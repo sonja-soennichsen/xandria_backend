@@ -7,17 +7,7 @@ import { corsOptions, helmetOptions } from "./types"
 const express = require("express")
 
 module.exports = function (app: any) {
-  app.use(
-    cors({
-      origin: [
-        "https://studio.apollographql.com",
-        "https://xandria-2jytui6ygq-ey.a.run.app",
-        "https://xandria.vercel.app",
-        "https://xandria-web-joshuaknauber.vercel.app",
-      ],
-      credentials: true,
-    })
-  )
+  app.use(cors(corsOptions))
   // app.use(helmet(helmetOptions))
   app.use(cookieParser())
   app.use(bodyParser.json())

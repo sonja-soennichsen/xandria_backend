@@ -3,9 +3,22 @@ const { ApolloServer } = require("apollo-server-express")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 import { server_config } from "./config/server_config"
+import { corsOptions } from "./config/types"
 import { initialize_database, initialize_models } from "./utils/initialize_db"
+const cors = require("cors")
 
 const app = express()
+app.use(
+  cors({
+    origin: [
+      "https://studio.apollographql.com",
+      "https://xandria-2jytui6ygq-ey.a.run.app",
+      "https://xandria.vercel.app",
+      "https://xandria-web-joshuaknauber.vercel.app",
+    ],
+    credentials: true,
+  })
+)
 
 let dbURI
 let DEV_AUTH
@@ -43,7 +56,7 @@ export default Promise.all([initialize_database(driver)]).then(
     server.applyMiddleware({
       app,
       path: "/graphql",
-      cors: false,
+      cors: corsOptions,
     })
 
     app.listen(4000, () => console.log(`🚀 Server ready at 4000`))

@@ -41,6 +41,7 @@ export const helmetOptions = {
         "http://localhost:3000/",
         "http://localhost:4000/",
         "https://xandria-web-git-main-joshuaknauber.vercel.app/",
+        "https://apollo-server-landing-page.cdn.apollographql.com",
       ],
     },
   },

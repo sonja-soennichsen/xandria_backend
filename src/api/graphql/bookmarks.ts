@@ -1,6 +1,6 @@
 import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
-const fetch = require('@adobe/node-fetch-retry');
+const fetch = require("@adobe/node-fetch-retry")
 
 const makeBookmark = async (
   _source: any,
@@ -111,29 +111,34 @@ const makeBookmarkFromUrl = async (
       })
     } else {
       // fetch scraper
-      const returned = await fetch('https://xandria-scraper-2jytui6ygq-ey.a.run.app', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+      const returned = await fetch(
+        "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: resourceUrl }),
         },
-        body: JSON.stringify({'url': resourceUrl})
-      }, {
-        retryOptions: {
+        {
+          retryOptions: {
             retryInitialDelay: 1000,
             forceSocketTimeout: true,
             retryMaxDuration: 300000,
-          //   retryOnHttpResponse: function (returned: any) {
-          //     if ( (returned.status >= 500) || returned.status >= 400) {
-          //         return true;
-          //     }
-          // }
-        }})
+            //   retryOnHttpResponse: function (returned: any) {
+            //     if ( (returned.status >= 500) || returned.status >= 400) {
+            //         return true;
+            //     }
+            // }
+          },
+        }
+      )
 
-        content = await returned.json();
+      content = await returned.json()
 
-        console.log(content)
-        console.log(content['headline'])
+      console.log(content)
+      console.log(content["headline"])
 
       // make bookmark
       await User.update({
@@ -150,13 +155,13 @@ const makeBookmarkFromUrl = async (
               },
               onCreate: {
                 node: {
-                  "headline": content['headline'],
-                  "description": content['description'],
-                  "url": content['url'],
-                  "imageURL": content['imageURL'],
-                  "rootSite": content['rootSite'],
-                  "author": content['author']
-              },
+                  headline: content["headline"],
+                  description: content["description"],
+                  url: content["url"],
+                  imageURL: content["imageURL"],
+                  rootSite: content["rootSite"],
+                  author: content["author"],
+                },
               },
             },
           ],

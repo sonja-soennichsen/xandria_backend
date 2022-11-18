@@ -33,12 +33,12 @@ export const helmetOptions = {
     directives: {
       "script-src": [
         "'self'",
-        "http://localhost:4000/graphql",
-        "https://apollo-server-landing-page.cdn.apollographql.com",
-        "https://xandria-web-joshuaknauber.vercel.app/",
-        "https://xandria-2jytui6ygq-ey.a.run.app/",
-        "xandria-web-joshuaknauber.vercel.app",
-        "https://xandria.vercel.app/",
+        "https://studio.apollographql.com",
+        "https://xandria-2jytui6ygq-ey.a.run.app",
+        "https://xandria.vercel.app",
+        "https://xandria-web-joshuaknauber.vercel.app",
+        "http://localhost:3000/",
+        "http://localhost:4000/",
       ],
     },
   },

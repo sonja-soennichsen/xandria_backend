@@ -8,7 +8,7 @@ const express = require("express")
 
 module.exports = function (app: any) {
   app.use(cors(corsOptions))
-  // app.use(helmet(helmetOptions))
+  app.use(helmet(helmetOptions))
   app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(express.urlencoded({ extended: true }))

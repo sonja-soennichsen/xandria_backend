@@ -8,17 +8,6 @@ import { initialize_database, initialize_models } from "./utils/initialize_db"
 const cors = require("cors")
 
 const app = express()
-app.use(
-  cors({
-    origin: [
-      "https://studio.apollographql.com",
-      "https://xandria-2jytui6ygq-ey.a.run.app",
-      "https://xandria.vercel.app",
-      "https://xandria-web-joshuaknauber.vercel.app",
-    ],
-    credentials: true,
-  })
-)
 
 let dbURI
 let DEV_AUTH

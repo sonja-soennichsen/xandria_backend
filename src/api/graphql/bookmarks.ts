@@ -80,8 +80,6 @@ const makeBookmarkFromUrl = async (
   try {
     check_auth(context)
 
-    let content
-
     const [existing] = await Resource.find({
       where: {
         url: resourceUrl,
@@ -126,19 +124,11 @@ const makeBookmarkFromUrl = async (
             retryInitialDelay: 1000,
             forceSocketTimeout: true,
             retryMaxDuration: 300000,
-            //   retryOnHttpResponse: function (returned: any) {
-            //     if ( (returned.status >= 500) || returned.status >= 400) {
-            //         return true;
-            //     }
-            // }
           },
         }
       )
 
-      content = await returned.json()
-
-      console.log(content)
-      console.log(content["headline"])
+      const content = await returned.json()
 
       // make bookmark
       await User.update({

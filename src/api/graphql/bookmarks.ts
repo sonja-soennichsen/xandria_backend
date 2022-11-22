@@ -1,5 +1,6 @@
 import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
+import { fetch_scraper } from "../../utils/fetch_scraper"
 const fetch = require("@adobe/node-fetch-retry")
 
 const makeBookmark = async (
@@ -109,117 +110,65 @@ const makeBookmarkFromUrl = async (
       })
     } else {
       // fetch scraper
-      const returned = await fetch(
-        "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url: resourceUrl }),
-        },
-        {
-          retryOptions: {
-            retryInitialDelay: 1000,
-            forceSocketTimeout: true,
-            retryMaxDuration: 300000,
-          },
-        }
-      )
-
-      const content = await returned.json()
-
-      // make bookmark
-      // await User.update({
-      //   "where": {
-      //     "id": context.currentUser.id,
-      //   },
-      //   "connectOrCreate": {
-      //     "bookmarks": [
-      //       {
-      //         "where": {
-      //           "node": {
-      //             "url": resourceUrl
-      //           }
-      //         },
-      //         "onCreate": {
-      //           "node": {
-      //                   headline: content["headline"],
-      //                   description: content["description"],
-      //                   url: content["url"],
-      //                   imageURL: content["imageURL"],
-      //                   rootSite: content["rootSite"],
-      //                   author: content["author"],
-      //                   tags: content["tags"][0]
-      //           },
-      //           "edge": {
-      //             "userAddedTags": []
-      //           }
-      //         }
-      //       }
-      //     ]
-      //   }
-      // })
+      const content = await fetch_scraper(resourceUrl)
 
       await User.update({
-        "where": {
-          "id": context.currentUser.id
+        where: {
+          id: context.currentUser.id,
         },
-        "connectOrCreate": {
-          "bookmarks": [
-            {
-              "where": {
-                "node": {
-                  "url": resourceUrl
-                }
-              },
-              "onCreate": {
-                "node": {
-                        headline: content["headline"],
-                        description: content["description"],
-                        url: content["url"],
-                        imageURL: content["imageURL"],
-                        rootSite: content["rootSite"],
-                        author: content["author"],
-                },
-                "edge": {
-                  "userAddedTags": []
-                }
-              }
-            }
-          ]
-        },
-      })
-
-      await Resource.update({
         connectOrCreate: {
-          tags: [
+          bookmarks: [
             {
               where: {
                 node: {
-                  name: content["tags"][0],
+                  url: resourceUrl,
                 },
               },
               onCreate: {
                 node: {
-                  name: content["tags"][0],
+                  headline: content["headline"],
+                  description: content["description"],
+                  url: content["url"],
+                  imageURL: content["imageURL"],
+                  rootSite: content["rootSite"],
+                  author: content["author"],
                 },
                 edge: {
-                  name: content["tags"][0],
+                  userAddedTags: [],
                 },
               },
             },
           ],
         },
-        where: {
-          url: resourceUrl,
-        },
-      }
-    )
-  }
+      })
 
-
+      content["tags"].map(async (tag: string) => {
+        await Resource.update({
+          connectOrCreate: {
+            tags: [
+              {
+                where: {
+                  node: {
+                    name: tag,
+                  },
+                },
+                onCreate: {
+                  node: {
+                    name: tag,
+                  },
+                  edge: {
+                    name: tag,
+                  },
+                },
+              },
+            ],
+          },
+          where: {
+            url: resourceUrl,
+          },
+        })
+      })
+    }
 
     return true
   } catch (e) {

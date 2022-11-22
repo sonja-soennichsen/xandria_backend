@@ -61,11 +61,3 @@ export async function check_double_resource(resourceUrl: String) {
     })
   }
 }
-
-export async function find_user(username: String) {
-  return await User.find({
-    where: {
-      username: username,
-    },
-  })
-}

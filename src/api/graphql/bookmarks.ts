@@ -151,6 +151,7 @@ const makeBookmarkFromUrl = async (
                   imageURL: content["imageURL"],
                   rootSite: content["rootSite"],
                   author: content["author"],
+                  tags: content["tags"]
                 },
               },
             },

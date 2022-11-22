@@ -8,7 +8,8 @@ export const base_model = gql`
     url: String! @unique
     imageURL: String
     rootSite: String!
-    tags: [String!]!
+    tags: [Tag!]!
+      @relationship(direction: OUT, type: "HAS_TAG", properties: "hasTag")
     users: [User!]!
       @relationship(direction: IN, type: "BOOKMARKED", properties: "bookmarked")
     comments: [Comment!]! @relationship(direction: IN, type: "HAS_COMMENT")

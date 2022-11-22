@@ -7,6 +7,8 @@ import {
   addResourceQuery,
   resourceInput,
   resourceQuery,
+  resourceInputScraper,
+  addResourceQueryScraper
 } from "../__mocks__/resource"
 require("dotenv").config()
 import { get_token } from "../utils/get_token"
@@ -122,4 +124,18 @@ describe("testing auth functionns", () => {
       expect(data.resources[0].url).toBe("example.com/image")
     })
   })
+
+  // it("uses scraper", async () => {
+  //   const token = get_token(userID)
+  //   await request({
+  //     url: "http://localhost:4000/graphql",
+  //     document: addResourceQueryScraper,
+  //     variables: resourceInputScraper,
+  //     requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
+  //   }).then((data) => {
+  //     expect(data).toBeTruthy
+  //     console.log(data)
+  //   })
+  // })
+
 })

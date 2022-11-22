@@ -74,7 +74,7 @@ const removeBookmark = async (
 
 const makeBookmarkFromUrl = async (
   _source: any,
-  { resourceUrl, headline }: any,
+  { resourceUrl }: any,
   context: any
 ) => {
   try {
@@ -131,34 +131,95 @@ const makeBookmarkFromUrl = async (
       const content = await returned.json()
 
       // make bookmark
+      // await User.update({
+      //   "where": {
+      //     "id": context.currentUser.id,
+      //   },
+      //   "connectOrCreate": {
+      //     "bookmarks": [
+      //       {
+      //         "where": {
+      //           "node": {
+      //             "url": resourceUrl
+      //           }
+      //         },
+      //         "onCreate": {
+      //           "node": {
+      //                   headline: content["headline"],
+      //                   description: content["description"],
+      //                   url: content["url"],
+      //                   imageURL: content["imageURL"],
+      //                   rootSite: content["rootSite"],
+      //                   author: content["author"],
+      //                   tags: content["tags"][0]
+      //           },
+      //           "edge": {
+      //             "userAddedTags": []
+      //           }
+      //         }
+      //       }
+      //     ]
+      //   }
+      // })
+
       await User.update({
-        where: {
-          id: context.currentUser.id,
+        "where": {
+          "id": context.currentUser.id
         },
+        "connectOrCreate": {
+          "bookmarks": [
+            {
+              "where": {
+                "node": {
+                  "url": resourceUrl
+                }
+              },
+              "onCreate": {
+                "node": {
+                        headline: content["headline"],
+                        description: content["description"],
+                        url: content["url"],
+                        imageURL: content["imageURL"],
+                        rootSite: content["rootSite"],
+                        author: content["author"],
+                },
+                "edge": {
+                  "userAddedTags": []
+                }
+              }
+            }
+          ]
+        },
+      })
+
+      await Resource.update({
         connectOrCreate: {
-          bookmarks: [
+          tags: [
             {
               where: {
                 node: {
-                  url: resourceUrl,
+                  name: content["tags"][0],
                 },
               },
               onCreate: {
                 node: {
-                  headline: content["headline"],
-                  description: content["description"],
-                  url: content["url"],
-                  imageURL: content["imageURL"],
-                  rootSite: content["rootSite"],
-                  author: content["author"],
-                  tags: content["tags"]
+                  name: content["tags"][0],
+                },
+                edge: {
+                  name: content["tags"][0],
                 },
               },
             },
           ],
         },
-      })
-    }
+        where: {
+          url: resourceUrl,
+        },
+      }
+    )
+  }
+
+
 
     return true
   } catch (e) {

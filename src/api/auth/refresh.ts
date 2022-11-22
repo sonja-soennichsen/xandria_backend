@@ -3,7 +3,7 @@ const router = express.Router()
 var jwt = require("jsonwebtoken")
 import { cookieConfig } from "../../config/static"
 import { Request, Response } from "express"
-import { create_logger } from "../../utils/create_logger"
+import { create_logger } from "../../utils/logger_helper"
 const logger = create_logger()
 
 router.get("/", async (req: Request, res: Response) => {

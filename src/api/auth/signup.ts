@@ -8,7 +8,7 @@ import { cookieConfig } from "../../config/static"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
 import { find_user } from "../../utils/mutation_helper"
-import { create_logger } from "../../utils/create_logger"
+import { create_logger } from "../../utils/logger_helper"
 const logger = create_logger()
 
 router.post(

@@ -480,6 +480,22 @@ query GetResourceByID($resourceId: String!) {
 }
 ```
 
+### Get Resource by Title/Description
+
+```
+query Query($searchterm: String!) {
+  getResourceByTitle(searchterm: $searchterm) {
+    headline
+    tags {
+      name
+    }
+  }
+}
+{
+  "searchterm": string
+}
+```
+
 ### Get all tag names
 
 ```

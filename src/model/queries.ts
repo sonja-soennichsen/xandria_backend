@@ -36,6 +36,18 @@ export const queries = gql`
   }
 
   type Query {
+    getResourceByTitle(searchterm: String!): [Resource]
+      @cypher(
+        statement: """
+        MATCH (r:Resource)
+        WHERE  r.headline CONTAINS searchterm OR r.description CONTAINS searchterm
+        RETURN r
+        """
+      )
+      @auth(rules: [{ isAuthenticated: true }])
+  }
+
+  type Query {
     getResourcesByRelatedTag(tag: String!): [Resource]
       @cypher(
         statement: """

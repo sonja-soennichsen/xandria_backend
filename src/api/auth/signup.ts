@@ -51,12 +51,12 @@ router.post(
     const { users } = await User.create({
       input: [
         {
-          username,
+          username: username.trim(),
           password: hashedPassword,
           salt,
-          name,
+          name: name.trim(),
           role: "User",
-          email,
+          email: email.trim(),
         },
       ],
     })

@@ -36,7 +36,7 @@ const makeBookmark = async (
       },
     })
 
-    return
+    return true
   } catch (e) {
     return e
   }
@@ -68,7 +68,7 @@ const removeBookmark = async (
       },
     })
 
-    return
+    return true
   } catch (e) {
     return e
   }

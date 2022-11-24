@@ -20,7 +20,7 @@ const updateUserData = async (
         email: email,
       },
     })
-    return "it worked"
+    return true
   } catch (e) {
     return e
   }
@@ -48,7 +48,7 @@ const changePassword = async (
           password: hashed,
         },
       })
-      return "password updated"
+      return true
     } else {
       throw new GraphQLError("Wrong Password", {
         extensions: {

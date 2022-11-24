@@ -52,7 +52,7 @@ const addResource = async (
         },
       ],
     })
-    return "it worked"
+    return true
   } catch (e) {
     return e
   }
@@ -90,7 +90,7 @@ const addTagToResource = async (
         id: resourceId,
       },
     })
-    return
+    return true
   } catch (e) {
     return e
   }

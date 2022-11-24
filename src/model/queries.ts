@@ -39,9 +39,8 @@ export const queries = gql`
     getResourceByTitle(searchterm: String!): [Resource]
       @cypher(
         statement: """
-        MATCH (r:Resource)
-        WHERE  r.headline CONTAINS searchterm OR r.description CONTAINS searchterm
-        RETURN r
+        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node
+        RETURN node
         """
       )
       @auth(rules: [{ isAuthenticated: true }])

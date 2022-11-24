@@ -133,7 +133,7 @@ MATCH (n:User) WHERE n.name = $param
 CREATE INDEX user_index FOR (n:User) ON (n.name)
 ```
 
-- Resource by name of tag-relationship, url and headline
+- Resource by name of tag-relationship, url and headline, description
 
 ```sql
 # Query
@@ -145,6 +145,8 @@ return n, r, t
 CREATE TEXT INDEX tag_resource_rel FOR ()-[r:HAS_TAG]-() ON (r.name)
 CREATE TEXT INDEX resource_url FOR (n:Resource) ON (n.url)
 CREATE TEXT INDEX resource_headline FOR (n:Resource) ON (n.headline)
+CREATE INDEX resource_title_descr FOR (n:Resource) ON (n.headline, n.description)
+CREATE FULLTEXT INDEX fulltext_titlesAndDescriptions FOR (n:Resource) ON EACH [n.title, n.description]
 ```
 
 - Nodes by label

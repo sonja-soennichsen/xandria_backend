@@ -40,7 +40,7 @@ const addResource = async (
                   name: tags,
                 },
                 edge: {
-                  name: tags,
+                  name: tags.toLowerCase(),
                 },
               },
             },
@@ -80,7 +80,7 @@ const addTagToResource = async (
                 name: tagName,
               },
               edge: {
-                name: tagName,
+                name: tagName.toLowerCase(),
               },
             },
           },

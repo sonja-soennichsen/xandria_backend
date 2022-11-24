@@ -15,7 +15,7 @@ export async function add_tag_to_resouce(tag: String, url: String) {
               name: tag,
             },
             edge: {
-              name: tag,
+              name: tag.toLowerCase(),
             },
           },
         },

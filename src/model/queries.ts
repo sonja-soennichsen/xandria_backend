@@ -47,16 +47,14 @@ export const queries = gql`
   }
 
   type Query {
-    getResourceByTagsAndTitle(
-      searchterm: String!
-      tags: [String!]!
-    ): [Resource]
+    getResourceByTagsAndTitle(searchterm: String, tags: [String]): [Resource]
       @cypher(
         statement: """
-        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node
-        RETURN node
+        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node, score
+        RETURN node  ORDER BY score DESC
         UNION
-        MATCH (node:Resource )-[:HAS_TAG]-(t:Tag) WHERE t.name IN $tags
+        UNWIND $tags as tag
+        MATCH (node:Resource )-[t:HAS_TAG]-() WHERE t.name = toLower(tag)
         RETURN node
         """
       )

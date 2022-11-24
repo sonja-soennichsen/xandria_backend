@@ -4,6 +4,7 @@ import {
   check_resource_exists,
   check_double_resource,
 } from "../../utils/check"
+var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const addResource = async (
   _source: any,
@@ -20,15 +21,16 @@ const addResource = async (
   context: any
 ) => {
   check_auth(context)
+  const sanitized_url = sanitizeUrl(url)
 
   try {
-    await check_double_resource(url)
+    await check_double_resource(sanitized_url)
     await Resource.create({
       input: [
         {
           headline,
           description,
-          url,
+          url: sanitized_url,
           imageURL,
           rootSite,
           author,

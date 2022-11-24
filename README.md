@@ -508,6 +508,21 @@ query Query($searchterm: String!) {
 }
 ```
 
+### Get resource by Title/Description and List of Tags
+
+```
+query Query($searchterm: String!, $tags: [String!]!) {
+  getResourceByTagAndTitle(searchterm: $searchterm, tags: $tags) {
+    headline
+  }
+}
+
+{
+  "searchterm": "example",
+  "tags": ["tag", "name"]
+}
+```
+
 ### Get all tag names
 
 ```

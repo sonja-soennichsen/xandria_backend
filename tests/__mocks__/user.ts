@@ -1,5 +1,5 @@
 export const signUp = {
-  username: "testUser",
+  username: " testUser ",
   password: "Ne1nfee!fgew",
   name: "Test User",
   email: "null@test.de",

@@ -512,7 +512,7 @@ query Query($searchterm: String!) {
 
 ```
 query Query($searchterm: String!, $tags: [String!]!) {
-  getResourceByTagAndTitle(searchterm: $searchterm, tags: $tags) {
+  getResourceByTagsAndTitle(searchterm: $searchterm, tags: $tags) {
     headline
   }
 }

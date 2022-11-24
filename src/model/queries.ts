@@ -47,7 +47,10 @@ export const queries = gql`
   }
 
   type Query {
-    getResourceByTagAndTitle(searchterm: String!, tags: [String!]!): [Resource]
+    getResourceByTagsAndTitle(
+      searchterm: String!
+      tags: [String!]!
+    ): [Resource]
       @cypher(
         statement: """
         CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node

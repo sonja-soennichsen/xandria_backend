@@ -27,9 +27,9 @@ export const queries = gql`
     getResourcesByTags(tags: [String]!): [Resource]
       @cypher(
         statement: """
-        MATCH (n:Resource )-[:HAS_TAG]-(t:Tag)
-        WHERE t.name IN $tags
-        RETURN n
+        UNWIND $tags as tag
+        MATCH (node:Resource )-[t:HAS_TAG]-() WHERE t.name = toLower(tag)
+        RETURN node
         """
       )
       @auth(rules: [{ isAuthenticated: true }])

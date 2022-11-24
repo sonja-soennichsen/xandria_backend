@@ -2,7 +2,7 @@ import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
 import { fetch_scraper } from "../../utils/fetch_scraper"
 import { add_tag_to_resouce } from "../../utils/mutation_helper"
-const fetch = require("@adobe/node-fetch-retry")
+var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const makeBookmark = async (
   _source: any,
@@ -81,10 +81,11 @@ const makeBookmarkFromUrl = async (
 ) => {
   try {
     check_auth(context)
+    const sanitized_url = sanitizeUrl(resourceUrl)
 
     const [existing] = await Resource.find({
       where: {
-        url: resourceUrl,
+        url: sanitized_url,
       },
     })
 
@@ -100,7 +101,7 @@ const makeBookmarkFromUrl = async (
                 {
                   where: {
                     node: {
-                      url: resourceUrl,
+                      url: sanitized_url,
                     },
                   },
                 },
@@ -110,7 +111,7 @@ const makeBookmarkFromUrl = async (
         },
       })
     } else {
-      const content = await fetch_scraper(resourceUrl)
+      const content = await fetch_scraper(sanitized_url)
 
       await User.update({
         where: {
@@ -121,7 +122,7 @@ const makeBookmarkFromUrl = async (
             {
               where: {
                 node: {
-                  url: resourceUrl,
+                  url: sanitized_url,
                 },
               },
               onCreate: {
@@ -143,7 +144,7 @@ const makeBookmarkFromUrl = async (
       })
 
       content["tags"].map(async (tag: string) => {
-        await add_tag_to_resouce(tag, resourceUrl)
+        await add_tag_to_resouce(tag, sanitized_url)
       })
     }
 

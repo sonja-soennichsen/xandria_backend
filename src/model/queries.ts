@@ -39,8 +39,8 @@ export const queries = gql`
     getResourceByTitle(searchterm: String!): [Resource]
       @cypher(
         statement: """
-        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node
-        RETURN node
+        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node, score
+        RETURN node, score
         """
       )
       @auth(rules: [{ isAuthenticated: true }])

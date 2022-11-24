@@ -138,8 +138,8 @@ CREATE INDEX user_index FOR (n:User) ON (n.name)
 ```sql
 # Query
 MATCH (n:Resource) - [r:HAS_TAG] - (t:Tag)
-WHERE r.name = $param
-return n, r, t
+WHERE r.name = $param return n, r, t
+CALL db.index.fulltext.queryNodes("fulltext_titlesAndDescriptions",  $param) YIELD node, score  RETURN node, score
 
 # Index
 CREATE TEXT INDEX tag_resource_rel FOR ()-[r:HAS_TAG]-() ON (r.name)
@@ -147,6 +147,16 @@ CREATE TEXT INDEX resource_url FOR (n:Resource) ON (n.url)
 CREATE TEXT INDEX resource_headline FOR (n:Resource) ON (n.headline)
 CREATE INDEX resource_title_descr FOR (n:Resource) ON (n.headline, n.description)
 CREATE FULLTEXT INDEX fulltext_titlesAndDescriptions FOR (n:Resource) ON EACH [n.title, n.description]
+```
+
+- Tag by name
+
+```sql
+# Query
+CALL db.index.fulltext.queryRelationships("fulltext_resource_tags",  $param) YIELD relationship   RETURN relationship
+
+# Index
+CREATE FULLTEXT INDEX fulltext_resource_tags FOR ()-[r:HAS_TAG]-() ON EACH [r.name] OPTIONS {indexConfig: {`fulltext.analyzer`: 'url_or_email', `fulltext eventually_consistent`: true}}
 ```
 
 - Nodes by label

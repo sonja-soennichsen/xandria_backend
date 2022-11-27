@@ -1,11 +1,9 @@
-import {
-  create_logger,
-  get_duration_in_milliseconds,
-} from "../utils/logger_helper"
+import { get_duration_in_milliseconds } from "../utils/logger_helper"
+import { loggerOptions } from "./static"
+const { createLogger } = require("winston")
+export const logger = new createLogger(loggerOptions)
 
 module.exports = function (app: any) {
-  const logger = create_logger()
-
   app.use((err: any, req: any, res: any, next: any) => {
     logger.error({ err })
     next()

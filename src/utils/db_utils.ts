@@ -37,7 +37,7 @@ export function initialize_models_and_ogm(driver: any) {
   return { User, Resource, Tag, Comment, Note }
 }
 
-export async function initialize_database(driver: any) {
+export async function get_schema(driver: any) {
   const neoSchema = new Neo4jGraphQL({
     typeDefs,
     driver,

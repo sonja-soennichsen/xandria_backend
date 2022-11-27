@@ -4,7 +4,7 @@ const neo4j = require("neo4j-driver")
 require("dotenv").config()
 import { server_config } from "./config/server_config"
 import { corsOptions } from "./config/static"
-import { initialize_database, initialize_models } from "./utils/initialize_db"
+import { initialize_database, initialize_models } from "./utils/db_utils"
 
 const app = express()
 

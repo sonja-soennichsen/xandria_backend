@@ -5,18 +5,20 @@ require("dotenv").config()
 import { server_config } from "./config/server_config"
 import { corsOptions } from "./config/static"
 import {
-  initialize_models_and_ogm,
+  initialize_models,
   get_schema,
   get_credentials,
 } from "./utils/db_utils"
+const { OGM } = require("@neo4j/graphql-ogm")
+import { typeDefs } from "./model"
 
 const app = express()
 
 const { DB_URI, DEV_AUTH } = get_credentials()
 const driver = neo4j.driver(DB_URI, DEV_AUTH)
-
-export const { User, Resource, Tag, Comment, Note } =
-  initialize_models_and_ogm(driver)
+const ogm = new OGM({ typeDefs, driver })
+ogm.init()
+export const { User, Resource, Tag, Comment, Note } = initialize_models(ogm)
 
 export default Promise.all([get_schema(driver)]).then(async ([schema]) => {
   const server = new ApolloServer({

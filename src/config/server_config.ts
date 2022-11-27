@@ -1,8 +1,9 @@
 const depthLimit = require("graphql-depth-limit")
-import { ApolloError } from "apollo-server-express"
+
 var jwt = require("jsonwebtoken")
 import { User } from "../index"
 import { check_context_auth } from "../utils/check"
+import { format_error } from "../utils/error_utils"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
 
 export const server_config = {
@@ -28,15 +29,5 @@ export const server_config = {
   },
   introspection: true,
   playground: true,
-  formatError: (err: ApolloError) => {
-    if (err.message.startsWith("Expected")) {
-      return new Error("Internal server error -  Malformed Database Source")
-    }
-    if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
-      return new Error(
-        "Context creation failed: JsonWebTokenError: jwt must be provided"
-      )
-    }
-    return err
-  },
+  formatError: format_error,
 }

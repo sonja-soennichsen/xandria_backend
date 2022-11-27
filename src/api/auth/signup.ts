@@ -8,6 +8,7 @@ import { cookieConfig } from "../../config/static"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
 import { find_user } from "../../utils/mutation_utils"
+import { user_by_username } from "../../utils/find"
 
 router.post(
   "/",
@@ -26,7 +27,7 @@ router.post(
 
     const { password, username, name, email } = req.body
 
-    const [existing] = await find_user(username)
+    const [existing] = await user_by_username(username)
 
     if (existing) {
       return res.status(400).json({

@@ -1,5 +1,6 @@
 import { GraphQLError } from "graphql"
 import { Resource, User } from "../index"
+import { resource_by_id, resource_by_url } from "./find"
 
 export function check_auth(context: any) {
   if (!context.currentUser || !context.auth.isAuthenticated) {
@@ -27,10 +28,8 @@ export function check_context_auth(currentUser: any) {
   }
 }
 
-export async function check_resource_exists(resourceId: String) {
-  const [exists] = await Resource.find({
-    where: { id: resourceId },
-  })
+export async function check_resource_exists(id: String) {
+  const [exists] = await resource_by_id(id)
 
   if (!exists) {
     throw new GraphQLError("Wrong ID provided", {
@@ -44,12 +43,8 @@ export async function check_resource_exists(resourceId: String) {
   }
 }
 
-export async function check_double_resource(resourceUrl: String) {
-  const [existing] = await Resource.find({
-    where: {
-      url: resourceUrl,
-    },
-  })
+export async function check_double_resource(url: String) {
+  const [existing] = await resource_by_url(url)
   if (existing) {
     throw new GraphQLError("Resoure already exists", {
       extensions: {

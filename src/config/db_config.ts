@@ -5,7 +5,9 @@ const { Neo4jGraphQL } = require("@neo4j/graphql")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 const neo4j = require("neo4j-driver")
 
-export function initialize_models(ogm: any) {
+export function initialize_ogm_and_models(driver: any) {
+  const ogm = new OGM({ typeDefs, driver })
+  ogm.init()
   const User = ogm.model("User")
   const Resource = ogm.model("Resource")
   const Tag = ogm.model("Tag")

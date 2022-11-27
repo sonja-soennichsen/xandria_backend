@@ -5,30 +5,14 @@ require("dotenv").config()
 import { server_config } from "./config/server_config"
 import { corsOptions } from "./config/static"
 import {
-  initialize_database,
+  get_driver,
   initialize_models_and_ogm,
+  initialize_database,
 } from "./utils/db_utils"
 
 const app = express()
 
-let dbURI
-let DEV_AUTH
-if (process.env.NODE_ENV === "test") {
-  dbURI = process.env.NEO4J_URI_TEST
-  DEV_AUTH = neo4j.auth.basic(
-    process.env.NEO4J_USER,
-    process.env.NEO4J_PASSWORD_TEST
-  )
-} else {
-  dbURI = process.env.NEO4J_URI
-  DEV_AUTH = neo4j.auth.basic(
-    process.env.NEO4J_USER,
-    process.env.NEO4J_PASSWORD
-  )
-}
-
-const driver = neo4j.driver(dbURI, DEV_AUTH)
-
+const driver = get_driver()
 export const { User, Resource, Tag, Comment, Note } =
   initialize_models_and_ogm(driver)
 

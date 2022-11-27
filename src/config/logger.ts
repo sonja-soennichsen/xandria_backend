@@ -1,6 +1,6 @@
 import {
   create_logger,
-  getDurationInMilliseconds,
+  get_duration_in_milliseconds,
 } from "../utils/logger_helper"
 
 module.exports = function (app: any) {
@@ -15,7 +15,7 @@ module.exports = function (app: any) {
     const start = process.hrtime()
 
     res.on("close", () => {
-      const durationInMilliseconds = getDurationInMilliseconds(start)
+      const durationInMilliseconds = get_duration_in_milliseconds(start)
       logger.info(
         `[Method]${req.method} [URL]${
           req.originalUrl

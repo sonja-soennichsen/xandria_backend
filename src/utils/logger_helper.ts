@@ -13,7 +13,7 @@ export function create_logger() {
   return new createLogger(myWinstonOptions)
 }
 
-export function getDurationInMilliseconds(start: [number, number]) {
+export function get_duration_in_milliseconds(start: [number, number]) {
   const NS_PER_SEC = 1e9
   const NS_TO_MS = 1e6
   const diff = process.hrtime(start)

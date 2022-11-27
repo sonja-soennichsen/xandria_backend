@@ -1,6 +1,6 @@
 import express from "express"
 const router = express.Router()
-import { compare } from "../../utils/password_checks"
+import { compare } from "../../utils/password_uitls"
 var jwt = require("jsonwebtoken")
 import { User } from "../../index"
 import { cookieConfig } from "../../config/static"

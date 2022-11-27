@@ -1,6 +1,6 @@
 import { User } from "../../index"
 import { check_auth } from "../../utils/check"
-import { compare, hash } from "../../utils/password_checks"
+import { compare, hash } from "../../utils/password_uitls"
 import { GraphQLError } from "graphql"
 
 const updateUserData = async (

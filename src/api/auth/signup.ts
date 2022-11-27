@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-import { get_salt, hash } from "../../utils/password_checks"
+import { get_salt, hash } from "../../utils/password_uitls"
 var jwt = require("jsonwebtoken")
 import { User } from "../../index"
 const { passwordStrength } = require("check-password-strength")

@@ -2,7 +2,7 @@ const express = require("express")
 const { ApolloServer } = require("apollo-server-express")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
-import { server_config } from "./config/server_config"
+import { initialize_server } from "./config/server_config"
 import { corsOptions } from "./config/static"
 import {
   initialize_models,
@@ -21,10 +21,7 @@ ogm.init()
 export const { User, Resource, Tag, Comment, Note } = initialize_models(ogm)
 
 export default Promise.all([get_schema(driver)]).then(async ([schema]) => {
-  const server = new ApolloServer({
-    schema,
-    ...server_config,
-  })
+  const server = initialize_server(schema)
   await server.start()
 
   require("./config/middleware")(app)

@@ -34,3 +34,39 @@ export async function find_user(username: String) {
     },
   })
 }
+
+export async function make_bookmark(
+  id: String,
+  url: String,
+  userAddedTags?: String[]
+) {
+  try {
+    await User.update({
+      where: {
+        id: id,
+      },
+      update: {
+        bookmarks: [
+          {
+            connect: [
+              {
+                where: {
+                  node: {
+                    url: url,
+                  },
+                },
+                edge: {
+                  userAddedTags: userAddedTags ? userAddedTags : [],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    })
+
+    return
+  } catch (e) {
+    return e
+  }
+}

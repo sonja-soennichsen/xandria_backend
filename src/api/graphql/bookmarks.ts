@@ -1,8 +1,8 @@
 import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
 import { fetch_scraper } from "../../utils/fetch_scraper"
-import { resource_by_url } from "../../utils/find"
-import { add_tag_to_resouce } from "../../utils/mutation_utils"
+import { resource_by_id, resource_by_url } from "../../utils/find"
+import { add_tag_to_resouce, make_bookmark } from "../../utils/mutation_utils"
 var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const makeBookmark = async (
@@ -12,30 +12,8 @@ const makeBookmark = async (
 ) => {
   try {
     check_auth(context)
-
-    await User.update({
-      where: {
-        id: context.currentUser.id,
-      },
-      update: {
-        bookmarks: [
-          {
-            connect: [
-              {
-                where: {
-                  node: {
-                    id: resourceId,
-                  },
-                },
-                edge: {
-                  userAddedTags: userAddedTags,
-                },
-              },
-            ],
-          },
-        ],
-      },
-    })
+    const [resource] = await resource_by_id(resourceId)
+    await make_bookmark(context.currentUser.id, resource[0].url, userAddedTags)
 
     return true
   } catch (e) {
@@ -83,30 +61,10 @@ const makeBookmarkFromUrl = async (
   try {
     check_auth(context)
     const sanitized_url = sanitizeUrl(resourceUrl)
-
     const [existing] = await resource_by_url(sanitizeUrl)
 
     if (existing) {
-      await User.update({
-        where: {
-          username: context.currentUser.username,
-        },
-        update: {
-          bookmarks: [
-            {
-              connect: [
-                {
-                  where: {
-                    node: {
-                      url: sanitized_url,
-                    },
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      })
+      await make_bookmark(context.currentUser.id, sanitizeUrl)
     } else {
       const content = await fetch_scraper(sanitized_url)
 

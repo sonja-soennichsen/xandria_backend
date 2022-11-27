@@ -7,7 +7,7 @@ const { passwordStrength } = require("check-password-strength")
 import { cookieConfig } from "../../config/static"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
-import { find_user } from "../../utils/mutation_helper"
+import { find_user } from "../../utils/mutation_utils"
 
 router.post(
   "/",

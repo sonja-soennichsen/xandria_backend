@@ -1,7 +1,7 @@
 import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
 import { fetch_scraper } from "../../utils/fetch_scraper"
-import { add_tag_to_resouce } from "../../utils/mutation_helper"
+import { add_tag_to_resouce } from "../../utils/mutation_utils"
 var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const makeBookmark = async (

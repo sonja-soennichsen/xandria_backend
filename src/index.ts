@@ -1,5 +1,4 @@
 const express = require("express")
-const { ApolloServer } = require("apollo-server-express")
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 import { initialize_server } from "./config/server_config"
@@ -8,7 +7,7 @@ import {
   initialize_models,
   get_schema,
   get_credentials,
-} from "./utils/db_utils"
+} from "./config/db_config"
 const { OGM } = require("@neo4j/graphql-ogm")
 import { typeDefs } from "./model"
 

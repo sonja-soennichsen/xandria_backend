@@ -1,38 +1,37 @@
 import { Resource, User } from "../index"
+import { tagInterface } from "../config/static"
 
-export async function add_tag_to_resouce(tag: String, url: String) {
-  await Resource.update({
-    connectOrCreate: {
-      tags: [
-        {
-          where: {
-            node: {
-              name: tag,
-            },
-          },
-          onCreate: {
-            node: {
-              name: tag,
-            },
-            edge: {
-              name: tag.toLowerCase(),
-            },
-          },
+export function get_tag_query(tags: [String], url: String) {
+  var tagList: tagInterface[] = []
+
+  tags.map((tag: string) => {
+    var temp: tagInterface = {
+      where: {
+        node: {
+          name: tag,
         },
-      ],
+      },
+      onCreate: {
+        node: {
+          name: tag,
+        },
+        edge: {
+          name: tag.toLowerCase(),
+        },
+      },
+    }
+    tagList.push(temp)
+  })
+
+  const tagQuery = {
+    connectOrCreate: {
+      tags: tagList,
     },
     where: {
       url: url,
     },
-  })
-}
-
-export async function find_user(username: String) {
-  return await User.find({
-    where: {
-      username: username,
-    },
-  })
+  }
+  return tagQuery
 }
 
 export async function make_bookmark(

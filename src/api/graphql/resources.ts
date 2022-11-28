@@ -4,6 +4,8 @@ import {
   check_resource_exists,
   check_double_resource,
 } from "../../utils/check"
+import { resource_by_id } from "../../utils/find"
+import { get_tag_query } from "../../utils/mutation_utils"
 var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const addResource = async (
@@ -62,36 +64,17 @@ const addResource = async (
 
 const addTagToResource = async (
   _source: any,
-  { resourceId, tagName }: any,
+  { resourceId, tags }: any,
   context: any
 ) => {
   try {
     check_auth(context)
-    await check_resource_exists(resourceId)
-    await Resource.update({
-      connectOrCreate: {
-        tags: [
-          {
-            where: {
-              node: {
-                name: tagName,
-              },
-            },
-            onCreate: {
-              node: {
-                name: tagName,
-              },
-              edge: {
-                name: tagName.toLowerCase(),
-              },
-            },
-          },
-        ],
-      },
-      where: {
-        id: resourceId,
-      },
-    })
+    const resource = await resource_by_id(resourceId)
+    console.log(resource)
+
+    const tagQuery = get_tag_query(tags, resource[0].url)
+    await Resource.update(tagQuery)
+
     return true
   } catch (e) {
     return e

@@ -18,7 +18,7 @@ export const mutations = gql`
     deleteNote(noteId: String!): Boolean
   }
   type Mutation {
-    addTagToResource(resourceId: String!, tagName: String!): Boolean
+    addTagToResource(resourceId: String!, tags: [String]!): Boolean
     relateTag(tag1: String!, tag2: String!): Boolean
   }
   type Mutation {
@@ -36,6 +36,6 @@ export const mutations = gql`
       author: String!
       tags: String!
       userAddedTags: [String!]
-    ): Boolean
+    ): String
   }
 `

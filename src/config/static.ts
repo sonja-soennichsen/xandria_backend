@@ -55,3 +55,19 @@ export const loggerOptions = {
     new transports.Console({ format: format.simple() }),
   ],
 }
+
+export interface tagInterface {
+  where: {
+    node: {
+      name: string
+    }
+  }
+  onCreate: {
+    node: {
+      name: string
+    }
+    edge: {
+      name: string
+    }
+  }
+}

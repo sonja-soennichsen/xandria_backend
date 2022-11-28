@@ -29,7 +29,7 @@ export const initialize_server = (schema: any) => {
         throw new Error(e)
       }
     },
-    introspection: false,
+    introspection: true,
     playground: true,
     formatError: format_error,
   })

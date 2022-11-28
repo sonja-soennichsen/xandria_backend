@@ -7,8 +7,6 @@ import {
   addResourceQuery,
   resourceInput,
   resourceQuery,
-  resourceInputScraper,
-  addResourceQueryScraper
 } from "../__mocks__/resource"
 require("dotenv").config()
 import { get_token } from "../utils/get_token"
@@ -17,7 +15,7 @@ afterAll(async () => {
   await clear_database()
 })
 
-describe("testing auth functionns", () => {
+describe("testing auth and graphql endpoint", () => {
   let userID = ""
 
   test("signs up", async () => {
@@ -58,7 +56,6 @@ describe("testing auth functionns", () => {
   })
 
   test("logs in", async () => {
-    process.env.JWT = "TEST"
     await axios
       .post("http://localhost:4000/login", login)
       .then((res: any) => {
@@ -137,5 +134,4 @@ describe("testing auth functionns", () => {
   //     console.log(data)
   //   })
   // })
-
 })

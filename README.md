@@ -331,12 +331,12 @@ mutation DeleteNote($noteId: String!) {
 Adds a tag to the selected resource. If the tag doesn't exist, it creates a new one
 
 ```
-mutation AddTagToResource($resourceUrl: String, $tagName: String) {
-  addTagToResource(resourceURL: $resourceUrl, tagName: $tagName)
+mutation AddTagToResource($resourceId: String!, $tags: [String]!) {
+  addTagToResource(resourceId: $resourceId, tags: $tags)
 }
 {
-  "resourceUrl": "resourceUrl",
-  "tagName": "tagName"
+  "resourceId": id,
+  "tags": [ "example",  "tag"]
 }
 ```
 

@@ -65,10 +65,12 @@ const makeBookmarkFromUrl = async (
 
     if (existing) {
       await make_bookmark(context.currentUser.id, sanitized_url)
+      return "bookmark created to existing resource"
     } else {
       try {
         const content = await fetch_scraper(sanitized_url)
 
+        // create resource and make bookmark
         await User.update({
           where: {
             id: context.currentUser.id,
@@ -99,8 +101,11 @@ const makeBookmarkFromUrl = async (
           },
         })
 
+        // add tags
         const tagQuery = get_tag_query(content["tags"], sanitized_url)
         await Resource.update(tagQuery)
+
+        return "Bookmark created to newly created resource"
       } catch (e) {
         // If scraper doesn't work, make bookmark for user with only the url
         await User.update({
@@ -135,8 +140,6 @@ const makeBookmarkFromUrl = async (
         return "Scraper failed - Bookmark created only with URL "
       }
     }
-
-    return "Bookmark successfully created"
   } catch (e) {
     return e
   }

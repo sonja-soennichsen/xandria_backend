@@ -1,5 +1,4 @@
 const express = require("express")
-
 const neo4j = require("neo4j-driver")
 require("dotenv").config()
 import { initialize_server } from "./config/server_config"

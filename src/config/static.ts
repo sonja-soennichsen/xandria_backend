@@ -71,3 +71,13 @@ export interface tagInterface {
     }
   }
 }
+
+export interface ScraperData {
+  headline: string
+  description: string
+  url: string
+  imageURL: string
+  rootSite: string
+  author: string
+  tags: [String]
+}

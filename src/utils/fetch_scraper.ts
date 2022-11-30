@@ -1,14 +1,5 @@
 const fetch = require("@adobe/node-fetch-retry")
-
-interface ScraperData {
-  headline: String
-  description: String
-  url: String
-  imageURL: String
-  rootSite: String
-  author: String
-  tags: [String]
-}
+import { ScraperData } from "../config/static"
 
 export async function fetch_scraper(url: String) {
   const returned = await fetch(

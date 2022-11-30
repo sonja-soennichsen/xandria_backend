@@ -9,7 +9,7 @@ import { TagModel } from "../models/tag_model"
 import { CommentModel } from "../models/comment_model"
 const neo4j = require("neo4j-driver")
 
-export function initialize_ogm_and_models(driver: any) {
+export function initialize_models() {
   const User = new UserModel()
   const Resource = new ResourceModel()
   const Tag = new TagModel()

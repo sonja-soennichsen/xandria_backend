@@ -24,4 +24,8 @@ export class CommentModel extends OGM {
   async delete(query: UpdateInput) {
     return this.Comment.delete(query)
   }
+
+  async find(query: any) {
+    return this.Comment.find(query)
+  }
 }

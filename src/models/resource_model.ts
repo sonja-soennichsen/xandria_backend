@@ -61,4 +61,8 @@ export class ResourceModel extends OGM {
   async update(query: UpdateInput) {
     return this.Resource.update(query)
   }
+
+  async find(query: any) {
+    return this.Resource.find(query)
+  }
 }

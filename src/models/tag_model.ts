@@ -20,4 +20,8 @@ export class TagModel extends OGM {
   async update(query: UpdateInput) {
     return this.Tag.update(query)
   }
+
+  async find(query: any) {
+    return this.Tag.find(query)
+  }
 }

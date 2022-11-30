@@ -32,4 +32,8 @@ export class UserModel extends OGM {
   async update(query: UpdateInput) {
     return this.User.update(query)
   }
+
+  async find(query: any) {
+    return this.User.find(query)
+  }
 }

@@ -24,4 +24,8 @@ export class NoteModel extends OGM {
   async delete(query: UpdateInput) {
     return this.Note.delete(query)
   }
+
+  async find(query: any) {
+    return this.Note.find(query)
+  }
 }

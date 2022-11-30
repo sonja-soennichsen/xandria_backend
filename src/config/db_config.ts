@@ -4,13 +4,14 @@ import resolvers from "../api/graphql"
 const { Neo4jGraphQL } = require("@neo4j/graphql")
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth"
 import { UserModel } from "../models/user_model"
+import { ResourceModel } from "../models/resource_model"
 const neo4j = require("neo4j-driver")
 
 export function initialize_ogm_and_models(driver: any) {
   const ogm = new OGM({ typeDefs, driver })
   ogm.init()
   const User = new UserModel()
-  const Resource = ogm.model("Resource")
+  const Resource = new ResourceModel()
   const Tag = ogm.model("Tag")
   const Comment = ogm.model("Comment")
   const Note = ogm.model("Note")

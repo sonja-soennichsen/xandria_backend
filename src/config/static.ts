@@ -83,14 +83,7 @@ export interface ScraperData {
 }
 
 export interface CreateInput {
-  input: {
-    username: any
-    password: any
-    salt: any
-    name: any
-    role: string
-    email: any
-  }[]
+  [key: string]: any
 }
 
 export interface UpdateInput {

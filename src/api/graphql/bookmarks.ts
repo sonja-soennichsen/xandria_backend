@@ -1,7 +1,6 @@
 import { User, Resource } from "../../index"
-import { check_auth, check_resource_exists } from "../../utils/check"
+import { check_auth } from "../../utils/check"
 import { fetch_scraper } from "../../utils/fetch_scraper"
-import { resource_by_id, resource_by_url } from "../../utils/find"
 import { get_tag_query, make_bookmark } from "../../utils/mutation_utils"
 var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
@@ -12,7 +11,7 @@ const makeBookmark = async (
 ) => {
   try {
     check_auth(context)
-    const [resource] = await resource_by_id(resourceId)
+    const [resource] = await Resource.find_by_id(resourceId)
     await make_bookmark(context.currentUser.id, resource[0].url, userAddedTags)
 
     return true
@@ -28,7 +27,7 @@ const removeBookmark = async (
 ) => {
   try {
     check_auth(context)
-    await check_resource_exists(resourceId)
+    await Resource.exists(resourceId)
 
     await User.update({
       where: {
@@ -61,7 +60,7 @@ const makeBookmarkFromUrl = async (
   try {
     check_auth(context)
     const sanitized_url = sanitizeUrl(resourceUrl)
-    const [existing] = await resource_by_url(sanitized_url)
+    const [existing] = await Resource.find_by_url(sanitized_url)
 
     if (existing) {
       await make_bookmark(context.currentUser.id, sanitized_url)

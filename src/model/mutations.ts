@@ -2,28 +2,28 @@ const { gql } = require("apollo-server")
 
 export const mutations = gql`
   type Mutation {
-    makeBookmark(resourceId: String!, userAddedTags: [String]!): String
-    removeBookmark(resourceId: String!): String
-    makeBookmarkFromUrl(resourceUrl: String!, headline: String): String
+    makeBookmark(resourceId: String!, userAddedTags: [String]!): Boolean
+    removeBookmark(resourceId: String!): Boolean
+    makeBookmarkFromUrl(resourceUrl: String!): Boolean
   }
 
   type Mutation {
-    addComment(resourceId: String!, text: String!): String
-    deleteComment(commentId: String!): String
+    addComment(resourceId: String!, text: String!): Boolean
+    deleteComment(commentId: String!): Boolean
   }
 
   type Mutation {
-    addNote(resourceId: String!, text: String!): String
-    updateNote(noteId: String!, text: String!): String
-    deleteNote(noteId: String!): String
+    addNote(resourceId: String!, text: String!): Boolean
+    updateNote(noteId: String!, text: String!): Boolean
+    deleteNote(noteId: String!): Boolean
   }
   type Mutation {
-    addTagToResource(resourceId: String!, tagName: String!): String
-    relateTag(tag1: String!, tag2: String!): String
+    addTagToResource(resourceId: String!, tags: [String]!): Boolean
+    relateTag(tag1: String!, tag2: String!): Boolean
   }
   type Mutation {
-    updateUserData(newUsername: String!, name: String!, email: String!): String
-    changePassword(oldPassword: String!, newPassword: String!): String
+    updateUserData(newUsername: String!, name: String!, email: String!): Boolean
+    changePassword(oldPassword: String!, newPassword: String!): Boolean
   }
 
   type Mutation {
@@ -36,6 +36,6 @@ export const mutations = gql`
       author: String!
       tags: String!
       userAddedTags: [String!]
-    ): String!
+    ): String
   }
 `

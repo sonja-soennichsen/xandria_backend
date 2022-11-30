@@ -27,9 +27,35 @@ export const queries = gql`
     getResourcesByTags(tags: [String]!): [Resource]
       @cypher(
         statement: """
-        MATCH (n:Resource )-[:HAS_TAG]-(t:Tag)
-        WHERE t.name IN tags
-        RETURN n
+        UNWIND $tags as tag
+        MATCH (node:Resource )-[t:HAS_TAG]-() WHERE t.name = toLower(tag)
+        RETURN node
+        """
+      )
+      @auth(rules: [{ isAuthenticated: true }])
+  }
+
+  type Query {
+    getResourceByTitle(searchterm: String!): [Resource]
+      @cypher(
+        statement: """
+        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node, score
+        RETURN node, score
+        """
+      )
+      @auth(rules: [{ isAuthenticated: true }])
+  }
+
+  type Query {
+    getResourceByTagsAndTitle(searchterm: String, tags: [String]): [Resource]
+      @cypher(
+        statement: """
+        CALL db.index.fulltext.queryNodes(\\"fulltext_titlesAndDescriptions\\", searchterm) YIELD node, score
+        RETURN node  ORDER BY score DESC
+        UNION
+        UNWIND $tags as tag
+        MATCH (node:Resource )-[t:HAS_TAG]-() WHERE t.name = toLower(tag)
+        RETURN node
         """
       )
       @auth(rules: [{ isAuthenticated: true }])

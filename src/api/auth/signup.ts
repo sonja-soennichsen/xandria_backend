@@ -1,15 +1,13 @@
 const express = require("express")
 const router = express.Router()
-import { get_salt, hash } from "../../utils/password_checks"
+import { get_salt, hash } from "../../utils/password_uitls"
 var jwt = require("jsonwebtoken")
 import { User } from "../../index"
 const { passwordStrength } = require("check-password-strength")
 import { cookieConfig } from "../../config/static"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
-import { find_user } from "../../utils/check"
-import { create_logger } from "../../utils/create_logger"
-const logger = create_logger()
+import { user_by_username } from "../../utils/find"
 
 router.post(
   "/",
@@ -23,13 +21,12 @@ router.post(
   async (req: Request, res: Response) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      logger.error(errors.array())
       return res.status(422).json({ errors: errors.array() })
     }
 
     const { password, username, name, email } = req.body
 
-    const [existing] = await find_user(username)
+    const [existing] = await user_by_username(username)
 
     if (existing) {
       return res.status(400).json({
@@ -51,12 +48,12 @@ router.post(
     const { users } = await User.create({
       input: [
         {
-          username,
+          username: username.trim(),
           password: hashedPassword,
           salt,
-          name,
+          name: name.trim(),
           role: "User",
-          email,
+          email: email.trim(),
         },
       ],
     })

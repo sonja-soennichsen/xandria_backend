@@ -133,18 +133,30 @@ MATCH (n:User) WHERE n.name = $param
 CREATE INDEX user_index FOR (n:User) ON (n.name)
 ```
 
-- Resource by name of tag-relationship, url and headline
+- Resource by name of tag-relationship, url and headline, description
 
 ```sql
 # Query
 MATCH (n:Resource) - [r:HAS_TAG] - (t:Tag)
-WHERE r.name = $param
-return n, r, t
+WHERE r.name = $param return n, r, t
+CALL db.index.fulltext.queryNodes("fulltext_titlesAndDescriptions",  $param) YIELD node, score  RETURN node, score
 
 # Index
 CREATE TEXT INDEX tag_resource_rel FOR ()-[r:HAS_TAG]-() ON (r.name)
 CREATE TEXT INDEX resource_url FOR (n:Resource) ON (n.url)
 CREATE TEXT INDEX resource_headline FOR (n:Resource) ON (n.headline)
+CREATE INDEX resource_title_descr FOR (n:Resource) ON (n.headline, n.description)
+CREATE FULLTEXT INDEX fulltext_titlesAndDescriptions FOR (n:Resource) ON EACH [n.headline, n.description]
+```
+
+- Tag by name
+
+```sql
+# Query
+CALL db.index.fulltext.queryRelationships("fulltext_resource_tags",  $param) YIELD relationship   RETURN relationship
+
+# Index
+CREATE FULLTEXT INDEX fulltext_resource_tags FOR ()-[r:HAS_TAG]-() ON EACH [r.name] OPTIONS {indexConfig: {`fulltext.analyzer`: 'url_or_email', `fulltext eventually_consistent`: true}}
 ```
 
 - Nodes by label
@@ -319,12 +331,12 @@ mutation DeleteNote($noteId: String!) {
 Adds a tag to the selected resource. If the tag doesn't exist, it creates a new one
 
 ```
-mutation AddTagToResource($resourceUrl: String, $tagName: String) {
-  addTagToResource(resourceURL: $resourceUrl, tagName: $tagName)
+mutation AddTagToResource($resourceId: String!, $tags: [String]!) {
+  addTagToResource(resourceId: $resourceId, tags: $tags)
 }
 {
-  "resourceUrl": "resourceUrl",
-  "tagName": "tagName"
+  "resourceId": id,
+  "tags": [ "example",  "tag"]
 }
 ```
 
@@ -477,6 +489,37 @@ query GetResourceByID($resourceId: String!) {
 }
 {
   "resourceId": String
+}
+```
+
+### Get Resource by Title/Description
+
+```
+query Query($searchterm: String!) {
+  getResourceByTitle(searchterm: $searchterm) {
+    headline
+    tags {
+      name
+    }
+  }
+}
+{
+  "searchterm": string
+}
+```
+
+### Get resource by Title/Description and List of Tags
+
+```
+query Query($searchterm: String!, $tags: [String!]!) {
+  getResourceByTagsAndTitle(searchterm: $searchterm, tags: $tags) {
+    headline
+  }
+}
+
+{
+  "searchterm": "example",
+  "tags": ["tag", "name"]
 }
 ```
 

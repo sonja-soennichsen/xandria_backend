@@ -1,7 +1,8 @@
 import { User } from "../../index"
 import { check_auth } from "../../utils/check"
-import { compare, hash } from "../../utils/password_checks"
+import { compare, hash } from "../../utils/password_uitls"
 import { GraphQLError } from "graphql"
+import { user_by_id } from "../../utils/find"
 
 const updateUserData = async (
   _source: any,
@@ -20,7 +21,7 @@ const updateUserData = async (
         email: email,
       },
     })
-    return "it worked"
+    return true
   } catch (e) {
     return e
   }
@@ -34,9 +35,7 @@ const changePassword = async (
   try {
     check_auth(context)
 
-    const [user] = await User.find({
-      where: { id: context.currentUser.id },
-    })
+    const [user] = await user_by_id(context.currentUser.id)
 
     if (compare(oldPassword, user.password, user.salt)) {
       const hashed = hash(newPassword, user.salt)
@@ -48,7 +47,7 @@ const changePassword = async (
           password: hashed,
         },
       })
-      return "password updated"
+      return true
     } else {
       throw new GraphQLError("Wrong Password", {
         extensions: {

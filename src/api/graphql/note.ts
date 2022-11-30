@@ -34,7 +34,7 @@ const addNote = async (
         },
       ],
     })
-    return
+    return true
   } catch (e) {
     return e
   }
@@ -55,7 +55,7 @@ const updateNote = async (
         text: text,
       },
     })
-    return
+    return true
   } catch (e) {
     return e
   }
@@ -69,7 +69,7 @@ const deleteNote = async (_source: any, { noteId }: any, context: any) => {
         id: noteId,
       },
     })
-    return
+    return true
   } catch (e) {
     return e
   }

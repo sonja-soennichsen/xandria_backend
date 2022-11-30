@@ -4,6 +4,9 @@ import {
   check_resource_exists,
   check_double_resource,
 } from "../../utils/check"
+import { resource_by_id } from "../../utils/find"
+import { get_tag_query } from "../../utils/mutation_utils"
+var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const addResource = async (
   _source: any,
@@ -20,15 +23,16 @@ const addResource = async (
   context: any
 ) => {
   check_auth(context)
+  const sanitized_url = sanitizeUrl(url)
 
   try {
-    await check_double_resource(url)
+    await check_double_resource(sanitized_url)
     await Resource.create({
       input: [
         {
           headline,
           description,
-          url,
+          url: sanitized_url,
           imageURL,
           rootSite,
           author,
@@ -40,7 +44,7 @@ const addResource = async (
                   name: tags,
                 },
                 edge: {
-                  name: tags,
+                  name: tags.toLowerCase(),
                 },
               },
             },
@@ -52,7 +56,7 @@ const addResource = async (
         },
       ],
     })
-    return "it worked"
+    return true
   } catch (e) {
     return e
   }
@@ -60,37 +64,18 @@ const addResource = async (
 
 const addTagToResource = async (
   _source: any,
-  { resourceId, tagName }: any,
+  { resourceId, tags }: any,
   context: any
 ) => {
   try {
     check_auth(context)
-    await check_resource_exists(resourceId)
-    await Resource.update({
-      connectOrCreate: {
-        tags: [
-          {
-            where: {
-              node: {
-                name: tagName,
-              },
-            },
-            onCreate: {
-              node: {
-                name: tagName,
-              },
-              edge: {
-                name: tagName,
-              },
-            },
-          },
-        ],
-      },
-      where: {
-        id: resourceId,
-      },
-    })
-    return
+    const resource = await resource_by_id(resourceId)
+    console.log(resource)
+
+    const tagQuery = get_tag_query(tags, resource[0].url)
+    await Resource.update(tagQuery)
+
+    return true
   } catch (e) {
     return e
   }

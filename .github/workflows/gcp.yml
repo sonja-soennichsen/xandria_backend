@@ -2,7 +2,7 @@
 name: Build, Push and Deploy NodeJS Image w/ Google Cloud Platform
 on:
   push:
-    branches: [main]
+    branches: [cache]
 
 jobs:
   test:
@@ -29,6 +29,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - run: npm run dev-test
@@ -80,7 +81,7 @@ jobs:
           service: xandria
           image: europe-west3-docker.pkg.dev/xandria-web/xandria/xandria:latest
           region: europe-west3
-          flags: --allow-unauthenticated --vpc-connector=vpc
+          flags: --allow-unauthenticated
           credentials: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
       - name: Test deployment

@@ -34,7 +34,7 @@ const addComment = async (
         },
       ],
     })
-    return
+    return true
   } catch (e) {
     return e
   }
@@ -52,7 +52,7 @@ const deleteComment = async (
         id: commentId,
       },
     })
-    return
+    return true
   } catch (e) {
     return e
   }

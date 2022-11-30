@@ -3,8 +3,6 @@ const router = express.Router()
 var jwt = require("jsonwebtoken")
 import { cookieConfig } from "../../config/static"
 import { Request, Response } from "express"
-import { create_logger } from "../../utils/create_logger"
-const logger = create_logger()
 
 router.get("/", async (req: Request, res: Response) => {
   const token = req.cookies["jwt"]
@@ -12,8 +10,6 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err: any, decode: any) => {
       if (err) {
-        logger.error("Unauthorized attempt to refresh token")
-
         return res
           .status(406)
           .json({ message: "Unauthorizied: Invalid token provided" })

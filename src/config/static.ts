@@ -1,5 +1,5 @@
-// sameSite needs to be set to False -> "none" allows for CSRF Attacks
-// CSRF -> Cross-Site Request Forgery: Let's another website use the auth cookie to send a request on your behalf
+const { format, transports } = require("winston")
+const { combine, timestamp, prettyPrint } = format
 
 export const cookieConfig: {} = {
   httpOnly: true,
@@ -45,4 +45,29 @@ export const helmetOptions = {
       ],
     },
   },
+}
+
+export const loggerOptions = {
+  format: combine(timestamp(), format.json(), prettyPrint()),
+  transports: [
+    new transports.File({ filename: "error.log", level: "error" }),
+    new transports.File({ filename: "info.log", level: "info" }),
+    new transports.Console({ format: format.simple() }),
+  ],
+}
+
+export interface tagInterface {
+  where: {
+    node: {
+      name: string
+    }
+  }
+  onCreate: {
+    node: {
+      name: string
+    }
+    edge: {
+      name: string
+    }
+  }
 }

@@ -1,6 +1,9 @@
 import { User, Resource } from "../../index"
 import { check_auth, check_resource_exists } from "../../utils/check"
-const fetch = require("@adobe/node-fetch-retry")
+import { fetch_scraper } from "../../utils/fetch_scraper"
+import { resource_by_id, resource_by_url } from "../../utils/find"
+import { get_tag_query, make_bookmark } from "../../utils/mutation_utils"
+var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
 const makeBookmark = async (
   _source: any,
@@ -9,32 +12,10 @@ const makeBookmark = async (
 ) => {
   try {
     check_auth(context)
+    const [resource] = await resource_by_id(resourceId)
+    await make_bookmark(context.currentUser.id, resource[0].url, userAddedTags)
 
-    await User.update({
-      where: {
-        id: context.currentUser.id,
-      },
-      update: {
-        bookmarks: [
-          {
-            connect: [
-              {
-                where: {
-                  node: {
-                    id: resourceId,
-                  },
-                },
-                edge: {
-                  userAddedTags: userAddedTags,
-                },
-              },
-            ],
-          },
-        ],
-      },
-    })
-
-    return
+    return true
   } catch (e) {
     return e
   }
@@ -66,7 +47,7 @@ const removeBookmark = async (
       },
     })
 
-    return
+    return true
   } catch (e) {
     return e
   }
@@ -74,92 +55,91 @@ const removeBookmark = async (
 
 const makeBookmarkFromUrl = async (
   _source: any,
-  { resourceUrl, headline }: any,
+  { resourceUrl }: any,
   context: any
 ) => {
   try {
     check_auth(context)
-
-    const [existing] = await Resource.find({
-      where: {
-        url: resourceUrl,
-      },
-    })
+    const sanitized_url = sanitizeUrl(resourceUrl)
+    const [existing] = await resource_by_url(sanitized_url)
 
     if (existing) {
-      await User.update({
-        where: {
-          username: context.currentUser.username,
-        },
-        update: {
-          bookmarks: [
-            {
-              connect: [
-                {
-                  where: {
-                    node: {
-                      url: resourceUrl,
-                    },
+      await make_bookmark(context.currentUser.id, sanitized_url)
+      return "bookmark created to existing resource"
+    } else {
+      try {
+        const content = await fetch_scraper(sanitized_url)
+
+        // create resource and make bookmark
+        await User.update({
+          where: {
+            id: context.currentUser.id,
+          },
+          connectOrCreate: {
+            bookmarks: [
+              {
+                where: {
+                  node: {
+                    url: sanitized_url,
                   },
                 },
-              ],
-            },
-          ],
-        },
-      })
-    } else {
-      // fetch scraper
-      const returned = await fetch(
-        "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url: resourceUrl }),
-        },
-        {
-          retryOptions: {
-            retryInitialDelay: 1000,
-            forceSocketTimeout: true,
-            retryMaxDuration: 300000,
-          },
-        }
-      )
-
-      const content = await returned.json()
-
-      // make bookmark
-      await User.update({
-        where: {
-          id: context.currentUser.id,
-        },
-        connectOrCreate: {
-          bookmarks: [
-            {
-              where: {
-                node: {
-                  url: resourceUrl,
+                onCreate: {
+                  node: {
+                    headline: content["headline"],
+                    description: content["description"],
+                    url: sanitized_url,
+                    imageURL: content["imageURL"],
+                    rootSite: content["rootSite"],
+                    author: content["author"],
+                  },
+                  edge: {
+                    userAddedTags: [],
+                  },
                 },
               },
-              onCreate: {
-                node: {
-                  headline: content["headline"],
-                  description: content["description"],
-                  url: content["url"],
-                  imageURL: content["imageURL"],
-                  rootSite: content["rootSite"],
-                  author: content["author"],
+            ],
+          },
+        })
+
+        // add tags
+        const tagQuery = get_tag_query(content["tags"], sanitized_url)
+        await Resource.update(tagQuery)
+
+        return "Bookmark created to newly created resource"
+      } catch (e) {
+        // If scraper doesn't work, make bookmark for user with only the url
+        await User.update({
+          where: {
+            id: context.currentUser.id,
+          },
+          connectOrCreate: {
+            bookmarks: [
+              {
+                where: {
+                  node: {
+                    url: sanitized_url,
+                  },
+                },
+                onCreate: {
+                  node: {
+                    headline: "",
+                    description: null,
+                    url: sanitized_url,
+                    imageURL: null,
+                    rootSite: null,
+                    author: null,
+                  },
+                  edge: {
+                    userAddedTags: [],
+                  },
                 },
               },
-            },
-          ],
-        },
-      })
+            ],
+          },
+        })
+        return "Scraper failed - Bookmark created only with URL "
+      }
     }
-
-    return true
   } catch (e) {
     return e
   }

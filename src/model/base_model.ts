@@ -4,10 +4,10 @@ export const base_model = gql`
   type Resource {
     id: ID! @id
     headline: String!
-    description: String!
+    description: String
     url: String! @unique
     imageURL: String
-    rootSite: String!
+    rootSite: String
     tags: [Tag!]!
       @relationship(direction: OUT, type: "HAS_TAG", properties: "hasTag")
     users: [User!]!
@@ -15,7 +15,7 @@ export const base_model = gql`
     comments: [Comment!]! @relationship(direction: IN, type: "HAS_COMMENT")
     notes: [Note!]! @relationship(direction: IN, type: "HAS_NOTE")
     userAddedTags: [String]
-    author: String!
+    author: String
     createdAt: DateTime @timestamp(operations: [CREATE])
     updatedAt: DateTime @timestamp(operations: [CREATE, UPDATE])
     upvotes: Int

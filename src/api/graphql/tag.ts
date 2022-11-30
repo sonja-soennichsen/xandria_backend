@@ -25,7 +25,7 @@ const relateTag = async (_source: any, { tag1, tag2 }: any, context: any) => {
         ],
       },
     })
-    return
+    return true
   } catch (e) {
     return e
   }

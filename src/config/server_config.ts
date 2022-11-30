@@ -1,42 +1,36 @@
 const depthLimit = require("graphql-depth-limit")
-import { ApolloError } from "apollo-server-express"
+const { ApolloServer } = require("apollo-server-express")
 var jwt = require("jsonwebtoken")
-import { User } from "../index"
 import { check_context_auth } from "../utils/check"
+import { format_error } from "../utils/error_utils"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
+import { User } from "../index"
 
-export const server_config = {
-  validationRules: [depthLimit(10), createComplexityLimitRule(2000)],
-  context: async ({ res, req }: any) => {
-    try {
-      const token = req.cookies["jwt"] || "" || req.headers["jwt"]
-      const userJWT = jwt.verify(token, process.env.JWT_SECRET)
-      const [currentUser] = await User.find({
-        where: { id: userJWT.sub },
-      })
+export const initialize_server = (schema: any) => {
+  return new ApolloServer({
+    schema,
+    validationRules: [depthLimit(10), createComplexityLimitRule(2000)],
+    context: async ({ res, req }: any) => {
+      try {
+        const token = req.cookies["jwt"] || "" || req.headers["jwt"]
+        const userJWT = jwt.verify(token, process.env.JWT_SECRET)
+        const [currentUser] = await User.find({
+          where: { id: userJWT.sub },
+        })
 
-      check_context_auth(currentUser)
+        check_context_auth(currentUser)
 
-      return {
-        req,
-        res,
-        currentUser,
+        return {
+          req,
+          res,
+          currentUser,
+        }
+      } catch (e) {
+        throw new Error(e)
       }
-    } catch (e) {
-      throw new Error(e)
-    }
-  },
-  introspection: true,
-  playground: true,
-  formatError: (err: ApolloError) => {
-    if (err.message.startsWith("Expected")) {
-      return new Error("Internal server error -  Malformed Database Source")
-    }
-    if (err.message.startsWith("Context creation failed: JsonWebTokenError")) {
-      return new Error(
-        "Context creation failed: JsonWebTokenError: jwt must be provided"
-      )
-    }
-    return err
-  },
+    },
+    introspection: true,
+    playground: true,
+    formatError: format_error,
+  })
 }

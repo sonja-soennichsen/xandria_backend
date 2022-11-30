@@ -12,6 +12,14 @@ export const addResourceQuery = `mutation AddResource($headline: String!, $descr
     addResource(headline: $headline, description: $description, url: $url, imageURL: $imageUrl, rootSite: $rootSite, author: $author, tags: $tags)
   }`
 
+  export const resourceInputScraper = {
+    "resourceUrl": "https://en.wikipedia.org/wiki/Brazil"
+  }
+  
+  export const addResourceQueryScraper = `mutation Mutation($resourceUrl: String!) {
+    makeBookmarkFromUrl(resourceUrl: $resourceUrl)
+  }`
+
 export const resourceQuery = `query Query {
     resources {
       headline

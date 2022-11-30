@@ -1,18 +1,25 @@
-import { create_logger } from "../utils/create_logger"
+import { get_duration_in_milliseconds } from "../utils/utils"
+import { loggerOptions } from "./static"
+const { createLogger } = require("winston")
+const logger = new createLogger(loggerOptions)
 
 module.exports = function (app: any) {
-  const logger = create_logger()
-
-  function logRequest(req: any, res: any, next: any) {
-    logger.info(req.url)
-    next()
-  }
-
-  function logError(err: any, req: any, res: any, next: any) {
+  app.use((err: any, req: any, res: any, next: any) => {
     logger.error({ err })
     next()
-  }
+  })
 
-  app.use(logRequest)
-  app.use(logError)
+  app.use((req: any, res: any, next: any) => {
+    const start = process.hrtime()
+
+    res.on("close", () => {
+      const durationInMilliseconds = get_duration_in_milliseconds(start)
+      logger.info(
+        `[Method]${req.method} [URL]${
+          req.originalUrl
+        } [Duration]${durationInMilliseconds.toLocaleString()} ms`
+      )
+    })
+    next()
+  })
 }

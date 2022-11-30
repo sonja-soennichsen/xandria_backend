@@ -12,7 +12,7 @@ import {
 const app = express()
 
 const { DB_URI, DEV_AUTH } = get_credentials()
-const driver = neo4j.driver(DB_URI, DEV_AUTH)
+export const driver = neo4j.driver(DB_URI, DEV_AUTH)
 export const { User, Resource, Tag, Comment, Note } =
   initialize_ogm_and_models(driver)
 

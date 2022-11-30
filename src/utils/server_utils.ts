@@ -19,9 +19,7 @@ export const create_context = async ({ res, req }: any) => {
   try {
     const token = req.cookies["jwt"] || "" || req.headers["jwt"]
     const userJWT = jwt.verify(token, process.env.JWT_SECRET)
-    const [currentUser] = await User.find({
-      where: { id: userJWT.sub },
-    })
+    const [currentUser] = await User.find_by_id(userJWT.sub)
 
     check_context_auth(currentUser)
 

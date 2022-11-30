@@ -12,7 +12,7 @@ const makeBookmark = async (
   try {
     check_auth(context)
     const [resource] = await Resource.find_by_id(resourceId)
-    await make_bookmark(context.currentUser.id, resource[0].url, userAddedTags)
+    await make_bookmark(context.currentUser.id, resource.url, userAddedTags)
 
     return true
   } catch (e) {

@@ -89,3 +89,21 @@ export interface CreateInput {
 export interface UpdateInput {
   [key: string]: any
 }
+
+export interface UserType {
+  id: string
+  username: string
+  password: string
+  salt: string
+  name: string
+  role: string
+  email: string
+  createdAt: string
+  updatedAt: string | null
+}
+
+export interface JWT {
+  sub: string
+  username: string
+  iat: number
+}

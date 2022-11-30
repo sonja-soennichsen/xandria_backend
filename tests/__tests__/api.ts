@@ -63,8 +63,7 @@ describe("testing auth and graphql endpoint", () => {
         expect(res.data).toMatch("logged in")
       })
       .catch((err: any) => {
-        // write test for failure here
-        console.log(err)
+        expect(err).toBeFalsy
       })
   })
 

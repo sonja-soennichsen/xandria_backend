@@ -6,9 +6,9 @@ import { CreateInput, UpdateInput } from "../config/static"
 export class UserModel extends OGM {
   constructor() {
     super({ typeDefs, driver })
-    this.User = this.initializeUser()
+    this.User = this.initialize_user()
   }
-  initializeUser() {
+  initialize_user() {
     this.init()
     return this.model("User")
   }

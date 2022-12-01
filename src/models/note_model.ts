@@ -6,9 +6,9 @@ import { CreateInput, UpdateInput } from "../config/static"
 export class NoteModel extends OGM {
   constructor() {
     super({ typeDefs, driver })
-    this.Note = this.intializeNote()
+    this.Note = this.intialize_note()
   }
-  intializeNote() {
+  intialize_note() {
     this.init()
     return this.model("Note")
   }

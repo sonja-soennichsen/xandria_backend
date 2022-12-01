@@ -7,9 +7,9 @@ import { GraphQLError } from "graphql"
 export class ResourceModel extends OGM {
   constructor() {
     super({ typeDefs, driver })
-    this.Resource = this.initializeResource()
+    this.Resource = this.initialize_resource()
   }
-  initializeResource() {
+  initialize_resource() {
     this.init()
     return this.model("Resource")
   }

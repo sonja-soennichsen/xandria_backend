@@ -6,9 +6,9 @@ import { CreateInput, UpdateInput } from "../config/static"
 export class CommentModel extends OGM {
   constructor() {
     super({ typeDefs, driver })
-    this.Comment = this.intializeComment()
+    this.Comment = this.intialize_comment()
   }
-  intializeComment() {
+  intialize_comment() {
     this.init()
     return this.model("Comment")
   }

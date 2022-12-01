@@ -6,9 +6,9 @@ import { CreateInput, UpdateInput } from "../config/static"
 export class TagModel extends OGM {
   constructor() {
     super({ typeDefs, driver })
-    this.Tag = this.intializeTag()
+    this.Tag = this.intialize_tag()
   }
-  intializeTag() {
+  intialize_tag() {
     this.init()
     return this.model("Tag")
   }

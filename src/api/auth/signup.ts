@@ -1,10 +1,8 @@
 const express = require("express")
 const router = express.Router()
-import { get_salt, hash } from "../../utils/password_uitls"
-var jwt = require("jsonwebtoken")
+import { get_salt, hash, set_cookie } from "../../utils/password_uitls"
 import { User } from "../../index"
 const { passwordStrength } = require("check-password-strength")
-import { cookieConfig } from "../../config/static"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
 
@@ -56,12 +54,8 @@ router.post(
         },
       ],
     })
-    const token = jwt.sign(
-      { sub: users[0].id, username: username },
-      process.env.JWT_SECRET
-    )
 
-    res.cookie("jwt", token, cookieConfig)
+    set_cookie(users[0].id, username, res)
 
     return res.status(200).json(users[0].id)
   }

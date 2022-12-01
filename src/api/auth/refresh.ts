@@ -1,8 +1,8 @@
 const express = require("express")
 const router = express.Router()
 var jwt = require("jsonwebtoken")
-import { cookieConfig } from "../../config/static"
 import { Request, Response } from "express"
+import { set_cookie } from "../../utils/password_uitls"
 
 router.get("/", async (req: Request, res: Response) => {
   const token = req.cookies["jwt"]
@@ -14,13 +14,7 @@ router.get("/", async (req: Request, res: Response) => {
           .status(406)
           .json({ message: "Unauthorizied: Invalid token provided" })
       } else {
-        const token = jwt.sign(
-          { sub: decode["sub"], username: decode["username"] },
-          process.env.JWT_SECRET
-        )
-
-        res.cookie("jwt", token, cookieConfig)
-
+        set_cookie(decode["sub"], decode["username"], res)
         return res.status(200)
       }
     })

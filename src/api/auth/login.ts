@@ -1,9 +1,8 @@
 import express from "express"
 const router = express.Router()
 import { compare } from "../../utils/password_uitls"
-var jwt = require("jsonwebtoken")
 import { User } from "../../index"
-import { cookieConfig } from "../../config/static"
+import { set_cookie } from "../../utils/password_uitls"
 import { Request, Response } from "express"
 const { body } = require("express-validator")
 
@@ -31,12 +30,7 @@ router.post(
       })
     }
 
-    const token = jwt.sign(
-      { sub: user.id, username: username },
-      process.env.JWT_SECRET
-    )
-
-    res.cookie("jwt", token, cookieConfig)
+    set_cookie(user.id, username, res)
 
     return res.status(200).json("logged in")
   }

@@ -243,12 +243,12 @@ mutation MakeBookmark($resourceId: String!, $userAddedTags: [String]!) {
 ### Make Bookmark and create resource if it doesn't exist yet
 
 ```
-mutation MakeBookmarkToNewResource($resourceUrl: String!, $headline: String!) {
-  makeBookmarkToNewResource(resourceURL: $resourceUrl, headline: $headline)
+mutation MakeBookmarkFromUrl($resourceUrl: String!, $headline: String) {
+  makeBookmarkFromUrl(resourceUrl: $resourceUrl, headline: $headline)
 }
 {
-  "resourceUrl": String,
-  "headline": String
+  "resourceUrl": string!,
+  "headline": string
 }
 ```
 

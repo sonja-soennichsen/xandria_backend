@@ -54,7 +54,7 @@ const removeBookmark = async (
 
 const makeBookmarkFromUrl = async (
   _source: any,
-  { resourceUrl }: any,
+  { resourceUrl, headline }: any,
   context: any
 ) => {
   try {
@@ -121,7 +121,7 @@ const makeBookmarkFromUrl = async (
                 },
                 onCreate: {
                   node: {
-                    headline: "",
+                    headline: headline,
                     description: null,
                     url: sanitized_url,
                     imageURL: null,

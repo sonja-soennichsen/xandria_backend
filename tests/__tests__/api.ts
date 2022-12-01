@@ -120,17 +120,4 @@ describe("testing auth and graphql endpoint", () => {
       expect(data.resources[0].url).toBe("example.com/image")
     })
   })
-
-  // it("uses scraper", async () => {
-  //   const token = get_token(userID)
-  //   await request({
-  //     url: "http://localhost:4000/graphql",
-  //     document: addResourceQueryScraper,
-  //     variables: resourceInputScraper,
-  //     requestHeaders: { authorization: `Bearer ${token}`, jwt: token },
-  //   }).then((data) => {
-  //     expect(data).toBeTruthy
-  //     console.log(data)
-  //   })
-  // })
 })

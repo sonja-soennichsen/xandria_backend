@@ -15,6 +15,7 @@ const { DB_URI, DEV_AUTH } = get_credentials()
 export const driver = neo4j.driver(DB_URI, DEV_AUTH)
 export const { User, Resource, Tag, Comment, Note } = initialize_models()
 
+// start server
 export default Promise.all([get_schema(driver)]).then(async ([schema]) => {
   const server = initialize_server(schema)
   await server.start()

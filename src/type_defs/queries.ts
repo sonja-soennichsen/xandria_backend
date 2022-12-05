@@ -74,6 +74,6 @@ export const queries = gql`
   }
 
   type Query {
-    resources: [Resource!]
+    resourceQuery: [Resource]
   }
 `

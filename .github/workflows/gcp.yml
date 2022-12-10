@@ -2,7 +2,7 @@
 name: Build, Push and Deploy NodeJS Image w/ Google Cloud Platform
 on:
   push:
-    branches: [cache]
+    branches: [main]
 
 jobs:
   test:
@@ -39,9 +39,9 @@ jobs:
     name: Build and Push Docker Image to GCP Artifact Registry
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: xandria
-      PROJECT_ID: xandria-web
-      REPO_ID: xandria
+      IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      REPO_ID: ${{ secrets.REPO_ID }}
 
     steps:
       - name: Checkout
@@ -79,7 +79,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v0
         with:
           service: xandria
-          image: europe-west3-docker.pkg.dev/xandria-web/xandria/xandria:latest
+          image: ${{ secrets.ARTIFACT_IMAGE }}
           region: europe-west3
           flags: --allow-unauthenticated
           credentials: ${{ secrets.SERVICE_ACCOUNT_KEY }}

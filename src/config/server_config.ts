@@ -29,8 +29,7 @@ export const initialize_server = (schema: any) => {
         throw new Error(e)
       }
     },
-    introspection: true,
-    playground: true,
+    introspection: !process.env.IS_PROD,
     formatError: format_error,
   })
 }

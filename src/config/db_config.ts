@@ -8,6 +8,7 @@ import { NoteModel } from "../models/note_model"
 import { TagModel } from "../models/tag_model"
 import { CommentModel } from "../models/comment_model"
 const neo4j = require("neo4j-driver")
+require("dotenv").config()
 
 export function initialize_models() {
   const User = new UserModel()

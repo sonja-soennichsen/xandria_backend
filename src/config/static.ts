@@ -21,6 +21,8 @@ export const corsOptions = {
     "https://xandria.vercel.app",
     "https://xandria-web-joshuaknauber.vercel.app",
     "https://xandria-web-git-main-joshuaknauber.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:4000",
   ],
   credentials: true,
 }
@@ -36,6 +38,8 @@ export const helmetOptions = {
         "https://xandria-web-joshuaknauber.vercel.app",
         "https://xandria-web-git-main-joshuaknauber.vercel.app",
         "https://apollo-server-landing-page.cdn.apollographql.com",
+        "http://localhost:3000",
+        "http://localhost:4000",
       ],
     },
   },

@@ -74,6 +74,17 @@ export const queries = gql`
   }
 
   type Query {
+    getNotes: [Note]
+      @cypher(
+        statement: """
+        MATCH (n:Note)-[:WROTE_NOTE]-(u:User) WHERE u.id = $auth.jwt.sub
+        RETURN n
+        """
+      )
+      @auth(rules: [{ isAuthenticated: true }])
+  }
+
+  type Query {
     resourceQuery: [Resource]
   }
 `

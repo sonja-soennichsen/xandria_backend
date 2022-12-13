@@ -4,6 +4,7 @@ export const auth_rules = gql`
   extend type Comment
     @auth(
       rules: [
+        { operations: [READ], isAuthenticated: true }
         {
           operations: [UPDATE, DELETE]
           isAuthenticated: true
@@ -20,14 +21,18 @@ export const auth_rules = gql`
   extend type Collection
     @auth(
       rules: [
-        { operations: [CREATE, READ, UPDATE, DELETE], isAuthenticated: true }
+        {
+          operations: [UPDATE, DELETE, READ, CREATE]
+          isAuthenticated: true
+          allow: { author: { id: "$jwt.sub" } }
+          bind: { author: { id: "$jwt.sub" } }
+        }
       ]
     )
 
   extend type User
     @auth(
       rules: [
-        { operations: [READ], isAuthenticated: true }
         {
           operations: [UPDATE, DELETE, READ]
           isAuthenticated: true

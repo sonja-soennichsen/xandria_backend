@@ -5,6 +5,9 @@ import { User } from "../index"
 import { check_context_auth } from "../utils/check"
 var jwt = require("jsonwebtoken")
 import { format_error } from "../utils/server_utils"
+require("dotenv").config()
+
+const intro_flag: boolean = process.env.IS_PROD === "true" ? false : true
 
 export const initialize_server = (schema: any) => {
   return new ApolloServer({
@@ -29,7 +32,7 @@ export const initialize_server = (schema: any) => {
         throw new Error(e)
       }
     },
-    introspection: !process.env.IS_PROD,
+    introspection: intro_flag,
     formatError: format_error,
   })
 }

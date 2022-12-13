@@ -5,6 +5,7 @@ import { User } from "../../index"
 const { passwordStrength } = require("check-password-strength")
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
+import { mostCommonPasswords } from "../../config/static"
 
 router.post(
   "/",
@@ -32,7 +33,7 @@ router.post(
     }
 
     const passStrength = passwordStrength(password)
-    if (passStrength.id < 3) {
+    if (passStrength.id < 3 || password in mostCommonPasswords) {
       return res.status(400).json({
         error: `Choose stronger password. Should contain at least a lowercase, uppercase, symbol and a number`,
         data: passStrength,

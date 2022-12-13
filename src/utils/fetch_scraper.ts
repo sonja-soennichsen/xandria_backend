@@ -3,7 +3,7 @@ import { ScraperData } from "../config/static"
 
 export async function fetch_scraper(url: String) {
   const returned = await fetch(
-    "https://xandria-scraper-2jytui6ygq-ey.a.run.app",
+    "https://xandria-scraper-ba5osva6tq-ey.a.run.app",
     {
       method: "POST",
       headers: {

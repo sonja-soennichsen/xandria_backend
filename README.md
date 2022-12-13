@@ -326,6 +326,19 @@ mutation DeleteNote($noteId: String!) {
 }
 ```
 
+### Get Note (for logged in User)
+
+```
+query GetNotes {
+  getNotes {
+    id
+    resource {
+      id
+    }
+  }
+}
+```
+
 ### Add Tag to Resource
 
 Adds a tag to the selected resource. If the tag doesn't exist, it creates a new one

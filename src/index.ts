@@ -4,7 +4,7 @@ require("dotenv").config()
 import { initialize_server } from "./config/server_config"
 import { corsOptions } from "./config/static"
 import {
-  initialize_ogm_and_models,
+  initialize_models,
   get_schema,
   get_credentials,
 } from "./config/db_config"
@@ -12,10 +12,10 @@ import {
 const app = express()
 
 const { DB_URI, DEV_AUTH } = get_credentials()
-const driver = neo4j.driver(DB_URI, DEV_AUTH)
-export const { User, Resource, Tag, Comment, Note } =
-  initialize_ogm_and_models(driver)
+export const driver = neo4j.driver(DB_URI, DEV_AUTH)
+export const { User, Resource, Tag, Comment, Note } = initialize_models()
 
+// start server
 export default Promise.all([get_schema(driver)]).then(async ([schema]) => {
   const server = initialize_server(schema)
   await server.start()

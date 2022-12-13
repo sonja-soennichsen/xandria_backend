@@ -18,11 +18,8 @@ export const signoutConfig: { [key: string]: any } = {
 export const corsOptions = {
   origin: [
     "https://studio.apollographql.com",
-    "https://xandria-2jytui6ygq-ey.a.run.app",
     "https://xandria.vercel.app",
     "https://xandria-web-joshuaknauber.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:4000",
     "https://xandria-web-git-main-joshuaknauber.vercel.app",
   ],
   credentials: true,
@@ -35,11 +32,8 @@ export const helmetOptions = {
       "script-src": [
         "'self'",
         "https://studio.apollographql.com",
-        "https://xandria-2jytui6ygq-ey.a.run.app",
         "https://xandria.vercel.app",
         "https://xandria-web-joshuaknauber.vercel.app",
-        "http://localhost:3000",
-        "http://localhost:4000",
         "https://xandria-web-git-main-joshuaknauber.vercel.app",
         "https://apollo-server-landing-page.cdn.apollographql.com",
       ],
@@ -71,3 +65,104 @@ export interface tagInterface {
     }
   }
 }
+
+export interface ScraperData {
+  headline: string
+  description: string
+  url: string
+  imageURL: string
+  rootSite: string
+  author: string
+  tags: [String]
+}
+
+export interface CreateInput {
+  [key: string]: any
+}
+
+export interface UpdateInput {
+  [key: string]: any
+}
+
+export interface UserType {
+  id: string
+  username: string
+  password: string
+  salt: string
+  name: string
+  role: string
+  email: string
+  createdAt: string
+  updatedAt: string | null
+}
+
+export interface JWT {
+  sub: string
+  username: string
+  iat: number
+}
+
+export const mostCommonPasswords = [
+  "123456",
+  "password",
+  "12345678",
+  "qwerty",
+  "123456789",
+  "12345",
+  "1234",
+  "111111",
+  "1234567",
+  "dragon",
+  "123123",
+  "baseball",
+  "abc123",
+  "football",
+  "monkey",
+  "letmein",
+  "696969",
+  "shadow",
+  "master",
+  "666666",
+  "qwertyuiop",
+  "123321",
+  "mustang",
+  "1234567890",
+  "michael",
+  "654321",
+  "pussy",
+  "superman",
+  "1qaz2wsx",
+  "7777777",
+  "fuckyou",
+  "121212",
+  "000000",
+  "qazwsx",
+  "123qwe",
+  "killer",
+  "trustno1",
+  "jordan",
+  "jennifer",
+  "zxcvbnm",
+  "asdfgh",
+  "hunter",
+  "buster",
+  "soccer",
+  "harley",
+  "batman",
+  "andrew",
+  "tigger",
+  "sunshine",
+  "iloveyou",
+  "fuckme",
+  "2000",
+  "charlie",
+  "robert",
+  "thomas",
+  "hockey",
+  "ranger",
+  "daniel",
+  "Password1",
+  "Nothing",
+  "1qaz2wsx3edc",
+  "Good123654",
+]

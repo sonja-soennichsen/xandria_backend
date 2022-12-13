@@ -1,10 +1,5 @@
 import { Resource } from "../../index"
-import {
-  check_auth,
-  check_resource_exists,
-  check_double_resource,
-} from "../../utils/check"
-import { resource_by_id } from "../../utils/find"
+import { check_auth } from "../../utils/check"
 import { get_tag_query } from "../../utils/mutation_utils"
 var sanitizeUrl = require("@braintree/sanitize-url").sanitizeUrl
 
@@ -26,7 +21,7 @@ const addResource = async (
   const sanitized_url = sanitizeUrl(url)
 
   try {
-    await check_double_resource(sanitized_url)
+    await Resource.not_double(sanitized_url)
     await Resource.create({
       input: [
         {
@@ -69,8 +64,7 @@ const addTagToResource = async (
 ) => {
   try {
     check_auth(context)
-    const resource = await resource_by_id(resourceId)
-    console.log(resource)
+    const resource = await Resource.find_by_id(resourceId)
 
     const tagQuery = get_tag_query(tags, resource[0].url)
     await Resource.update(tagQuery)

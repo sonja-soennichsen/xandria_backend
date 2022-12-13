@@ -1,10 +1,13 @@
 const depthLimit = require("graphql-depth-limit")
 const { ApolloServer } = require("apollo-server-express")
-var jwt = require("jsonwebtoken")
-import { check_context_auth } from "../utils/check"
-import { format_error } from "../utils/error_utils"
 const { createComplexityLimitRule } = require("graphql-validation-complexity")
 import { User } from "../index"
+import { check_context_auth } from "../utils/check"
+var jwt = require("jsonwebtoken")
+import { format_error } from "../utils/server_utils"
+require("dotenv").config()
+
+const intro_flag: boolean = process.env.IS_PROD === "true" ? false : true
 
 export const initialize_server = (schema: any) => {
   return new ApolloServer({
@@ -29,8 +32,7 @@ export const initialize_server = (schema: any) => {
         throw new Error(e)
       }
     },
-    introspection: true,
-    playground: true,
+    introspection: intro_flag,
     formatError: format_error,
   })
 }

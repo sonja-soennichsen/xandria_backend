@@ -1,4 +1,4 @@
-import { Resource, User } from "../index"
+import { User } from "../index"
 import { tagInterface } from "../config/static"
 
 export function get_tag_query(tags: [String], url: String) {

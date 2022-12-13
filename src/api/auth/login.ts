@@ -1,11 +1,9 @@
 import express from "express"
 const router = express.Router()
 import { compare } from "../../utils/password_uitls"
-var jwt = require("jsonwebtoken")
 import { User } from "../../index"
-import { cookieConfig } from "../../config/static"
+import { set_cookie } from "../../utils/password_uitls"
 import { Request, Response } from "express"
-import { user_by_username } from "../../utils/find"
 const { body } = require("express-validator")
 
 router.post(
@@ -16,7 +14,7 @@ router.post(
     const password: string = req.body.password
     const username: string = req.body.username
 
-    const [user] = await user_by_username(username)
+    const [user] = await User.find_by_username(username)
 
     if (!user) {
       return res.status(404).json({
@@ -32,12 +30,7 @@ router.post(
       })
     }
 
-    const token = jwt.sign(
-      { sub: user.id, username: username },
-      process.env.JWT_SECRET
-    )
-
-    res.cookie("jwt", token, cookieConfig)
+    set_cookie(user.id, username, res)
 
     return res.status(200).json("logged in")
   }

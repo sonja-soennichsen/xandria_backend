@@ -1,13 +1,11 @@
 const express = require("express")
 const router = express.Router()
-import { get_salt, hash } from "../../utils/password_uitls"
-var jwt = require("jsonwebtoken")
+import { get_salt, hash, set_cookie } from "../../utils/password_uitls"
 import { User } from "../../index"
 const { passwordStrength } = require("check-password-strength")
-import { cookieConfig } from "../../config/static"
 import { body, validationResult } from "express-validator"
 import { Request, Response } from "express"
-import { user_by_username } from "../../utils/find"
+import { mostCommonPasswords } from "../../config/static"
 
 router.post(
   "/",
@@ -26,16 +24,16 @@ router.post(
 
     const { password, username, name, email } = req.body
 
-    const [existing] = await user_by_username(username)
+    const existing: any[] = await User.find_by_username(username)
 
-    if (existing) {
+    if ((existing.length = 0)) {
       return res.status(400).json({
         error: `User with username ${username} already exists!`,
       })
     }
 
     const passStrength = passwordStrength(password)
-    if (passStrength.id < 3) {
+    if (passStrength.id < 3 || password in mostCommonPasswords) {
       return res.status(400).json({
         error: `Choose stronger password. Should contain at least a lowercase, uppercase, symbol and a number`,
         data: passStrength,
@@ -57,12 +55,8 @@ router.post(
         },
       ],
     })
-    const token = jwt.sign(
-      { sub: users[0].id, username: username },
-      process.env.JWT_SECRET
-    )
 
-    res.cookie("jwt", token, cookieConfig)
+    set_cookie(users[0].id, username, res)
 
     return res.status(200).json(users[0].id)
   }

@@ -1,5 +1,5 @@
-import { Note } from "../../index"
-import { check_auth, check_resource_exists } from "../../utils/check"
+import { Note, Resource } from "../../index"
+import { check_auth } from "../../utils/check"
 
 const addNote = async (
   _source: any,
@@ -8,7 +8,7 @@ const addNote = async (
 ) => {
   try {
     check_auth(context)
-    await check_resource_exists(resourceId)
+    await Resource.exists(resourceId)
     await Note.create({
       input: [
         {

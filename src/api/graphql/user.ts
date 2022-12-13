@@ -2,7 +2,6 @@ import { User } from "../../index"
 import { check_auth } from "../../utils/check"
 import { compare, hash } from "../../utils/password_uitls"
 import { GraphQLError } from "graphql"
-import { user_by_id } from "../../utils/find"
 
 const updateUserData = async (
   _source: any,
@@ -35,7 +34,7 @@ const changePassword = async (
   try {
     check_auth(context)
 
-    const [user] = await user_by_id(context.currentUser.id)
+    const [user] = await User.find_by_id(context.currentUser.id)
 
     if (compare(oldPassword, user.password, user.salt)) {
       const hashed = hash(newPassword, user.salt)

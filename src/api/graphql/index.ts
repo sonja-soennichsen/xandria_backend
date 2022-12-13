@@ -4,6 +4,7 @@ import note from "./note"
 import bookmarks from "./bookmarks"
 import comment from "./comment"
 import tag from "./tag"
+import query from "./query"
 
 export default {
   Mutation: {
@@ -13,5 +14,8 @@ export default {
     ...note,
     ...tag,
     ...bookmarks,
+  },
+  Query: {
+    ...query,
   },
 }

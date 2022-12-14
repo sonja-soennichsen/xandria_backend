@@ -25,7 +25,7 @@
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.2.0",
     "@apollo/client": "^3.7.0",
-    "@apollo/server": "^4.0.1",
+    "@apollo/server": "^4.2.0",
     "@braintree/sanitize-url": "^6.0.2",
     "@neo4j/graphql": "^3.10.1",
     "@neo4j/graphql-ogm": "^3.10.1",

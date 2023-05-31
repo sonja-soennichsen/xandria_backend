@@ -18,9 +18,6 @@ export const signoutConfig: { [key: string]: any } = {
 export const corsOptions = {
   origin: [
     "https://studio.apollographql.com",
-    "https://xandria.vercel.app",
-    "https://xandria-web-joshuaknauber.vercel.app",
-    "https://xandria-web-git-main-joshuaknauber.vercel.app",
   ],
   credentials: true,
 }
@@ -32,10 +29,6 @@ export const helmetOptions = {
       "script-src": [
         "'self'",
         "https://studio.apollographql.com",
-        "https://xandria.vercel.app",
-        "https://xandria-web-joshuaknauber.vercel.app",
-        "https://xandria-web-git-main-joshuaknauber.vercel.app",
-        "https://apollo-server-landing-page.cdn.apollographql.com",
       ],
     },
   },
